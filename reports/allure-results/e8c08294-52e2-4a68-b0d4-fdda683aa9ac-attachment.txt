@@ -1,0 +1,4 @@
+INFO     test_saucedemo_valid_login:test_saucedemo_login.py:14 Starting tests: test_saucedemo_valid_login
+INFO     test_saucedemo_valid_login:test_saucedemo_login.py:17 Open SauceDemo Website
+INFO     test_saucedemo_valid_login:test_saucedemo_login.py:20 Login using username and password
+INFO     test_saucedemo_valid_login:test_saucedemo_login.py:23 Swag Labs logo should be displayed
