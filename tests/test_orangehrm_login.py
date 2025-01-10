@@ -1,5 +1,7 @@
 import allure
 import time
+
+import utils
 import utils.custom_logger as cl
 import logging
 from conftest import driver
@@ -16,6 +18,9 @@ class TestOrangeHrmLogin:
         steps = OrangeHrmPage(driver)
 
         steps.open_orangehrm_website()
+        steps.login_with_username_and_password("Admin", "admin123")
+        time.sleep(10)
+
 
 
 

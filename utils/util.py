@@ -23,6 +23,10 @@ class Util(object):
     log = cl.custom_logger(logging.INFO)
 
 
+    def wait_seconds(self, seconds):
+        time.sleep(seconds)
+
+
     def get_alpha_numeric(self, length, type='letters'):
         """
         Get random string of characters
