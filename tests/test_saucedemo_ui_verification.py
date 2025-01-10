@@ -15,6 +15,6 @@ class TestSauceDemoUIVerification:
         steps.open_saucedemo_website()
         steps.login_with_username_and_password("standard_user", "secret_sauce")
         steps.click_hamburger_menu()
-        steps.verify_hamburger_menu_list(["All Items", "About", "Logout", "Reset App State", "Test"])
+        steps.verify_hamburger_menu_list(["All Items", "About", "Logout", "Reset App State", "Tests"])
 
 

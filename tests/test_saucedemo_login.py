@@ -6,7 +6,7 @@ from conftest import driver
 from pages.saucedemo_page import SauceDemoPage
 
 
-class TestSauceDemoUI:
+class TestSauceDemoLogin:
 
     @allure.title("Test Case: SauceDemo Valid Login")
     def test_saucedemo_valid_login(self, driver):

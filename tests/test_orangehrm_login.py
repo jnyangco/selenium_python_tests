@@ -1,0 +1,21 @@
+import allure
+import time
+import utils.custom_logger as cl
+import logging
+from conftest import driver
+from pages.orangehrm_page import OrangeHrmPage
+from pages.saucedemo_page import SauceDemoPage
+
+
+class TestOrangeHrmLogin:
+
+    @allure.title("Test Case: OrangeHRM Valid Login")
+    def test_orangehrm_valid_login(self, driver):
+        log = cl.custom_logger(logging.INFO)
+        log.info("Starting tests: template")
+        steps = OrangeHrmPage(driver)
+
+        steps.open_orangehrm_website()
+
+
+
