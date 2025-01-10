@@ -1,1 +1,0 @@
-INFO     SauceDemoPage:saucedemo_page.py:76 Actual Error Message = Epic sadface: Sorry, this user has been locked out.
