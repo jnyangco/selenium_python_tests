@@ -1,0 +1,16 @@
+# Files
+/reports
+/tests/automation.log
+
+# IDE Specific
+.DS_Store
+
+# Pycharm Cache
+#base/__pycache__/
+#pages/__pycache__/
+#pages/dashboard/__pycache__/
+#pages/login/__pycache__/
+#tests/__pycache__/
+#tests/dashboard/__pycache__/
+#tests/login/__pycache__/
+#utils/__pycache__/
