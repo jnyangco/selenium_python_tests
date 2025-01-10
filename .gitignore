@@ -7,10 +7,5 @@
 
 # Pycharm Cache
 #base/__pycache__/
-#pages/__pycache__/
-#pages/dashboard/__pycache__/
-#pages/login/__pycache__/
-#tests/__pycache__/
-#tests/dashboard/__pycache__/
-#tests/login/__pycache__/
-#utils/__pycache__/
+pages/__pycache__/
+tests/__pycache__/
