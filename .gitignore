@@ -1,6 +1,6 @@
 # Files
 /reports
-/tests/automation.log
+automation.log
 
 # IDE Specific
 .DS_Store
