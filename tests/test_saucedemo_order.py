@@ -11,6 +11,7 @@ class TestSauceDemoOrder:
     @allure.title("SauceDemo: Order an Item")
     def test_order_item(self, driver):
         log = cl.custom_logger(logging.INFO)
+        log.info("Starting tests: test_order_item")
         steps = SauceDemoPage(driver)
 
         # variables
