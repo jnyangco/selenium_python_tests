@@ -26,6 +26,10 @@ class TestSauceDemoOrder:
         steps.open_cart()
         time.sleep(2)
 
+        steps.verify_item_displayed_in_cart_page(item_name, 1)
+        steps.click_checkout_button()
+        time.sleep(5)
+
 
 
 

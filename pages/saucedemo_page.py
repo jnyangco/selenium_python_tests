@@ -38,6 +38,11 @@ class SauceDemoPage:
     _cart_total_text = (By.XPATH, "//div[@id='shopping_cart_container']//span")
     _cart_icon = (By.XPATH, "//a[@class='shopping_cart_link']")
 
+    # Cart page elements
+    _cart_item_list_dynamic_xpath = "//div[@class='cart_item']//div[text()='{}']"
+    _cart_item_quantity_dynamic_xpath = "//div[@class='cart_item']//div[text()='{}']/../../../div[@class='cart_quantity']"
+    _checkout_button = (By.XPATH, "//button[@id='checkout']")
+
 
 
     @allure.step("Open SauceDemo Website")
@@ -177,6 +182,24 @@ class SauceDemoPage:
     def open_cart(self):
         cart_icon = self.wait.until(EC.element_to_be_clickable(self._cart_icon))
         cart_icon.click()
+
+
+    @allure.step("Verify item displayed in cart page - item name and quantity")
+    def verify_item_displayed_in_cart_page(self, item_name, expected_item_quantity):
+        try:
+            self.wait.until(EC.visibility_of_element_located((By.XPATH, self._cart_item_list_dynamic_xpath.format(item_name))))
+        except TimeoutException:
+            pytest.fail(f"FAILED: Element not visible. Expected = 'True', Actual = 'False'")
+
+        actual_item_quantity = self.wait.until(EC.visibility_of_element_located((By.XPATH, self._cart_item_quantity_dynamic_xpath.format(item_name)))).text
+        assert int(actual_item_quantity) == expected_item_quantity, pytest.fail(f"FAILED: Incorrect item quantity for '{item_name}'. Expected = {expected_item_quantity}, Actual = {actual_item_quantity}")
+
+
+    @allure.step("Click Checkout button")
+    def click_checkout_button(self):
+        checkout_button = self.wait.until(EC.element_to_be_clickable(self._checkout_button))
+        checkout_button.click()
+
 
 
 
