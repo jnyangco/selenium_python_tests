@@ -8,7 +8,7 @@ from pages.saucedemo_page import SauceDemoPage
 
 class TestSauceDemoInvalidLogin:
 
-    @allure.title("Test Case: Sauce Demo Invalid Login using Incorrect Password")
+    @allure.title("SauceDemo: Invalid Login using Incorrect Password")
     def test_saucedemo_invalid_login_incorrect_password(self, driver):
         log = cl.custom_logger(logging.INFO)
         steps = SauceDemoPage(driver)
@@ -18,7 +18,7 @@ class TestSauceDemoInvalidLogin:
         steps.verify_invalid_login_error_message("Epic sadface: Username and password do not match any user in this service")
 
 
-    @allure.title("Test Case: Sauce Demo Invalid login using locked out user")
+    @allure.title("SauceDemo: Invalid login using locked out user")
     def test_saucedemo_invalid_login_locked_out_user(self, driver):
         log = cl.custom_logger(logging.INFO)
         steps = SauceDemoPage(driver)

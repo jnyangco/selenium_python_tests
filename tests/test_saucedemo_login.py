@@ -8,7 +8,7 @@ from pages.saucedemo_page import SauceDemoPage
 
 class TestSauceDemoLogin:
 
-    @allure.title("Test Case: SauceDemo Valid Login")
+    @allure.title("SauceDemo: Valid Login")
     def test_saucedemo_valid_login(self, driver):
         log = cl.custom_logger(logging.INFO)
         log.info("Starting tests: test_saucedemo_valid_login")

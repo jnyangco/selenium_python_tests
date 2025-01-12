@@ -32,6 +32,13 @@ class SauceDemoPage:
 
     _invalid_login_error_message = (By.XPATH, "//h3[@data-test='error']")
 
+    _inventory_list = (By.XPATH, "//div[@class='inventory_list']//div[@class='inventory_item_name ']")
+    # _add_to_cart_item_button_dynamic_xpath = "//div[@class='inventory_item_name ' and contains(.,'{}')]/../../..//button[1]"
+    _add_to_cart_item_button_dynamic_xpath = "//div[@class='inventory_item_name ' and contains(.,'{}')]/../../..//button[1]"
+    _cart_total_text = (By.XPATH, "//div[@id='shopping_cart_container']//span")
+    _cart_icon = (By.XPATH, "//a[@class='shopping_cart_link']")
+
+
 
     @allure.step("Open SauceDemo Website")
     def open_saucedemo_website(self):
@@ -132,6 +139,45 @@ class SauceDemoPage:
                 pytest.fail(f"Element not matched. Expected = {expected_element}, Actual = {actual_element}")
 
     # pytest.fail(f"Element not matched. Expected = {expected_element}, Actual = {actual_element}")
+
+
+    @allure.step("Verify total inventory list")
+    def verify_total_inventory_list(self, expected_total_list):
+        inventory_list = self.wait.until(EC.visibility_of_all_elements_located(self._inventory_list))
+        actual_total_list = len(inventory_list)
+        print(f"actual_total_list -> {actual_total_list}")
+        for element in inventory_list:
+            print(f"Element = {element.text}")
+        assert actual_total_list == expected_total_list, pytest.fail(f"Total inventory list does not matched. Actual = {actual_total_list}, Expected = {expected_total_list}")
+
+
+    @allure.step("Click Add To Cart button using Item name")
+    def add_to_cart_item(self, item_name):
+        add_to_cart_xpath = self._add_to_cart_item_button_dynamic_xpath.format(item_name)
+        add_to_cart_button = self.wait.until(EC.element_to_be_clickable((By.XPATH, add_to_cart_xpath)))
+        add_to_cart_button.click()
+        # add_to_cart_button = self.wait.until(EC.element_to_be_clickable((By.XPATH, add_to_cart_xpath)))
+        # print(f">>> add_to_cart_button text = {add_to_cart_button.text}")
+
+
+    @allure.step("Add To Cart should be change to Remove")
+    def add_to_cart_button_change_to_remove(self, item_name):
+        add_to_cart_xpath = self._add_to_cart_item_button_dynamic_xpath.format(item_name)
+        add_to_cart_button = self.wait.until(EC.element_to_be_clickable((By.XPATH, add_to_cart_xpath)))
+        assert add_to_cart_button.text == "Remove", pytest.fail(f"FAILED: Incorrect button text. Expected = 'Remove', Actual = {add_to_cart_button.text}")
+
+
+    @allure.step("Verify cart total")
+    def verify_cart_total_text(self, expected_total):
+        cart_total_text = self.wait.until(EC.visibility_of_element_located(self._cart_total_text)).text
+        assert int(cart_total_text) == expected_total, pytest.fail(f"FAILED: Incorrect cart total. Expected = {expected_total}, Actual = {cart_total_text}")
+
+
+    @allure.step("Open Cart")
+    def open_cart(self):
+        cart_icon = self.wait.until(EC.element_to_be_clickable(self._cart_icon))
+        cart_icon.click()
+
 
 
 

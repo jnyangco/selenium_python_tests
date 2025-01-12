@@ -11,7 +11,7 @@ from pages.saucedemo_page import SauceDemoPage
 
 class TestOrangeHrmLogin:
 
-    @allure.title("Test Case: OrangeHRM Valid Login")
+    @allure.title("OrangeHRM: Valid Login")
     def test_orangehrm_valid_login(self, driver):
         log = cl.custom_logger(logging.INFO)
         log.info("Starting tests: template")
@@ -19,7 +19,7 @@ class TestOrangeHrmLogin:
 
         steps.open_orangehrm_website()
         steps.login_with_username_and_password("Admin", "admin123")
-        time.sleep(10)
+        time.sleep(2)
 
 
 
