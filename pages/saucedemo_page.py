@@ -15,7 +15,7 @@ from utils.report_status import ReportStatus
 
 class SauceDemoPage:
 
-    log = cl.custom_logger(logging.DEBUG)
+    log = cl.custom_logger(logging.INFO)
 
     def __init__(self, driver):
         self.driver = driver

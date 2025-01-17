@@ -11,7 +11,7 @@ class TestSauceDemoOrder:
     @allure.title("SauceDemo: Order One Product")
     def test_order_one_product(self, driver):
         log = cl.custom_logger(logging.INFO)
-        log.info("Starting tests: test_order_item")
+        log.info("Starting test: test_order_one_product")
         steps = SauceDemoPage(driver)
 
         # variables
@@ -68,7 +68,7 @@ class TestSauceDemoOrder:
     @allure.title("SauceDemo: Order Two Products")
     def test_order_two_products(self, driver):
         log = cl.custom_logger(logging.INFO)
-        log.info("Starting tests: test_order_item")
+        log.info("Starting test: test_order_two_products")
         steps = SauceDemoPage(driver)
 
         # variables

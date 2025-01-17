@@ -11,16 +11,16 @@ class TestSauceDemoLogin:
     @allure.title("SauceDemo: Valid Login")
     def test_saucedemo_valid_login(self, driver):
         log = cl.custom_logger(logging.INFO)
-        log.info("Starting tests: test_saucedemo_valid_login")
+        log.info("Starting test: test_saucedemo_valid_login")
         steps = SauceDemoPage(driver)
 
-        log.info("Step 1: Open SauceDemo Website")
+        log.info("Step: Open SauceDemo Website")
         steps.open_saucedemo_website()
 
-        log.info("Step 2: Login using username and password")
+        log.info("Step: Login using username and password")
         steps.login_with_username_and_password("standard_user", "secret_sauce")
 
-        log.info("Step 3: Swag Labs logo should be displayed")
+        log.info("Step: Swag Labs logo should be displayed")
         steps.swag_labs_logo_should_be_displayed()
 
 

@@ -11,6 +11,7 @@ class TestSauceDemoInvalidLogin:
     @allure.title("SauceDemo: Invalid Login using Incorrect Password")
     def test_saucedemo_invalid_login_incorrect_password(self, driver):
         log = cl.custom_logger(logging.INFO)
+        log.info("Starting test: test_saucedemo_invalid_login_incorrect_password")
         steps = SauceDemoPage(driver)
 
         log.info("Step: Login to website")
@@ -25,6 +26,7 @@ class TestSauceDemoInvalidLogin:
     @allure.title("SauceDemo: Invalid login using locked out user")
     def test_saucedemo_invalid_login_locked_out_user(self, driver):
         log = cl.custom_logger(logging.INFO)
+        log.info("Starting test: test_saucedemo_invalid_login_incorrect_password")
         steps = SauceDemoPage(driver)
 
         log.info("Step: Login to website")

@@ -14,7 +14,7 @@ class TestOrangeHrmLogin:
     @allure.title("OrangeHrm: Valid Login")
     def test_orangehrm_valid_login(self, driver):
         log = cl.custom_logger(logging.INFO)
-        log.info("Starting tests: template")
+        log.info("Starting test: test_orangehrm_valid_login")
         steps = OrangeHrmPage(driver)
 
         log.info("Step: Login to website")

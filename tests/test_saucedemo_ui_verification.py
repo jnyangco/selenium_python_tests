@@ -11,6 +11,7 @@ class TestSauceDemoUIVerification:
     @allure.title("SauceDemo: Verify Hamburger List")
     def test_hamburger_menu_list(self, driver):
         log = cl.custom_logger(logging.INFO)
+        log.info("Starting test: test_hamburger_menu_list")
         steps = SauceDemoPage(driver)
 
         log.info("Step: Login to website")
@@ -25,9 +26,10 @@ class TestSauceDemoUIVerification:
         steps.verify_hamburger_menu_list(["All Items", "About", "Logout", "Reset App State"])
 
 
-    @allure.title("SauceDemo: Verify Total Inventory List")
-    def test_inventory_list(self, driver):
+    @allure.title("SauceDemo: Verify Total Product Cards Displayed")
+    def test_total_product_cards_displayed(self, driver):
         log = cl.custom_logger(logging.INFO)
+        log.info("Starting test: test_total_product_cards_displayed")
         steps = SauceDemoPage(driver)
 
         log.info("Step: Login to website")
