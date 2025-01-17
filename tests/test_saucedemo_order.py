@@ -19,7 +19,7 @@ class TestSauceDemoOrder:
 
         steps.open_saucedemo_website()
         steps.login_with_username_and_password("standard_user", "secret_sauce")
-        time.sleep(2)
+
         steps.add_to_cart_item(item_name)
         time.sleep(1)
         steps.add_to_cart_button_change_to_remove(item_name)
@@ -27,9 +27,29 @@ class TestSauceDemoOrder:
         steps.open_cart()
         time.sleep(2)
 
-        steps.verify_item_displayed_in_cart_page(item_name, 1)
+        steps.verify_secondary_header_text("Your Cart")
+        steps.verify_item_name_quantity_and_price_displayed_in_cart_page(item_name, 1)
         steps.click_checkout_button()
-        time.sleep(5)
+        time.sleep(2)
+
+        steps.verify_secondary_header_text("Checkout: Your Information")
+        steps.fillup_checkout_information("QA", "Test", "12345")
+        time.sleep(1)
+        steps.click_continue_button()
+        time.sleep(2)
+
+        steps.verify_secondary_header_text("Checkout: Overview")
+        steps.verify_item_name_quantity_and_price_displayed_in_cart_page(item_name, 1)
+        steps.click_finish_button()
+        time.sleep(2)
+
+        steps.verify_secondary_header_text("Checkout: Complete!")
+        steps.verify_checkout_success_message_text("Thank you for your order!")
+        steps.verify_checkout_success_message_description("Your order has been dispatched, and will arrive just as fast as the pony can get there!")
+        time.sleep(2)
+
+
+
 
 
 

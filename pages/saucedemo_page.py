@@ -22,6 +22,10 @@ class SauceDemoPage:
         self.base_url = "https://www.saucedemo.com/"
         self.wait = WebDriverWait(driver, 10)
 
+    # Variables
+    item_price = 0
+
+    # Login Page
     _username_textbox = (By.XPATH, "//input[@id='user-name']")
     _password_textbox = (By.XPATH, "//input[@id='password']")
     _login_button = (By.XPATH, "//input[@id='login-button']")
@@ -29,20 +33,36 @@ class SauceDemoPage:
     _swag_labs_logo2 = (By.XPATH, "//div[@class='app_logo2']")
     _burger_menu = (By.XPATH, "//button[@id='react-burger-menu-btn']")
     _burger_menu_list = (By.XPATH, "//nav[@class='bm-item-list']/a")
-
     _invalid_login_error_message = (By.XPATH, "//h3[@data-test='error']")
 
+    # Product Page
     _inventory_list = (By.XPATH, "//div[@class='inventory_list']//div[@class='inventory_item_name ']")
     # _add_to_cart_item_button_dynamic_xpath = "//div[@class='inventory_item_name ' and contains(.,'{}')]/../../..//button[1]"
     _add_to_cart_item_button_dynamic_xpath = "//div[@class='inventory_item_name ' and contains(.,'{}')]/../../..//button[1]"
+    _product_item_price_added_to_cart_dynamic_xpath = "//div[@class='inventory_item_name ' and contains(.,'{}')]/../../..//div[@class='inventory_item_price']"
     _cart_total_text = (By.XPATH, "//div[@id='shopping_cart_container']//span")
     _cart_icon = (By.XPATH, "//a[@class='shopping_cart_link']")
 
-    # Cart page elements
+    # Cart Page
+    _secondary_header_text = (By.XPATH, "//div[@data-test='secondary-header']/span")
     _cart_item_list_dynamic_xpath = "//div[@class='cart_item']//div[text()='{}']"
     _cart_item_quantity_dynamic_xpath = "//div[@class='cart_item']//div[text()='{}']/../../../div[@class='cart_quantity']"
+    _cart_item_price_dynamic_xpath = "//div[@class='cart_item']//div[text()='{}']/../../..//div[@class='inventory_item_price']"
     _checkout_button = (By.XPATH, "//button[@id='checkout']")
 
+    # Checkout: Information
+    _first_name_info = (By.XPATH, "//input[@id='first-name']")
+    _last_name_info = (By.XPATH, "//input[@id='last-name']")
+    _zip_code_info = (By.XPATH, "//input[@id='postal-code']")
+    _continue_button = (By.XPATH, "//input[@id='continue']")
+
+    # Checkout: Overview
+    _finish_button = (By.XPATH, "//button[@id='finish']")
+
+    # Checkout: Complete
+    _checkout_success_message_text = (By.XPATH, "//h2[@class='complete-header']")
+    _checkout_success_message_description = (By.XPATH, "//div[@class='complete-text']")
+    _back_home_button = (By.XPATH, "//button[@id='back-to-products']")
 
 
     @allure.step("Open SauceDemo Website")
@@ -163,7 +183,16 @@ class SauceDemoPage:
         add_to_cart_button.click()
         # add_to_cart_button = self.wait.until(EC.element_to_be_clickable((By.XPATH, add_to_cart_xpath)))
         # print(f">>> add_to_cart_button text = {add_to_cart_button.text}")
+        self.get_item_price(item_name)
 
+
+    @allure.step("Get Item Price")
+    def get_item_price(self, item_name):
+        item_price = self.wait.until(EC.visibility_of_element_located((By.XPATH, self._product_item_price_added_to_cart_dynamic_xpath.format(item_name)))).text
+        item_price = item_price.replace("$","")
+        self.item_price = item_price
+        print(f"self.item_price = item_price = {self.item_price}")
+        # return item_price
 
     @allure.step("Add To Cart should be change to Remove")
     def add_to_cart_button_change_to_remove(self, item_name):
@@ -181,15 +210,23 @@ class SauceDemoPage:
     @allure.step("Open Cart")
     def open_cart(self):
         cart_icon = self.wait.until(EC.element_to_be_clickable(self._cart_icon))
+        cart_icon = self.wait.until(EC.element_to_be_clickable(self._cart_icon))
         cart_icon.click()
 
 
     @allure.step("Verify item displayed in cart page - item name and quantity")
-    def verify_item_displayed_in_cart_page(self, item_name, expected_item_quantity):
+    def verify_item_name_quantity_and_price_displayed_in_cart_page(self, item_name, expected_item_quantity):
+        expected_item_price = self.item_price
+
         try:
             self.wait.until(EC.visibility_of_element_located((By.XPATH, self._cart_item_list_dynamic_xpath.format(item_name))))
+
         except TimeoutException:
             pytest.fail(f"FAILED: Element not visible. Expected = 'True', Actual = 'False'")
+
+        actual_item_price = self.wait.until(EC.visibility_of_element_located((By.XPATH, self._cart_item_price_dynamic_xpath.format(item_name)))).text
+        actual_item_price = actual_item_price.replace("$", "")
+        assert actual_item_price == expected_item_price, pytest.fail(f"FAILED: Incorrect item price. Expected = {expected_item_price}, Actual = {actual_item_price}")
 
         actual_item_quantity = self.wait.until(EC.visibility_of_element_located((By.XPATH, self._cart_item_quantity_dynamic_xpath.format(item_name)))).text
         assert int(actual_item_quantity) == expected_item_quantity, pytest.fail(f"FAILED: Incorrect item quantity for '{item_name}'. Expected = {expected_item_quantity}, Actual = {actual_item_quantity}")
@@ -200,6 +237,44 @@ class SauceDemoPage:
         checkout_button = self.wait.until(EC.element_to_be_clickable(self._checkout_button))
         checkout_button.click()
 
+
+    def click_continue_button(self):
+        continue_button = self.wait.until(EC.element_to_be_clickable(self._continue_button))
+        continue_button.click()
+
+
+    @allure.step("Verify secondary header text")
+    def verify_secondary_header_text(self, expected_secondary_text):
+        actual_secondary_text = self.wait.until(EC.visibility_of_element_located(self._secondary_header_text)).text
+        assert actual_secondary_text == expected_secondary_text, pytest.fail(f"FAILED: Incorrect secondary header text. Expected = {expected_secondary_text}, Actual = {actual_secondary_text}")
+
+
+    @allure.step("Fillup Checkout Information")
+    def fillup_checkout_information(self, first_name, last_name, zip_code):
+        first_name_element = self.wait.until(EC.visibility_of_element_located(self._first_name_info))
+        first_name_element.send_keys(first_name)
+        last_name_element = self.wait.until(EC.element_to_be_clickable(self._last_name_info))
+        last_name_element.send_keys(last_name)
+        zip_code_element = self.wait.until(EC.element_to_be_clickable(self._zip_code_info))
+        zip_code_element.send_keys(zip_code)
+
+
+    @allure.step("Click Finish Button")
+    def click_finish_button(self):
+        finish_button = self.wait.until(EC.element_to_be_clickable(self._finish_button))
+        finish_button.click()
+
+
+    @allure.step("Verify checkout success message text")
+    def verify_checkout_success_message_text(self, expected_text):
+        actual_text = self.wait.until(EC.visibility_of_element_located(self._checkout_success_message_text)).text
+        assert actual_text == expected_text, pytest.fail(f"FAILED: Incorrect checkout success message text. Expected = {expected_text}, Actual = {actual_text}")
+
+
+    @allure.step("Verify checkout success message description")
+    def verify_checkout_success_message_description(self, expected_text):
+        actual_text = self.wait.until(EC.visibility_of_element_located(self._checkout_success_message_description)).text
+        assert actual_text == expected_text, pytest.fail(f"FAILED: Incorrect checkout success message description. Expected = {expected_text}, Actual = {actual_text}")
 
 
 
