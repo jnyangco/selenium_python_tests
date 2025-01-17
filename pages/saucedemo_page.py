@@ -37,7 +37,7 @@ class SauceDemoPage:
     _invalid_login_error_message = (By.XPATH, "//h3[@data-test='error']")
 
     # Product Page
-    _inventory_list = (By.XPATH, "//div[@class='inventory_list']//div[@class='inventory_item_name ']")
+    _product_cards = (By.XPATH, "//div[@class='inventory_list']//div[@class='inventory_item_name ']")
     # _add_to_cart_item_button_dynamic_xpath = "//div[@class='inventory_item_name ' and contains(.,'{}')]/../../..//button[1]"
     _add_to_cart_item_button_dynamic_xpath = "//div[@class='inventory_item_name ' and contains(.,'{}')]/../../..//button[1]"
     _product_item_price_added_to_cart_dynamic_xpath = "//div[@class='inventory_item_name ' and contains(.,'{}')]/../../..//div[@class='inventory_item_price']"
@@ -170,14 +170,14 @@ class SauceDemoPage:
     # pytest.fail(f"Element not matched. Expected = {expected_element}, Actual = {actual_element}")
 
 
-    @allure.step("Verify total inventory list")
-    def verify_total_inventory_list(self, expected_total_list):
-        inventory_list = self.wait.until(EC.visibility_of_all_elements_located(self._inventory_list))
-        actual_total_list = len(inventory_list)
+    @allure.step("Verify total product cards displayed")
+    def verify_total_product_cards_displayed(self, expected_total_list):
+        product_cards = self.wait.until(EC.visibility_of_all_elements_located(self._product_cards))
+        actual_total_list = len(product_cards)
         print(f"actual_total_list -> {actual_total_list}")
-        for element in inventory_list:
+        for element in product_cards:
             print(f"Element = {element.text}")
-        assert actual_total_list == expected_total_list, pytest.fail(f"Total inventory list does not matched. Actual = {actual_total_list}, Expected = {expected_total_list}")
+        assert actual_total_list == expected_total_list, pytest.fail(f"Total product cards displayed does not matched. Actual = {actual_total_list}, Expected = {expected_total_list}")
 
 
     @allure.step("Click Add To Cart button on the First Item using Item name")
