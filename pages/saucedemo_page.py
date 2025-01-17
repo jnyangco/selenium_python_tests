@@ -204,7 +204,6 @@ class SauceDemoPage:
         print(f">>> self.item_price_2 = {self.item_price_2}")
 
 
-
     @allure.step("Get Item Price")
     def get_item_price(self, item_name):
         item_price = self.wait.until(EC.visibility_of_element_located((By.XPATH, self._product_item_price_added_to_cart_dynamic_xpath.format(item_name)))).text
@@ -307,8 +306,6 @@ class SauceDemoPage:
         assert float(actual_total[1]) == expected_total, pytest.fail(f"FAILED: Incorrect Total. Expected = {expected_total}, Actual = {actual_total}")
 
 
-
-
     @allure.step("Compute Item Total")
     def compute_item_total(self):
         item_total = float(self.item_price_1) + float(self.item_price_2)
@@ -327,6 +324,30 @@ class SauceDemoPage:
         assert actual_text == expected_text, pytest.fail(f"FAILED: Incorrect checkout success message description. Expected = {expected_text}, Actual = {actual_text}")
 
 
+    @allure.step("Verify product cards ordering")
+    def verify_product_cards_ordering(self, order_type="ascending"): #default = ascending
+        actual_product_list = []
+        product_cards = self.wait.until(EC.visibility_of_all_elements_located(self._product_cards))
+        print(f">>> product_cards = {product_cards}")
+
+        if order_type.lower() == "ascending":
+            for product in product_cards:
+                print(f">>> product = {product.text}")
+                actual_product_list.append(product.text)
+            expected_product_list = sorted(actual_product_list)
+            print(f">>> actual_product_list = {actual_product_list}")
+            print(f">>> expected_product_list = {expected_product_list}")
+            assert actual_product_list == expected_product_list, pytest.fail(f"FAILED: Product is not in ascending order: "
+                                            f"Expected = \n{expected_product_list}, Actual = \n{actual_product_list}")
+        else:
+            for product in product_cards:
+                print(f">>> product = {product.text}")
+                actual_product_list.append(product.text)
+            expected_product_list = sorted(actual_product_list, reverse=True)
+            print(f">>> actual_product_list = {actual_product_list}")
+            print(f">>> expected_product_list = {expected_product_list}")
+            assert actual_product_list == expected_product_list, pytest.fail(f"FAILED: Product is not in ascending order: "
+                                            f"Expected = \n{expected_product_list}, Actual = \n{actual_product_list}")
 
 
 
