@@ -23,7 +23,8 @@ class SauceDemoPage:
         self.wait = WebDriverWait(driver, 10)
 
     # Variables
-    item_price = 0
+    item_price_1 = 0
+    item_price_2 = 0
 
     # Login Page
     _username_textbox = (By.XPATH, "//input[@id='user-name']")
@@ -58,6 +59,9 @@ class SauceDemoPage:
 
     # Checkout: Overview
     _finish_button = (By.XPATH, "//button[@id='finish']")
+    _item_total = (By.XPATH, "//div[@class='summary_subtotal_label']")
+    _tax = (By.XPATH, "//div[@class='summary_tax_label']")
+    _total = (By.XPATH, "//div[@class='summary_total_label']")
 
     # Checkout: Complete
     _checkout_success_message_text = (By.XPATH, "//h2[@class='complete-header']")
@@ -176,23 +180,38 @@ class SauceDemoPage:
         assert actual_total_list == expected_total_list, pytest.fail(f"Total inventory list does not matched. Actual = {actual_total_list}, Expected = {expected_total_list}")
 
 
-    @allure.step("Click Add To Cart button using Item name")
-    def add_to_cart_item(self, item_name):
+    @allure.step("Click Add To Cart button on the First Item using Item name")
+    def add_to_cart_first_item(self, item_name):
         add_to_cart_xpath = self._add_to_cart_item_button_dynamic_xpath.format(item_name)
         add_to_cart_button = self.wait.until(EC.element_to_be_clickable((By.XPATH, add_to_cart_xpath)))
         add_to_cart_button.click()
         # add_to_cart_button = self.wait.until(EC.element_to_be_clickable((By.XPATH, add_to_cart_xpath)))
         # print(f">>> add_to_cart_button text = {add_to_cart_button.text}")
-        self.get_item_price(item_name)
+        # self.get_item_price(item_name)
+        self.item_price_1 = self.get_item_price(item_name)
+        print(f">>> self.item_price_1 = {self.item_price_1}")
+
+
+    @allure.step("Click Add To Cart button on the Second Item using Item name")
+    def add_to_cart_second_item(self, item_name):
+        add_to_cart_xpath = self._add_to_cart_item_button_dynamic_xpath.format(item_name)
+        add_to_cart_button = self.wait.until(EC.element_to_be_clickable((By.XPATH, add_to_cart_xpath)))
+        add_to_cart_button.click()
+        # add_to_cart_button = self.wait.until(EC.element_to_be_clickable((By.XPATH, add_to_cart_xpath)))
+        # print(f">>> add_to_cart_button text = {add_to_cart_button.text}")
+        # self.get_item_price(item_name)
+        self.item_price_2 = self.get_item_price(item_name)
+        print(f">>> self.item_price_2 = {self.item_price_2}")
+
 
 
     @allure.step("Get Item Price")
     def get_item_price(self, item_name):
         item_price = self.wait.until(EC.visibility_of_element_located((By.XPATH, self._product_item_price_added_to_cart_dynamic_xpath.format(item_name)))).text
         item_price = item_price.replace("$","")
-        self.item_price = item_price
-        print(f"self.item_price = item_price = {self.item_price}")
-        # return item_price
+        # self.item_price_1 = item_price
+        # print(f"self.item_price = item_price = {self.item_price_1}")
+        return item_price
 
     @allure.step("Add To Cart should be change to Remove")
     def add_to_cart_button_change_to_remove(self, item_name):
@@ -215,8 +234,11 @@ class SauceDemoPage:
 
 
     @allure.step("Verify item displayed in cart page - item name and quantity")
-    def verify_item_name_quantity_and_price_displayed_in_cart_page(self, item_name, expected_item_quantity):
-        expected_item_price = self.item_price
+    def verify_item_name_quantity_and_price_displayed_in_cart_page(self, item_name, expected_item_quantity, item_number="item one"):
+        if item_number == 'item one':
+            expected_item_price = self.item_price_1
+        else:
+            expected_item_price = self.item_price_2
 
         try:
             self.wait.until(EC.visibility_of_element_located((By.XPATH, self._cart_item_list_dynamic_xpath.format(item_name))))
@@ -263,6 +285,34 @@ class SauceDemoPage:
     def click_finish_button(self):
         finish_button = self.wait.until(EC.element_to_be_clickable(self._finish_button))
         finish_button.click()
+
+
+    @allure.step("Verify Item Total")
+    def verify_item_total(self):
+        expected_item_total = self.compute_item_total()
+        actual_item_total = self.wait.until(EC.visibility_of_element_located(self._item_total)).text
+        actual_item_total = actual_item_total.split("$")
+        print(f">>> expected_item_total = {expected_item_total}")
+        print(f">>> actual_item_total = {actual_item_total[1]}")
+        assert float(actual_item_total[1]) == expected_item_total, pytest.fail(f"FAILED: Incorrect Item Total. Expected = {expected_item_total}, Actual = {actual_item_total}")
+
+        tax = self.wait.until(EC.visibility_of_element_located(self._tax)).text
+        tax = tax.split("$")
+        expected_total = float(actual_item_total[1]) + float(tax[1])
+
+        actual_total = self.wait.until(EC.visibility_of_element_located(self._total)).text
+        actual_total = actual_total.split("$")
+        print(f">>> expected_total = {expected_total}")
+        print(f">>> actual_total[1] = {actual_total[1]}")
+        assert float(actual_total[1]) == expected_total, pytest.fail(f"FAILED: Incorrect Total. Expected = {expected_total}, Actual = {actual_total}")
+
+
+
+
+    @allure.step("Compute Item Total")
+    def compute_item_total(self):
+        item_total = float(self.item_price_1) + float(self.item_price_2)
+        return item_total
 
 
     @allure.step("Verify checkout success message text")
