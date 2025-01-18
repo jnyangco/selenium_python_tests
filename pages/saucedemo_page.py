@@ -219,13 +219,13 @@ class SauceDemoPage:
     def add_to_cart_button_change_to_remove(self, item_name):
         add_to_cart_xpath = self._add_to_cart_item_button_dynamic_xpath.format(item_name)
         add_to_cart_button = self.wait.until(EC.element_to_be_clickable((By.XPATH, add_to_cart_xpath)))
-        assert add_to_cart_button.text == "Remove", pytest.fail(f"FAILED: Incorrect button text. Expected = 'Remove', Actual = {add_to_cart_button.text}")
+        assert add_to_cart_button.text == "Remove", pytest.fail(f"Incorrect button text. Expected = 'Remove', Actual = {add_to_cart_button.text}")
 
 
     @allure.step("Verify cart total")
     def verify_cart_total_text(self, expected_total):
         cart_total_text = self.wait.until(EC.visibility_of_element_located(self._cart_total_text)).text
-        assert int(cart_total_text) == expected_total, pytest.fail(f"FAILED: Incorrect cart total. Expected = {expected_total}, Actual = {cart_total_text}")
+        assert int(cart_total_text) == expected_total, pytest.fail(f"Incorrect cart total. Expected = {expected_total}, Actual = {cart_total_text}")
 
 
     @allure.step("Open Cart")
@@ -246,14 +246,14 @@ class SauceDemoPage:
             self.wait.until(EC.visibility_of_element_located((By.XPATH, self._cart_item_list_dynamic_xpath.format(item_name))))
 
         except TimeoutException:
-            pytest.fail(f"FAILED: Element not visible. Expected = 'True', Actual = 'False'")
+            pytest.fail(f"Element not visible. Expected = 'True', Actual = 'False'")
 
         actual_item_price = self.wait.until(EC.visibility_of_element_located((By.XPATH, self._cart_item_price_dynamic_xpath.format(item_name)))).text
         actual_item_price = actual_item_price.replace("$", "")
-        assert actual_item_price == expected_item_price, pytest.fail(f"FAILED: Incorrect item price. Expected = {expected_item_price}, Actual = {actual_item_price}")
+        assert actual_item_price == expected_item_price, pytest.fail(f"Incorrect item price. Expected = {expected_item_price}, Actual = {actual_item_price}")
 
         actual_item_quantity = self.wait.until(EC.visibility_of_element_located((By.XPATH, self._cart_item_quantity_dynamic_xpath.format(item_name)))).text
-        assert int(actual_item_quantity) == expected_item_quantity, pytest.fail(f"FAILED: Incorrect item quantity for '{item_name}'. Expected = {expected_item_quantity}, Actual = {actual_item_quantity}")
+        assert int(actual_item_quantity) == expected_item_quantity, pytest.fail(f"Incorrect item quantity for '{item_name}'. Expected = {expected_item_quantity}, Actual = {actual_item_quantity}")
 
 
     @allure.step("Click Checkout button")
@@ -270,7 +270,7 @@ class SauceDemoPage:
     @allure.step("Verify secondary header text")
     def verify_secondary_header_text(self, expected_secondary_text):
         actual_secondary_text = self.wait.until(EC.visibility_of_element_located(self._secondary_header_text)).text
-        assert actual_secondary_text == expected_secondary_text, pytest.fail(f"FAILED: Incorrect secondary header text. Expected = {expected_secondary_text}, Actual = {actual_secondary_text}")
+        assert actual_secondary_text == expected_secondary_text, pytest.fail(f"Incorrect secondary header text. Expected = {expected_secondary_text}, Actual = {actual_secondary_text}")
 
 
     @allure.step("Fillup Checkout Information")
@@ -296,7 +296,7 @@ class SauceDemoPage:
         actual_item_total = actual_item_total.split("$")
         print(f">>> expected_item_total = {expected_item_total}")
         print(f">>> actual_item_total = {actual_item_total[1]}")
-        assert float(actual_item_total[1]) == expected_item_total, pytest.fail(f"FAILED: Incorrect Item Total. Expected = {expected_item_total}, Actual = {actual_item_total}")
+        assert float(actual_item_total[1]) == expected_item_total, pytest.fail(f"Incorrect Item Total. Expected = {expected_item_total}, Actual = {actual_item_total}")
 
         tax = self.wait.until(EC.visibility_of_element_located(self._tax)).text
         tax = tax.split("$")
@@ -306,7 +306,7 @@ class SauceDemoPage:
         actual_total = actual_total.split("$")
         print(f">>> expected_total = {expected_total}")
         print(f">>> actual_total[1] = {actual_total[1]}")
-        assert float(actual_total[1]) == expected_total, pytest.fail(f"FAILED: Incorrect Total. Expected = {expected_total}, Actual = {actual_total}")
+        assert float(actual_total[1]) == expected_total, pytest.fail(f"Incorrect Total. Expected = {expected_total}, Actual = {actual_total}")
 
 
     @allure.step("Compute Item Total")
@@ -324,7 +324,7 @@ class SauceDemoPage:
     @allure.step("Verify checkout success message description")
     def verify_checkout_success_message_description(self, expected_text):
         actual_text = self.wait.until(EC.visibility_of_element_located(self._checkout_success_message_description)).text
-        assert actual_text == expected_text, pytest.fail(f"FAILED: Incorrect checkout success message description. Expected = {expected_text}, Actual = {actual_text}")
+        assert actual_text == expected_text, pytest.fail(f"Incorrect checkout success message description. Expected = {expected_text}, Actual = {actual_text}")
 
 
     @allure.step("Verify product cards ordering")
@@ -343,7 +343,7 @@ class SauceDemoPage:
             expected_product_list = sorted(actual_product_list)
             print(f">>> actual_product_list = {actual_product_list}")
             print(f">>> expected_product_list = {expected_product_list}")
-            assert actual_product_list == expected_product_list, pytest.fail(f"FAILED: Product is not in ascending order: "
+            assert actual_product_list == expected_product_list, pytest.fail(f"Product is not in ascending order: "
                                             f"Expected = \n{expected_product_list}, Actual = \n{actual_product_list}")
 
         elif order_type.lower() == "descending":
@@ -353,7 +353,7 @@ class SauceDemoPage:
             expected_product_list = sorted(actual_product_list, reverse=True)
             print(f">>> actual_product_list = {actual_product_list}")
             print(f">>> expected_product_list = {expected_product_list}")
-            assert actual_product_list == expected_product_list, pytest.fail(f"FAILED: Product is not in ascending order: "
+            assert actual_product_list == expected_product_list, pytest.fail(f"Product is not in ascending order: "
                                             f"Expected = \n{expected_product_list}, Actual = \n{actual_product_list}")
 
         elif order_type.lower() == "price low to high":
@@ -365,7 +365,7 @@ class SauceDemoPage:
             expected_product_price = sorted(actual_product_price)
             print(f">>> actual_product_price = {actual_product_price}")
             print(f">>> expected_product_price = {expected_product_price}")
-            assert actual_product_price == expected_product_price, pytest.fail(f"FAILED: Product price is not in ascending order: "
+            assert actual_product_price == expected_product_price, pytest.fail(f"Product price is not in ascending order: "
                                             f"Expected = \n{expected_product_price}, Actual = \n{actual_product_price}")
 
         elif order_type.lower() == "price high to low":
@@ -377,7 +377,7 @@ class SauceDemoPage:
             expected_product_price = sorted(actual_product_price, reverse=True)
             print(f">>> actual_product_price = {actual_product_price}")
             print(f">>> expected_product_price = {expected_product_price}")
-            assert actual_product_price == expected_product_price, pytest.fail(f"FAILED: Product price is not in descending order: "
+            assert actual_product_price == expected_product_price, pytest.fail(f"Product price is not in descending order: "
                                             f"Expected = \n{expected_product_price}, Actual = \n{actual_product_price}")
 
 
