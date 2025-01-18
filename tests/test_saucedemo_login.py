@@ -4,6 +4,7 @@ import utils.custom_logger as cl
 import logging
 from conftest import driver
 from pages.saucedemo_page import SauceDemoPage
+from utils.config_reader import read_config as data
 
 
 class TestSauceDemoLogin:
@@ -18,7 +19,9 @@ class TestSauceDemoLogin:
         steps.open_saucedemo_website()
 
         log.info("Step: Login using username and password")
-        steps.login_with_username_and_password("standard_user", "secret_sauce")
+        username = data("saucedemo", "standard_user")
+        password = data("saucedemo", "standard_password")
+        steps.login_with_username_and_password(username, password)
 
         log.info("Step: Swag Labs logo should be displayed")
         steps.swag_labs_logo_should_be_displayed()
