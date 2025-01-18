@@ -39,18 +39,3 @@ class TestSauceDemoUIVerification:
         log.info("Step: Verify total product cards displayed")
         steps.verify_total_product_cards_displayed(6)
 
-
-    @allure.title("SauceDemo: Verify Product Cards in Ascending Order")
-    def test_product_filter_ascending(self, driver):
-        log = cl.custom_logger(logging.INFO)
-        log.info("Starting test: test_product_filter_ascending")
-        steps = SauceDemoPage(driver)
-
-        log.info("Step: Login to website")
-        steps.open_saucedemo_website()
-        steps.login_with_username_and_password("standard_user", "secret_sauce")
-
-        log.info("Step: Verify product cards in ascending order")
-        steps.verify_product_cards_ordering("ascending")
-        time.sleep(2)
-

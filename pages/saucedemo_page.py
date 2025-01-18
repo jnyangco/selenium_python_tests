@@ -3,6 +3,7 @@ import allure
 import pytest
 from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 # from conftest import driver
@@ -38,11 +39,13 @@ class SauceDemoPage:
 
     # Product Page
     _product_cards = (By.XPATH, "//div[@class='inventory_list']//div[@class='inventory_item_name ']")
+    _product_price = (By.XPATH, "//div[@class='inventory_list']//div[@class='inventory_item_price']")
     # _add_to_cart_item_button_dynamic_xpath = "//div[@class='inventory_item_name ' and contains(.,'{}')]/../../..//button[1]"
     _add_to_cart_item_button_dynamic_xpath = "//div[@class='inventory_item_name ' and contains(.,'{}')]/../../..//button[1]"
     _product_item_price_added_to_cart_dynamic_xpath = "//div[@class='inventory_item_name ' and contains(.,'{}')]/../../..//div[@class='inventory_item_price']"
     _cart_total_text = (By.XPATH, "//div[@id='shopping_cart_container']//span")
     _cart_icon = (By.XPATH, "//a[@class='shopping_cart_link']")
+    _filter_product = (By.XPATH, "//select[@class='product_sort_container']")
 
     # Cart Page
     _secondary_header_text = (By.XPATH, "//div[@data-test='secondary-header']/span")
@@ -330,6 +333,9 @@ class SauceDemoPage:
         product_cards = self.wait.until(EC.visibility_of_all_elements_located(self._product_cards))
         print(f">>> product_cards = {product_cards}")
 
+        actual_product_price = []
+        product_price = self.wait.until(EC.visibility_of_all_elements_located(self._product_price))
+
         if order_type.lower() == "ascending":
             for product in product_cards:
                 print(f">>> product = {product.text}")
@@ -339,7 +345,8 @@ class SauceDemoPage:
             print(f">>> expected_product_list = {expected_product_list}")
             assert actual_product_list == expected_product_list, pytest.fail(f"FAILED: Product is not in ascending order: "
                                             f"Expected = \n{expected_product_list}, Actual = \n{actual_product_list}")
-        else:
+
+        elif order_type.lower() == "descending":
             for product in product_cards:
                 print(f">>> product = {product.text}")
                 actual_product_list.append(product.text)
@@ -348,6 +355,37 @@ class SauceDemoPage:
             print(f">>> expected_product_list = {expected_product_list}")
             assert actual_product_list == expected_product_list, pytest.fail(f"FAILED: Product is not in ascending order: "
                                             f"Expected = \n{expected_product_list}, Actual = \n{actual_product_list}")
+
+        elif order_type.lower() == "price low to high":
+            for price in product_price:
+                price = float(price.text.replace("$",""))
+                print(f">>> price = {price}")
+                actual_product_price.append(price)
+
+            expected_product_price = sorted(actual_product_price)
+            print(f">>> actual_product_price = {actual_product_price}")
+            print(f">>> expected_product_price = {expected_product_price}")
+            assert actual_product_price == expected_product_price, pytest.fail(f"FAILED: Product price is not in ascending order: "
+                                            f"Expected = \n{expected_product_price}, Actual = \n{actual_product_price}")
+
+        elif order_type.lower() == "price high to low":
+            for price in product_price:
+                price = float(price.text.replace("$",""))
+                print(f">>> price = {price}")
+                actual_product_price.append(price)
+
+            expected_product_price = sorted(actual_product_price, reverse=True)
+            print(f">>> actual_product_price = {actual_product_price}")
+            print(f">>> expected_product_price = {expected_product_price}")
+            assert actual_product_price == expected_product_price, pytest.fail(f"FAILED: Product price is not in descending order: "
+                                            f"Expected = \n{expected_product_price}, Actual = \n{actual_product_price}")
+
+
+    @allure.step("Select dropdown filter")
+    def select_dropdown_filter(self, sort_by):
+        dropdown = self.wait.until(EC.visibility_of_element_located(self._filter_product))
+        dropdown = Select(dropdown)
+        dropdown.select_by_visible_text(sort_by)
 
 
 
