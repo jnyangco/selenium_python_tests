@@ -20,7 +20,10 @@ class TestOrangeHrmLogin:
 
         log.info("Step: Login to website")
         steps.open_orangehrm_website()
-        steps.login_with_username_and_password("Admin", "admin123")
+        username = data("orangehrm", "username")
+        password = data("orangehrm", "password")
+
+        steps.login_with_username_and_password(username, password)
         time.sleep(2)
 
 
