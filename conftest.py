@@ -2,6 +2,7 @@ import logging
 import os
 import shutil
 import subprocess
+from email.policy import default
 
 import pytest
 from selenium import webdriver
@@ -18,40 +19,66 @@ log = cl.custom_logger(logging.INFO)
 # log.info("")
 
 @pytest.fixture(scope="function")
-def driver():
+def driver(request):
 
-    # Docker Selenium Grid Configuration
-    SELENIUM_GRID_URL = "http://localhost:4444/wd/hub"
+    # Get parameters from command line run
+    browser = request.config.getoption("--browser").lower()
+    os_type = request.config.getoption("--os_type").lower()
+    env = request.config.getoption("--env").lower()
 
-    # Chrome Optons
-    options = Options()
-    options.add_argument("--start-maximized") # Maximize browser
-    options.add_argument("--disable-infobars")  # Disable infobar
-    options.add_argument("--disable-dev-shm-usage")  # Overcome limited resources
-    options.add_argument("--no-sandbox")  # Bypass OS security model
-    options.add_argument("--headless")  # Run headless (optional)
+    # Chrome Options
+    # chrome_options = Options()
+    # chrome_options.add_argument("--start-maximized") # Maximize browser
+    # chrome_options.add_argument("--disable-infobars")  # Disable infobar
+    # chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resources
+    # chrome_options.add_argument("--no-sandbox")  # Bypass OS security model
+    # chrome_options.add_argument("--headless")  # Run headless (optional)
+    # chrome_options = chrome_options.to_capabilities()
 
-    # capabilities = options.to_capabilities()
+    if env == 'docker':
+        # Docker Selenium Grid Configuration
+        SELENIUM_GRID_URL = "http://localhost:4444/wd/hub"
 
-    # Initiate Webdriver (remote)
-    driver = webdriver.Remote(
-        command_executor=SELENIUM_GRID_URL,
-        options=options
-    )
+        # Chrome Options
+        chrome_options = Options()
+        chrome_options.add_argument("--start-maximized")  # Maximize browser
+        chrome_options.add_argument("--disable-infobars")  # Disable infobar
+        chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resources
+        chrome_options.add_argument("--no-sandbox")  # Bypass OS security model
+        chrome_options.add_argument("--headless")  # Run headless (optional)
 
+        # Initiate Webdriver (remote)
+        driver = webdriver.Remote(
+            command_executor=SELENIUM_GRID_URL,
+            options=chrome_options
+        )
+    else:
+        # Chrome Options
+        chrome_options = Options()
+        chrome_options.add_argument("--start-maximized")  # Maximize browser
+        driver = webdriver.Chrome(options=chrome_options)
 
+    driver.implicitly_wait(10)
 
     # Initialize the WebDriver (use Chrome in this example)
     # log.info(">>> driver = webdriver.Chrome()")
     # driver = webdriver.Chrome()
-    driver.implicitly_wait(10)
-    driver.maximize_window()
+    # driver.implicitly_wait(10)
+    # driver.maximize_window()
 
     # wait = WebDriverWait(driver, 10)
 
     yield driver
     # log.info(">>> driver.quit()")
     driver.quit()
+
+
+# --envi qa1 --browser chrome --report True --headless False
+def pytest_addoption(parser):
+    """Add CLI option for selecting the browser."""
+    parser.addoption("--browser", action="store", default="chrome", help="Type of browser to use: 'chrome' or 'firefox'")
+    parser.addoption("--os_type", action="store", default="", help="Type of operating system: 'mac', 'windows', 'linux'")
+    parser.addoption("--env", action="store", default="local", help="Where to run the tests: 'local' or 'docker'")
 
 
 
