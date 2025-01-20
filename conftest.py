@@ -8,6 +8,11 @@ from selenium import webdriver
 from selenium.webdriver.support.wait import WebDriverWait
 import utils.custom_logger as cl
 
+# Docker
+# deprecated in Selenium 4
+# from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.chrome.options import Options
+
 
 log = cl.custom_logger(logging.INFO)
 # log.info("")
@@ -15,9 +20,30 @@ log = cl.custom_logger(logging.INFO)
 @pytest.fixture(scope="function")
 def driver():
 
+    # Docker Selenium Grid Configuration
+    SELENIUM_GRID_URL = "http://localhost:4444/wd/hub"
+
+    # Chrome Optons
+    options = Options()
+    options.add_argument("--start-maximized") # Maximize browser
+    options.add_argument("--disable-infobars")  # Disable infobar
+    options.add_argument("--disable-dev-shm-usage")  # Overcome limited resources
+    options.add_argument("--no-sandbox")  # Bypass OS security model
+    options.add_argument("--headless")  # Run headless (optional)
+
+    # capabilities = options.to_capabilities()
+
+    # Initiate Webdriver (remote)
+    driver = webdriver.Remote(
+        command_executor=SELENIUM_GRID_URL,
+        options=options
+    )
+
+
+
     # Initialize the WebDriver (use Chrome in this example)
     # log.info(">>> driver = webdriver.Chrome()")
-    driver = webdriver.Chrome()
+    # driver = webdriver.Chrome()
     driver.implicitly_wait(10)
     driver.maximize_window()
 
