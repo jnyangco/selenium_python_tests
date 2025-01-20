@@ -35,6 +35,7 @@ def driver(request):
     # chrome_options.add_argument("--headless")  # Run headless (optional)
     # chrome_options = chrome_options.to_capabilities()
 
+
     if env == 'docker':
         # Docker Selenium Grid Configuration
         SELENIUM_GRID_URL = "http://localhost:4444/wd/hub"
@@ -52,7 +53,7 @@ def driver(request):
             command_executor=SELENIUM_GRID_URL,
             options=chrome_options
         )
-    else:
+    else: # local
         # Chrome Options
         chrome_options = Options()
         chrome_options.add_argument("--start-maximized")  # Maximize browser
