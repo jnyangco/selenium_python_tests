@@ -10,10 +10,10 @@ from pages.saucedemo_page import SauceDemoPage
 from utils.config_reader import read_config as data
 
 
-class TestOrangeHrmLogin:
+class TestOrangeHrmInvalidLogin:
 
-    @allure.title("OrangeHrm: Valid Login")
-    def test_orangehrm_valid_login(self, driver):
+    @allure.title("OrangeHrm: Error message should show up when using invalid password")
+    def test_orangehrm_invalid_password(self, driver):
         log = cl.custom_logger(logging.INFO)
         log.info("Starting test: test_orangehrm_valid_login")
         steps = OrangeHrmPage(driver)
@@ -21,13 +21,13 @@ class TestOrangeHrmLogin:
         log.info("Step: Open the OrangeHrm website")
         steps.open_orangehrm_website()
 
-        log.info("Step: Login using username and password")
+        log.info("Step: Login using username and incorrect password")
         username = data("orangehrm", "username")
-        password = data("orangehrm", "password")
+        password = "Password#%&!3278"
         steps.login_with_username_and_password(username, password)
 
-        log.info("Step: User is landed on dashboard page")
-        steps.user_landed_on_dashboard_page()
+        log.info("Step: Verify error message is displayed.")
+        steps.show_login_error_message("Invalid credentials")
         time.sleep(2)
 
 

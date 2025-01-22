@@ -10,10 +10,10 @@ from pages.saucedemo_page import SauceDemoPage
 from utils.config_reader import read_config as data
 
 
-class TestOrangeHrmLogin:
+class TestOrangeHrmUIVerification:
 
-    @allure.title("OrangeHrm: Valid Login")
-    def test_orangehrm_valid_login(self, driver):
+    @allure.title("OrangeHrm: Error message should show up when using invalid password")
+    def test_orangehrm_ui_verification(self, driver):
         log = cl.custom_logger(logging.INFO)
         log.info("Starting test: test_orangehrm_valid_login")
         steps = OrangeHrmPage(driver)
@@ -28,6 +28,14 @@ class TestOrangeHrmLogin:
 
         log.info("Step: User is landed on dashboard page")
         steps.user_landed_on_dashboard_page()
+
+        log.info("Step: Verify search menu is displayed")
+        steps.verify_search_menu_displayed()
+
+        log.info("Step: Verify side bar menus are correct")
+        steps.verify_side_bar_menus(["Admin", "PIM", "Leave", "Time",
+                                     "Recruitment", "My Info", "Performance", "Dashboard",
+                                     "Directory", "Maintenance", "Claim", "Buzz"])
         time.sleep(2)
 
 

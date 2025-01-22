@@ -28,16 +28,23 @@ class OrangeHrmPage:
     _lp_username_textbox = (By.XPATH, "//input[@name='username']")
     _lp_password_textbox = (By.XPATH, "//input[@name='password']")
     _lp_login_button = (By.XPATH, "//button[text()=' Login ']")
+    _lp_error_message = (By.XPATH, "//div[@class='orangehrm-login-error']//div[1]//p")
+
+    # Homepage (hp)
+    _hp_sidebar_menus = (By.XPATH, "//ul[@class='oxd-main-menu']/li//span")
+
+    # Dashboard Page (dp)
+    _dp_header_dashboard = (By.XPATH, "//div[@class='oxd-topbar-header-title']//h6[text()='Dashboard']")
+    _dp_search_menu = (By.XPATH, "//input[@placeholder='Search']")
 
 
 
-    # FUNCTIONS
+    # Login Page Functions
     @allure.step("Open OrangeHRM Website")
     def open_orangehrm_website(self):
         self.log.info("Open OrangeHRM Website")
         base_url = data("orangehrm", "base_url")
         self.driver.get(base_url)
-
 
     @allure.step("Login using username and password")
     def login_with_username_and_password(self, username, password):
@@ -53,6 +60,58 @@ class OrangeHrmPage:
         self.log.info("Click Login button")
         login_button = self.wait.until(EC.element_to_be_clickable(self._lp_login_button))
         login_button.click()
+
+
+    @allure.step("Verify error message using invalid login.")
+    def show_login_error_message(self, expected_error_message):
+        actual_error_message = self.wait.until(EC.visibility_of_element_located(self._lp_error_message)).text
+        assert actual_error_message == expected_error_message, pytest.fail(f"Incorrect error message. Expected = {expected_error_message}, Actual = {actual_error_message}")
+
+
+
+
+    # Homepage
+    @allure.step("Verify search menu is displayed")
+    def verify_search_menu_displayed(self):
+        try:
+            self.wait.until(EC.visibility_of_element_located(self._dp_search_menu))
+        except TimeoutException:
+            pytest.fail(f"Search menu is not displayed")
+
+
+    @allure.step("Verify side bar menus")
+    def verify_side_bar_menus(self, expected_menus):
+        menus = self.wait.until(EC.visibility_of_all_elements_located(self._hp_sidebar_menus))
+        actual_menus = []
+        for menu in menus:
+            actual_menus.append(menu.text)
+
+        # for index, menu in enumerate(menus):
+        #     assert menu.text == expected_menus[index], pytest.fail(f"Incorrect menu displayed. Expected = {expected_menus[index]}, Actual = {menu.text}"]
+
+        print(f">>> actual total menu = {len(menus)}")
+        print(f">>> expected total menu = {len(expected_menus)}")
+        assert len(menus) == len(expected_menus), pytest.fail(f"Incorrect total menus. Expected = {len(expected_menus)}, Actual = {len(actual_menus)}")
+
+        print(f">>> actual_menus = {actual_menus}")
+        print(f">>> expected_menus = {expected_menus}")
+        assert actual_menus == expected_menus, pytest.fail(f"Incorrect menus. Expected = {expected_menus}, Actual = {actual_menus}")
+
+
+
+
+    # Dashboard Page
+    @allure.step("User is landed on dashboard page")
+    def user_landed_on_dashboard_page(self):
+        try:
+            self.wait.until(EC.visibility_of_element_located(self._dp_header_dashboard))
+        except TimeoutException:
+            pytest.fail("Header dashboard is not displayed.")
+
+        expected_url = "https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index"
+        actual_url = self.driver.current_url
+        assert actual_url == expected_url, pytest.fail(f"Incorrect title. Expected = {expected_url}, Actual = {actual_url}")
+
 
 
 
