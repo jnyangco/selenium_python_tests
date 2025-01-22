@@ -12,7 +12,7 @@ from utils.config_reader import read_config as data
 
 class TestOrangeHrmUIVerification:
 
-    @allure.title("OrangeHrm: Error message should show up when using invalid password")
+    @allure.title("OrangeHrm: Side bar menu crawler")
     def test_orangehrm_ui_verification(self, driver):
         log = cl.custom_logger(logging.INFO)
         log.info("Starting test: test_orangehrm_valid_login")
@@ -36,7 +36,12 @@ class TestOrangeHrmUIVerification:
         steps.verify_side_bar_menus(["Admin", "PIM", "Leave", "Time",
                                      "Recruitment", "My Info", "Performance", "Dashboard",
                                      "Directory", "Maintenance", "Claim", "Buzz"])
-        time.sleep(2)
+
+        log.info("Step: Click on each menu and user should be redirected to correct url")
+        steps.side_bar_menu_crawler(["Admin", "PIM", "Leave", "Time",
+                                     "Recruitment", "My Info", "Performance", "Dashboard",
+                                     "Directory", "Maintenance", "Claim", "Buzz"])
+
 
 
 

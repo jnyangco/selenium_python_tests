@@ -32,6 +32,7 @@ class OrangeHrmPage:
 
     # Homepage (hp)
     _hp_sidebar_menus = (By.XPATH, "//ul[@class='oxd-main-menu']/li//span")
+    _hp_sidebar_menus_dynamic_xpath = "//ul[@class='oxd-main-menu']/li//span[text()='{}']"
 
     # Dashboard Page (dp)
     _dp_header_dashboard = (By.XPATH, "//div[@class='oxd-topbar-header-title']//h6[text()='Dashboard']")
@@ -96,6 +97,53 @@ class OrangeHrmPage:
         print(f">>> actual_menus = {actual_menus}")
         print(f">>> expected_menus = {expected_menus}")
         assert actual_menus == expected_menus, pytest.fail(f"Incorrect menus. Expected = {expected_menus}, Actual = {actual_menus}")
+
+
+    @allure.step("Side bar menu crawler")
+    def side_bar_menu_crawler(self, menus):
+        base_url = data("orangehrm", "base_url") + "/web/index.php"
+        expected_url = ""
+
+        for index in range(len(menus)):
+            menu = menus[index]
+            try:
+                self.wait.until(EC.element_to_be_clickable((By.XPATH, self._hp_sidebar_menus_dynamic_xpath.format(menu)))).click()
+            except TimeoutException:
+                pytest.fail(f"Menu '{menu}' not found")
+
+            current_url = self.driver.current_url
+
+            if menu == "Admin":
+                expected_url = base_url + "/admin/viewSystemUsers"
+            elif menu == "PIM":
+                expected_url = base_url + "/pim/viewEmployeeList"
+            elif menu == "Leave":
+                expected_url = base_url + "/leave/viewLeaveList"
+            elif menu == "Time":
+                expected_url = base_url + "/time/viewEmployeeTimesheet"
+            elif menu == "Recruitment":
+                expected_url = base_url + "/recruitment/viewCandidates"
+            elif menu == "My Info":
+                expected_url = base_url + "/pim/viewPersonalDetails/empNumber/7"
+            elif menu == "Performance":
+                expected_url = base_url + "/performance/searchEvaluatePerformanceReview"
+            elif menu == "Dashboard":
+                expected_url = base_url + "/dashboard/index"
+            elif menu == "Directory":
+                expected_url = base_url + "/directory/viewDirectory"
+            elif menu == "Maintenance":
+                expected_url = base_url + "/maintenance/purgeEmployee"
+                self.driver.back()
+            elif menu == "Claim":
+                expected_url = base_url + "/claim/viewAssignClaim"
+            elif menu == "Buzz":
+                expected_url = base_url + "/buzz/viewBuzz"
+
+            print(f">>> current_url = {current_url}")
+            print(f">>> expected_url = {expected_url}")
+            assert current_url == expected_url, pytest.fail(f"Incorrect url for '{menu}'. Expected = {expected_url}, Actual = {current_url}")
+
+
 
 
 
