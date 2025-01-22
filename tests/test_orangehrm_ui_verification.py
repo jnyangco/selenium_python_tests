@@ -15,7 +15,7 @@ class TestOrangeHrmUIVerification:
     @allure.title("OrangeHrm: Side bar menu crawler")
     def test_orangehrm_ui_verification(self, driver):
         log = cl.custom_logger(logging.INFO)
-        log.info("Starting test: test_orangehrm_valid_login")
+        log.info("Starting test: test_orangehrm_ui_verification")
         steps = OrangeHrmPage(driver)
 
         log.info("Step: Open the OrangeHrm website")

@@ -24,6 +24,9 @@ class OrangeHrmPage:
         self.wait = WebDriverWait(driver, 10)
 
     # ELEMENTS
+    # Global Page
+    _gp_topbar_menu_dynamic_xpath = "//nav[@aria-label='Topbar Menu']/ul/li/a[text()='{}']"
+
     # Login Page (lp)
     _lp_username_textbox = (By.XPATH, "//input[@name='username']")
     _lp_password_textbox = (By.XPATH, "//input[@name='password']")
@@ -38,6 +41,16 @@ class OrangeHrmPage:
     _dp_header_dashboard = (By.XPATH, "//div[@class='oxd-topbar-header-title']//h6[text()='Dashboard']")
     _dp_search_menu = (By.XPATH, "//input[@placeholder='Search']")
 
+    # PIM Page (pg)
+
+    # =================================================================================================================
+
+
+    # Global Page
+    @allure.step("Click top bar menu")
+    def click_top_bar_menu(self, menu):
+        topbar_menu = self.wait.until(EC.element_to_be_clickable((By.XPATH, self._gp_topbar_menu_dynamic_xpath.format(menu))))
+        topbar_menu.click()
 
 
     # Login Page Functions
@@ -144,6 +157,10 @@ class OrangeHrmPage:
             assert current_url == expected_url, pytest.fail(f"Incorrect url for '{menu}'. Expected = {expected_url}, Actual = {current_url}")
 
 
+    @allure.step("Click side bar menu")
+    def click_side_bar_menu(self, menu):
+        menu = self.wait.until(EC.element_to_be_clickable((By.XPATH, self._hp_sidebar_menus_dynamic_xpath.format(menu))))
+        menu.click()
 
 
 
