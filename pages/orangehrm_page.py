@@ -187,8 +187,6 @@ class OrangeHrmPage:
         # self.wait.until(EC.visibility_of_element_located(self._dp_header_dashboard), pytest.fail("Header dashboard is not displayed."))
 
         # WORKING - but result is not failed -> it is broken (yellow in allure report)
-
-        self.wait.until(EC.visibility_of_element_located(self._dp_header_dashboard), pytest.fail("Header dashboard is not displayed."))
         try:
             self.wait.until(EC.visibility_of_element_located(self._dp_header_dashboard))
         except TimeoutException:
