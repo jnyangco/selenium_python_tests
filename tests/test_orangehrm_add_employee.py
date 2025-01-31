@@ -32,7 +32,10 @@ class TestOrangeAddEmployee:
 
         log.info("Step: Click Add Employee top bar menu")
         steps.click_top_bar_menu("Add Employee")
-        time.sleep(10)
+        steps.add_employee()
+
+
+        time.sleep(15)
 
 
 

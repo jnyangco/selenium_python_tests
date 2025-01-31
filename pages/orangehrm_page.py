@@ -12,6 +12,8 @@ import logging
 from base.base_page import BasePage
 from utils.report_status import ReportStatus
 from utils.config_reader import read_config as data
+from utils import util
+from utils.util import Util as util
 
 
 class OrangeHrmPage:
@@ -42,6 +44,19 @@ class OrangeHrmPage:
     _dp_search_menu = (By.XPATH, "//input[@placeholder='Search']")
 
     # PIM Page (pg)
+    _pim_first_name = (By.XPATH, "//input[@name='firstName']")
+    _pim_middle_name = (By.XPATH, "//input[@name='middleName']")
+    _pim_last_name = (By.XPATH, "//input[@name='lastName']")
+    _pim_cancel_button = (By.XPATH, "//button[normalize-space()='Cancel']")
+    _pim_save_button = (By.XPATH, "//button[normalize-space()='Save']")
+    _pim_create_login_details_toggle = (By.XPATH, "//p[text()='Create Login Details']/following-sibling::div[1]")
+    _pim_username = (By.XPATH, "//label[text()='Username']/../..//input[1]")
+    _pim_password = (By.XPATH, "//label[text()='Password']/../..//input[1]")
+    _pim_confirm_password = (By.XPATH, "//label[text()='Confirm Password']/../../div[2]")
+    _pim_enabled_radio_button = (By.XPATH, "(//input[@type='radio']/following-sibling::span)[1]")
+    _pim_disabled_radio_button = (By.XPATH, "(//input[@type='radio']/following-sibling::span)[2]")
+    _pim_employee_name_label = (By.XPATH, "//div[@class='orangehrm-edit-employee-name']//h6")
+
 
     # =================================================================================================================
 
@@ -168,14 +183,41 @@ class OrangeHrmPage:
     # Dashboard Page
     @allure.step("User is landed on dashboard page")
     def user_landed_on_dashboard_page(self):
+        # NOT WORKING
+        # self.wait.until(EC.visibility_of_element_located(self._dp_header_dashboard), pytest.fail("Header dashboard is not displayed."))
+
+        # WORKING - but result is not failed -> it is broken (yellow in allure report)
+
+        self.wait.until(EC.visibility_of_element_located(self._dp_header_dashboard), pytest.fail("Header dashboard is not displayed."))
         try:
             self.wait.until(EC.visibility_of_element_located(self._dp_header_dashboard))
         except TimeoutException:
             pytest.fail("Header dashboard is not displayed.")
 
+
         expected_url = "https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index"
         actual_url = self.driver.current_url
         assert actual_url == expected_url, pytest.fail(f"Incorrect title. Expected = {expected_url}, Actual = {actual_url}")
+
+
+
+    # PIM Page
+    def add_employee(self):
+        random_name = util.generate_random_names()
+        random_name = random_name.split(" ")
+        self.wait.until(EC.visibility_of_element_located(self._pim_first_name)).send_keys(random_name[0])
+        self.wait.until(EC.visibility_of_element_located(self._pim_last_name)).send_keys(random_name[1])
+        self.wait.until(EC.element_to_be_clickable(self._pim_create_login_details_toggle)).click()
+        time.sleep(1)
+        self.wait.until(EC.visibility_of_element_located(self._pim_username)).send_keys(random_name[0]+random_name[1])
+        self.wait.until(EC.visibility_of_element_located(self._pim_password)).send_keys("Password#1")
+        # self.wait.until(EC.visibility_of_element_located(self._pim_confirm_password)).send_keys("Password#1")
+        self.wait.until(EC.element_to_be_clickable(self._pim_save_button)).click()
+
+
+
+
+
 
 
 
