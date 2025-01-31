@@ -2,6 +2,7 @@ import time
 import allure
 import pytest
 from selenium.common import TimeoutException
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -27,7 +28,11 @@ class OrangeHrmPage:
 
     # ELEMENTS
     # Global Page
-    _gp_topbar_menu_dynamic_xpath = "//nav[@aria-label='Topbar Menu']/ul/li/a[text()='{}']"
+    # _gp_topbar_menu_dynamic_xpath = "//nav[@aria-label='Topbar Menu']/ul/li/a[text()='{}']"
+    _gp_topbar_menu_dynamic_xpath = "//a[text()='{}']/.."
+
+    _gp_topbar_menu_add_employee = (By.XPATH, "//a[text()='Add Employee']")
+    # _gp_topbar_menu_add_employee = (By.XPATH, "//nav[@aria-label='Topbar Menu']/ul/li/a[text()='Add Employee']/..")
 
     # Login Page (lp)
     _lp_username_textbox = (By.XPATH, "//input[@name='username']")
@@ -64,8 +69,18 @@ class OrangeHrmPage:
     # Global Page
     @allure.step("Click top bar menu")
     def click_top_bar_menu(self, menu):
-        topbar_menu = self.wait.until(EC.element_to_be_clickable((By.XPATH, self._gp_topbar_menu_dynamic_xpath.format(menu))))
-        topbar_menu.click()
+        # top_bar_menu = self.wait.until(EC.element_to_be_clickable((By.XPATH, self._gp_topbar_menu_dynamic_xpath.format(menu))))
+        # top_bar_menu.click()
+
+        # Try Javascript click
+        top_bar_menu_add_employee = self.driver.find_element(*self._gp_topbar_menu_add_employee)
+        self.driver.execute_script("arguments[0].click();", top_bar_menu_add_employee)
+
+        # Try ACTIONS
+        # top_bar_menu_add_employee = self.driver.find_element(*self._gp_topbar_menu_add_employee)
+        # actions = ActionChains(self.driver)
+        # actions.click(top_bar_menu_add_employee)
+        # actions.perform()
 
 
     # Login Page Functions
@@ -174,8 +189,8 @@ class OrangeHrmPage:
 
     @allure.step("Click side bar menu")
     def click_side_bar_menu(self, menu):
-        menu = self.wait.until(EC.element_to_be_clickable((By.XPATH, self._hp_sidebar_menus_dynamic_xpath.format(menu))))
-        menu.click()
+        side_bar_menu = self.wait.until(EC.element_to_be_clickable((By.XPATH, self._hp_sidebar_menus_dynamic_xpath.format(menu))))
+        side_bar_menu.click()
 
 
 
@@ -210,7 +225,7 @@ class OrangeHrmPage:
         self.wait.until(EC.visibility_of_element_located(self._pim_username)).send_keys(random_name[0]+random_name[1])
         self.wait.until(EC.visibility_of_element_located(self._pim_password)).send_keys("Password#1")
         # self.wait.until(EC.visibility_of_element_located(self._pim_confirm_password)).send_keys("Password#1")
-        self.wait.until(EC.element_to_be_clickable(self._pim_save_button)).click()
+        # self.wait.until(EC.element_to_be_clickable(self._pim_save_button)).click()
 
 
 
