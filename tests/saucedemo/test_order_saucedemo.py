@@ -1,16 +1,17 @@
 import allure
 import time
-import utils.custom_logger as cl
 import logging
 from conftest import driver
 from pages.saucedemo.login_page_saucedemo import LoginPageSaucedemo
+from utils.config_reader import read_config as data
 
 
-class TestSauceDemoOrder:
+@allure.feature("Order")
+class TestOrderSaucedemo:
 
     @allure.title("SauceDemo: Order One Product")
     def test_order_one_product(self, driver):
-        log = cl.custom_logger(logging.INFO)
+        log = logging.getLogger(__name__)
         log.info("Starting test: test_order_one_product")
         steps = LoginPageSaucedemo(driver)
 
@@ -67,7 +68,7 @@ class TestSauceDemoOrder:
 
     @allure.title("SauceDemo: Order Two Products")
     def test_order_two_products(self, driver):
-        log = cl.custom_logger(logging.INFO)
+        log = logging.getLogger(__name__)
         log.info("Starting test: test_order_two_products")
         steps = LoginPageSaucedemo(driver)
 
@@ -76,7 +77,8 @@ class TestSauceDemoOrder:
         item_name2 = "Sauce Labs Bike Light"
 
         log.info("Step: Login to website")
-        steps.open_saucedemo_website()
+        # steps.open_saucedemo_website()
+        steps.open_url(data("saucedemo", "base_url"))
         steps.login_with_username_and_password("standard_user", "secret_sauce")
 
         log.info("Step: Add to cart the item 1 and item 2")

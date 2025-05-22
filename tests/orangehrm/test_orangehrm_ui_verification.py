@@ -1,6 +1,4 @@
 import allure
-
-import utils.custom_logger as cl
 import logging
 from conftest import driver
 from pages.orangehrm.orangehrm_page import OrangeHrmPage
@@ -11,7 +9,7 @@ class TestOrangeHrmUIVerification:
 
     @allure.title("OrangeHrm: Side bar menu crawler")
     def test_orangehrm_ui_verification(self, driver):
-        log = cl.custom_logger(logging.INFO)
+        log = logging.getLogger(__name__)
         log.info("Starting test: test_orangehrm_ui_verification")
         steps = OrangeHrmPage(driver)
 

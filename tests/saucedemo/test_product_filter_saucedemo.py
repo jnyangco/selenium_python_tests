@@ -1,16 +1,15 @@
 import allure
 import time
-import utils.custom_logger as cl
 import logging
 from conftest import driver
 from pages.saucedemo.login_page_saucedemo import LoginPageSaucedemo
 
 
-class TestSauceDemoProductFilter:
+class TestProductFilterSaucedemo:
 
     @allure.title("SauceDemo: Verify Product Cards in Ascending Order")
     def test_product_filter_ascending(self, driver):
-        log = cl.custom_logger(logging.INFO)
+        log = logging.getLogger(__name__)
         log.info("Starting test: test_product_filter_ascending")
         steps = LoginPageSaucedemo(driver)
 
@@ -30,7 +29,7 @@ class TestSauceDemoProductFilter:
 
     @allure.title("SauceDemo: Verify Product Cards in Descending Order")
     def test_product_filter_descending(self, driver):
-        log = cl.custom_logger(logging.INFO)
+        log = logging.getLogger(__name__)
         log.info("Starting test: test_product_filter_descending")
         steps = LoginPageSaucedemo(driver)
 
@@ -50,7 +49,7 @@ class TestSauceDemoProductFilter:
 
     @allure.title("SauceDemo: Verify Product Cards Order Price Low to High")
     def test_product_filter_price_low_to_high(self, driver):
-        log = cl.custom_logger(logging.INFO)
+        log = logging.getLogger(__name__)
         log.info("Starting test: test_product_filter_price_low_to_high")
         steps = LoginPageSaucedemo(driver)
 
@@ -70,7 +69,7 @@ class TestSauceDemoProductFilter:
 
     @allure.title("SauceDemo: Verify Product Cards Order Price High to Low")
     def test_product_filter_price_high_to_low(self, driver):
-        log = cl.custom_logger(logging.INFO)
+        log = logging.getLogger(__name__)
         log.info("Starting test: test_product_filter_price_high_to_low")
         steps = LoginPageSaucedemo(driver)
 
