@@ -2,7 +2,7 @@ import allure
 import utils.custom_logger as cl
 import logging
 from conftest import driver
-from pages.saucedemo.saucedemo_page import SauceDemoPage
+from pages.saucedemo.login_page_saucedemo import LoginPageSaucedemo
 
 
 class Template:
@@ -11,7 +11,7 @@ class Template:
     def template(self, driver):
         log = cl.custom_logger(logging.INFO)
         log.info("Starting tests: template")
-        steps = SauceDemoPage(driver)
+        steps = LoginPageSaucedemo(driver)
 
         log.info("Open SauceDemo Website")
         steps.open_saucedemo_website()

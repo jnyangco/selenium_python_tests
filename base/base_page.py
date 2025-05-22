@@ -15,14 +15,14 @@ import traceback
 from traceback import print_stack
 
 import allure
+import pytest
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from utils.screenshot_utils import ScreenshotUtils
 
-from utils.util import Util
-
+# from utils.util import Util
 # from utils import custom_logger as cl
 import logging
 
@@ -36,9 +36,9 @@ import os
 from utils.config_reader import read_config
 
 class BasePage:
+    """Base class for all page objects"""
 
     # log = cl.custom_logger(logging.DEBUG)
-
     def __init__(self, driver):
         """
         Init BasePage class
@@ -71,12 +71,109 @@ class BasePage:
         self.log.info(f"Page title: {title}")
         return title
 
+    # @allure.step("Finding element: {locator}")
+    def find_web_element(self, locator, timeout=10):
+        """Find element with explicit wait"""
+
+        # wait = WebDriverWait(self.driver, 10)
+        # element = wait.until(EC.visibility_of_element_located(locator))
+
+        try:
+            element = WebDriverWait(self.driver, timeout).until(
+                EC.presence_of_element_located(locator)
+            )
+            self.log.info(f"Found element: {locator}")
+            return element
+        except TimeoutException:
+            # self.screenshot_util.take_screenshot("element_not_found")
+            self.screenshot_util.take_screenshot()
+            self.log.error(f"Element not found: {locator}")
+            pytest.fail(f"Element not found: {locator}")
+            raise
+
+    @allure.step("Finding elements: {locator}")
+    def find_web_elements(self, locator, timeout=10):
+        """Find multiple elements with explicit wait"""
+        try:
+            elements = WebDriverWait(self.driver, timeout).until(
+                EC.presence_of_all_elements_located(locator)
+            )
+            self.log.info(f"Found {len(elements)} elements: {locator}")
+            return elements
+        except TimeoutException:
+            self.log.error(f"Elements not found: {locator}")
+            self.screenshot_util.take_screenshot("elements_not_found")
+            return []
+
+    # @allure.step("Clicking element: {locator}")
+    def click_element(self, locator):
+        """Click an element"""
+        element = self.wait.until(EC.element_to_be_clickable(locator))
+        self.log.info(f"Clicking element: {locator}")
+        element.click()
+
+    # @allure.step("Typing text: {text} into element: {locator}")
+    def enter_text(self, locator, text):
+        """Type text into an element after clearing it"""
+        element = self.find_web_element(locator)
+        element.clear()
+        self.log.info(f"Typing: {text} into element: {locator}")
+        element.send_keys(text)
+
+    @allure.step("Getting text from element: {locator}")
+    def get_text(self, locator):
+        """Get text from an element"""
+        element = self.find_web_element(locator)
+        text = element.text
+        self.log.info(f"Got text: {text} from element: {locator}")
+        return text
+
+    @allure.step("Checking if element is displayed: {locator}")
+    def is_element_displayed(self, locator):
+        """Check if element is displayed"""
+        try:
+            element = self.find_web_element(locator)
+            is_displayed = element.is_displayed()
+            self.log.info(f"Element {locator} is {'displayed' if is_displayed else 'not displayed'}")
+            return is_displayed
+        except (TimeoutException, NoSuchElementException):
+            self.log.info(f"Element {locator} is not displayed")
+            return False
+
+    @allure.step("Waiting for element to be visible: {locator}")
+    def wait_for_element_visible(self, locator, timeout=10):
+        """Wait for element to be visible"""
+        try:
+            element = WebDriverWait(self.driver, timeout).until(
+                EC.visibility_of_element_located(locator)
+            )
+            self.log.info(f"Element is visible: {locator}")
+            return element
+        except TimeoutException:
+            self.log.error(f"Element not visible: {locator}")
+            self.screenshot_util.take_screenshot("element_not_visible")
+            raise
+
+    @allure.step("Hovering over element: {locator}")
+    def hover(self, locator):
+        """Hover over an element"""
+        element = self.find_web_element(locator)
+        ActionChains(self.driver).move_to_element(element).perform()
+        self.log.info(f"Hovered over element: {locator}")
+
+    @allure.step("Scrolling to element: {locator}")
+    def scroll_to_element(self, locator):
+        """Scroll to element"""
+        element = self.find_web_element(locator)
+        self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
+        self.log.info(f"Scrolled to element: {locator}")
 
 
 
 
 
-    # -- old
+
+    # ======================= OLD FUNCTIONS ===========================================================================
     # positional argument -> by default it will open the base_url
     # if url is provided, it will open the provided url
     # def open_url(self, url_path=""):

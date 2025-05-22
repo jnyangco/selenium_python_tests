@@ -3,7 +3,7 @@ import time
 import utils.custom_logger as cl
 import logging
 from conftest import driver
-from pages.saucedemo.saucedemo_page import SauceDemoPage
+from pages.saucedemo.login_page_saucedemo import LoginPageSaucedemo
 
 
 class TestSauceDemoProductFilter:
@@ -12,7 +12,7 @@ class TestSauceDemoProductFilter:
     def test_product_filter_ascending(self, driver):
         log = cl.custom_logger(logging.INFO)
         log.info("Starting test: test_product_filter_ascending")
-        steps = SauceDemoPage(driver)
+        steps = LoginPageSaucedemo(driver)
 
         log.info("Step: Login to website")
         steps.open_saucedemo_website()
@@ -32,7 +32,7 @@ class TestSauceDemoProductFilter:
     def test_product_filter_descending(self, driver):
         log = cl.custom_logger(logging.INFO)
         log.info("Starting test: test_product_filter_descending")
-        steps = SauceDemoPage(driver)
+        steps = LoginPageSaucedemo(driver)
 
         log.info("Step: Login to website")
         steps.open_saucedemo_website()
@@ -52,7 +52,7 @@ class TestSauceDemoProductFilter:
     def test_product_filter_price_low_to_high(self, driver):
         log = cl.custom_logger(logging.INFO)
         log.info("Starting test: test_product_filter_price_low_to_high")
-        steps = SauceDemoPage(driver)
+        steps = LoginPageSaucedemo(driver)
 
         log.info("Step: Login to website")
         steps.open_saucedemo_website()
@@ -72,7 +72,7 @@ class TestSauceDemoProductFilter:
     def test_product_filter_price_high_to_low(self, driver):
         log = cl.custom_logger(logging.INFO)
         log.info("Starting test: test_product_filter_price_high_to_low")
-        steps = SauceDemoPage(driver)
+        steps = LoginPageSaucedemo(driver)
 
         log.info("Step: Login to website")
         steps.open_saucedemo_website()

@@ -31,11 +31,29 @@ def driver(request):
     """Create and yield WebDriver instance"""
     config = TestConfig()
 
-    # Create driver
-    driver = DriverFactory.create_driver(
-        browser_name=config.BROWSER,
-        headless=config.HEADLESS
-    )
+
+    # Get parameters from command line run
+    browser = request.config.getoption("--browser").lower()
+    os_type = request.config.getoption("--os_type").lower()
+    env = request.config.getoption("--env").lower()
+
+    print(f">>>>> ENV = {env}")
+    if env == "docker":
+        # Create driver - webdriver.Remote()
+        driver = DriverFactory.create_driver(
+            # browser_name=config.BROWSER,
+            browser_name=browser,
+            headless=True
+        )
+
+    else:
+        # Create driver - webdriver.Chrome()
+        driver = DriverFactory.create_driver(
+            # browser_name=config.BROWSER,
+            browser_name=browser,
+            headless=config.HEADLESS
+        )
+
 
     # Set implicit wait
     driver.implicitly_wait(config.IMPLICIT_WAIT)
@@ -67,6 +85,15 @@ def pytest_runtest_makereport(item, call):
         pytest._test_failed = True
     else:
         pytest._test_failed = False
+
+
+
+
+def pytest_addoption(parser):
+    """Add CLI option for selecting the browser."""
+    parser.addoption("--browser", action="store", default="chrome", help="Type of browser to use: 'chrome' or 'firefox'")
+    parser.addoption("--os_type", action="store", default="", help="Type of operating system: 'mac', 'windows', 'linux'")
+    parser.addoption("--env", action="store", default="local", help="Where to run the tests: 'local' or 'docker'")
 
 
 
@@ -128,12 +155,13 @@ def pytest_runtest_makereport(item, call):
 # old code parameter option for CLI run ------------------------------------------------------------
 
 # --envi qa1 --browser chrome --report True --headless False
+'''
 def pytest_addoption(parser):
     """Add CLI option for selecting the browser."""
     parser.addoption("--browser", action="store", default="chrome", help="Type of browser to use: 'chrome' or 'firefox'")
     parser.addoption("--os_type", action="store", default="", help="Type of operating system: 'mac', 'windows', 'linux'")
     parser.addoption("--env", action="store", default="local", help="Where to run the tests: 'local' or 'docker'")
-
+'''
 
 
 # Generate Allure Report when execution is completed
