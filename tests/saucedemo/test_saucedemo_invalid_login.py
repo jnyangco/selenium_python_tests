@@ -3,7 +3,7 @@ import time
 import utils.custom_logger as cl
 import logging
 from conftest import driver
-from pages.saucedemo.saucedemo_page import SauceDemoPage
+from pages.saucedemo.login_page_saucedemo import LoginPageSaucedemo
 from utils.config_reader import read_config as data
 
 
@@ -13,7 +13,7 @@ class TestSauceDemoInvalidLogin:
     def test_saucedemo_invalid_login_incorrect_password(self, driver):
         log = cl.custom_logger(logging.INFO)
         log.info("Starting test: test_saucedemo_invalid_login_incorrect_password")
-        steps = SauceDemoPage(driver)
+        steps = LoginPageSaucedemo(driver)
 
         log.info("Step: Login to website")
         steps.open_saucedemo_website()
@@ -32,7 +32,7 @@ class TestSauceDemoInvalidLogin:
     def test_saucedemo_invalid_login_locked_out_user(self, driver):
         log = cl.custom_logger(logging.INFO)
         log.info("Starting test: test_saucedemo_invalid_login_incorrect_password")
-        steps = SauceDemoPage(driver)
+        steps = LoginPageSaucedemo(driver)
 
         log.info("Step: Login to website")
         steps.open_saucedemo_website()

@@ -3,7 +3,7 @@ import time
 import utils.custom_logger as cl
 import logging
 from conftest import driver
-from pages.saucedemo.saucedemo_page import SauceDemoPage
+from pages.saucedemo.login_page_saucedemo import LoginPageSaucedemo
 
 
 class TestSauceDemoOrder:
@@ -12,7 +12,7 @@ class TestSauceDemoOrder:
     def test_order_one_product(self, driver):
         log = cl.custom_logger(logging.INFO)
         log.info("Starting test: test_order_one_product")
-        steps = SauceDemoPage(driver)
+        steps = LoginPageSaucedemo(driver)
 
         # variables
         item_name = "Sauce Labs Backpack"
@@ -69,7 +69,7 @@ class TestSauceDemoOrder:
     def test_order_two_products(self, driver):
         log = cl.custom_logger(logging.INFO)
         log.info("Starting test: test_order_two_products")
-        steps = SauceDemoPage(driver)
+        steps = LoginPageSaucedemo(driver)
 
         # variables
         item_name1 = "Sauce Labs Backpack"

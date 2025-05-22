@@ -61,13 +61,37 @@ class DriverFactory:
         log.info(f"Creating {browser_name} driver")
 
         if browser_name.lower() == "chrome":
-            driver = webdriver.Chrome()
+            options = webdriver.ChromeOptions()
+            if headless:
+                print(f">>>>> CHROME HEADLESS >>>>>")
+                options.add_argument("--headless") # Run headless (optional)
+                options.add_argument("--start-maximized")  # Maximize browser
+                options.add_argument("--disable-infobars")  # Disable infobar
+                options.add_argument("--disable-dev-shm-usage")  # Overcome limited resources
+                options.add_argument("--no-sandbox")  # Bypass OS security model
+                # options.add_argument("--disable-gpu")
+                options.add_argument("--window-size=1920,1080")
+
+                selenium_grid_url = "http://localhost:4444/wd/hub"
+                driver = webdriver.Remote(
+                    command_executor=selenium_grid_url,
+                    options=options
+                )
+            else:
+                print(f">>>>> CHROME NOT HEADLESS >>>>>")
+                driver = webdriver.Chrome(options=options)
 
         elif browser_name.lower() == "firefox":
-            driver = webdriver.Firefox()
+            options = webdriver.FirefoxOptions()
+            if headless:
+                options.add_argument("--headless")
+            driver = webdriver.Firefox(options=options)
 
         elif browser_name.lower() == "edge":
-            driver = webdriver.Edge()
+            options = webdriver.EdgeOptions()
+            if headless:
+                options.add_argument("--headless")
+            driver = webdriver.Edge(options=options)
 
         else:
             raise ValueError(f"Browser {browser_name} not supported")

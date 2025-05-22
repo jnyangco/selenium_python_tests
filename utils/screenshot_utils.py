@@ -16,7 +16,7 @@ class ScreenshotUtils:
         if not os.path.exists(self.screenshots_dir):
             os.makedirs(self.screenshots_dir)
 
-    @allure.step("Taking screenshot: {name}")
+    # @allure.step("Taking screenshot: {name}")
     def take_screenshot(self, name="screenshot"):
         """Take screenshot and attach to Allure report"""
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")

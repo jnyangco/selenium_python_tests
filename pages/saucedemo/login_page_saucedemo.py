@@ -14,7 +14,7 @@ from base.base_page import BasePage
 # from utils.report_status import ReportStatus
 
 
-class SauceDemoPage(BasePage):
+class LoginPageSaucedemo(BasePage):
 
     # log = cl.custom_logger(logging.INFO)
 
@@ -78,6 +78,51 @@ class SauceDemoPage(BasePage):
     _back_home_button = (By.XPATH, "//button[@id='back-to-products']")
 
 
+    # ========================================================================
+    # NEW
+    @allure.step("Login with username: {username} and password: {password}")
+    def login(self, username, password):
+        """Perform login action"""
+        self.enter_text(self._username_textbox, username)
+        self.enter_text(self._password_textbox, password)
+        self.click_element(self._login_button)
+
+    # @allure.step("Login with username: {username} and password: {password}")
+    # def login_v2(self, username, password):
+    #     """Perform login action"""
+    #     username_textbox = self.find_web_element(self._username_textbox)
+    #     username_textbox.send_keys(username)
+    #     password_textbox = self.find_web_element(self._password_textbox)
+    #     password_textbox.send_keys(password)
+    #     self.click_element(self._login_button)
+
+    @allure.step("Check if swag labs logo is displayed")
+    def is_swag_labs_logo_displayed(self):
+        try:
+            assert self.is_element_displayed(self._swag_labs_logo)
+        except Exception as e:
+            self.screenshot_util.take_screenshot()
+            self.log.error(f"Swag labs logo is not displayed. \nError: {e}")
+            pytest.fail(f"Swag labs logo is not displayed. \nError: {e}")
+
+
+    @allure.step("Check if error message is displayed")
+    def is_error_displayed(self):
+        """Check if error message is displayed"""
+        return self.is_element_displayed(self.ERROR_MESSAGE)
+
+    @allure.step("Get error message text")
+    def get_error_message(self):
+        """Get error message text"""
+        return self.get_text(self.ERROR_MESSAGE)
+
+
+
+
+
+    # ========================================================================
+
+
     @allure.step("Open SauceDemo Website")
     def open_saucedemo_website(self):
         # self.driver.get(self.base_url)
@@ -132,10 +177,33 @@ class SauceDemoPage(BasePage):
         try:
             swag_labs_logo = self.wait.until(EC.visibility_of_element_located(self._swag_labs_logo)).is_displayed()
             assert swag_labs_logo == True
-        except TimeoutException as e:
+        except TimeoutException:
             self.log.error(f"Swag Labs logo is not displayed")
+            self.screenshot_util.take_screenshot()
             pytest.fail(f"Swag Labs logo is not displayed")
 
+            # self.log.error(f"Element not found: {locator}")
+            # self.screenshot_util.take_screenshot("element_not_found")
+            # self.screenshot_util.take_screenshot()
+            # pytest.fail(f"Element not found: {locator}")
+            # raise
+
+    @allure.step("Swag Labs logo should be displayed")
+    def swag_labs_logo_should_be_displayed2(self):
+        swag_labs_logo_displayed = ""
+        try:
+            swag_labs_logo_displayed = self.is_element_displayed(self._swag_labs_logo)
+            assert swag_labs_logo_displayed == True
+        except TimeoutException:
+            self.screenshot_util.take_screenshot()
+            self.log.error(f"Swag Labs logo not displayed: {swag_labs_logo_displayed}")
+            pytest.fail(f"Swag Labs logo not displayed: {swag_labs_logo_displayed}")
+
+            # self.log.error(f"Element not found: {locator}")
+            # self.screenshot_util.take_screenshot("element_not_found")
+            # self.screenshot_util.take_screenshot()
+            # pytest.fail(f"Element not found: {locator}")
+            # raise
 
     @allure.step("Click hamburger menu")
     def click_hamburger_menu(self):

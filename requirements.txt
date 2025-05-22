@@ -14,3 +14,4 @@ Faker==35.0.0               # to generate random names
 
 # NEW ----
 pytest-timeout==2.2.0
+allure-python-commons==2.13.5
