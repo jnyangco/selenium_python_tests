@@ -10,9 +10,6 @@ This should not be used by creating object instances
 Example:
     Class LoginPage(BasePage)
 """
-import traceback
-# from base.selenium_driver import SeleniumDriver
-from traceback import print_stack
 
 import allure
 import pytest
@@ -21,18 +18,13 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from utils.screenshot_utils import ScreenshotUtils
-
-# from utils.util import Util
-# from utils import custom_logger as cl
 import logging
-
-from traceback import print_stack
 from selenium.common.exceptions import *
-
+import traceback
+from traceback import print_stack
 # for reports
 import time
 import os
-
 from utils.config_reader import read_config
 
 class BasePage:
@@ -48,21 +40,15 @@ class BasePage:
         """
         # super(BasePage, self).__init__(driver)
         self.driver = driver
-
         self.wait = WebDriverWait(driver, 10)
         self.log = logging.getLogger(self.__class__.__name__)
         self.screenshot_util = ScreenshotUtils(driver)
-
-        # self.base_url = read_config("url", "base_url")
-        # self.util = Util()
-
 
     @allure.step("Opening URL: {url}")
     def open_url(self, url):
         """Navigate to specified URL"""
         self.log.info(f"Opening URL: {url}")
         self.driver.get(url)
-
 
     @allure.step("Getting page title")
     def get_page_title(self):
