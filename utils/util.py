@@ -20,8 +20,8 @@ from faker import Faker
 class Util(object):
 # class Util:
 
-    log = cl.custom_logger(logging.INFO)
-
+    # log = cl.custom_logger(logging.INFO)
+    log = logging.getLogger(__name__)
 
     # def wait_seconds(self, seconds):
     #     time.sleep(seconds)

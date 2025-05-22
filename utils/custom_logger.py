@@ -1,8 +1,9 @@
-import inspect
-import logging
+# import inspect
+# import logging
 
+# TEMP COMMENT OUT ALL
+"""
 # log options -> DEBUG, INFO, warn, error, critical
-
 
 def custom_logger(log_level=logging.INFO): # default (if you don't specify upon calling log) -> debug
     # Gets the name of the class / method from where this method is called
@@ -15,7 +16,7 @@ def custom_logger(log_level=logging.INFO): # default (if you don't specify upon 
 
         # file_handler = logging.FileHandler("{0}.log".format(logger_name), mode='w')  # write
         # file_handler = logging.FileHandler("automation.log", mode='a')  # mode='a' -> append, mode='w' -> write
-        file_handler = logging.FileHandler("automation.log", mode='a')  # write
+        file_handler = logging.FileHandler("reports/automation.log", mode='a')  # write
         file_handler.setLevel(log_level)
 
         # name = classname "SeleniumDriver" - remove "- %(name)s" if you want to not print the classname in the log file
@@ -33,3 +34,4 @@ def custom_logger(log_level=logging.INFO): # default (if you don't specify upon 
         logger.addHandler(file_handler)
 
     return logger
+"""

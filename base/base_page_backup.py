@@ -23,7 +23,7 @@ from utils.screenshot_utils import ScreenshotUtils
 
 from utils.util import Util
 
-# from utils import custom_logger as cl
+from utils import custom_logger as cl
 import logging
 
 from traceback import print_stack
@@ -37,7 +37,7 @@ from utils.config_reader import read_config
 
 class BasePage:
 
-    # log = cl.custom_logger(logging.DEBUG)
+    log = cl.custom_logger(logging.DEBUG)
 
     def __init__(self, driver):
         """
@@ -48,40 +48,19 @@ class BasePage:
         """
         # super(BasePage, self).__init__(driver)
         self.driver = driver
-
-        self.wait = WebDriverWait(driver, 10)
-        self.log = logging.getLogger(self.__class__.__name__)
-        self.screenshot_util = ScreenshotUtils(driver)
-
-        # self.base_url = read_config("url", "base_url")
-        # self.util = Util()
+        self.base_url = read_config("url", "base_url")
+        self.util = Util()
 
 
-    @allure.step("Opening URL: {url}")
-    def open_url(self, url):
-        """Navigate to specified URL"""
-        self.log.info(f"Opening URL: {url}")
+    # positional argument -> by default it will open the base_url
+    # if url is provided, it will open the provided url
+    def open_url(self, url_path=""):
+        url = self.base_url + url_path
         self.driver.get(url)
 
 
-    @allure.step("Getting page title")
-    def get_page_title(self):
-        """Get page title"""
-        title = self.driver.title
-        self.log.info(f"Page title: {title}")
-        return title
-
-
-
-
-
-
-    # -- old
-    # positional argument -> by default it will open the base_url
-    # if url is provided, it will open the provided url
-    # def open_url(self, url_path=""):
-    #     url = self.base_url + url_path
-    #     self.driver.get(url)
+    def get_title(self):
+        return self.driver.title
 
 
     # (LOCATOR, LOCATOR_TYPE)
@@ -133,7 +112,7 @@ class BasePage:
             title_to_verify: Title on the page that needs to be verified
         """
         try:
-            actual_title = self.get_page_title()
+            actual_title = self.get_title()
             print(">>> actual page title = {}".format(actual_title))
             print(">>> expected page title = {}".format(title_to_verify))
             return self.verify_text_contains(actual_title, title_to_verify)

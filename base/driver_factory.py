@@ -9,18 +9,32 @@ Example:
     wdf.get_webdriver_instance()
 """
 import traceback
+import allure
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.firefox.service import Service as FirefoxService
+from selenium.webdriver.edge.service import Service as EdgeService
+
+# from webdriver_manager.chrome import ChromeDriverManager
+# from webdriver_manager.firefox import GeckoDriverManager
+# from webdriver_manager.microsoft import EdgeChromiumDriverManager
+
+import logging
+import platform
+import os
 
 class DriverFactory:
+    """Factory class for creating WebDriver instances"""
 
-    def __init__(self, browser):
-        """
-        Inits DriverFactory class
 
-        Returns:
-            None
-        """
-        self.browser = browser
+    # def __init__(self, browser):
+    #     """
+    #     Inits DriverFactory class
+    #
+    #     Returns:
+    #         None
+    #     """
+    #     self.browser = browser
     """
         Set chrome driver and iexplorer environment based on OS
 
@@ -39,34 +53,58 @@ class DriverFactory:
         PREFERRED: Set the path on the machine where browser will be executed
     """
 
+    @staticmethod
+    @allure.step("Creating {browser_name} driver")
+    def create_driver(browser_name="chrome", headless=False):
+        """Create and return WebDriver instance"""
+        log = logging.getLogger(__name__)
+        log.info(f"Creating {browser_name} driver")
 
-    def get_driver_instance(self):
-        """
-       Get WebDriver Instance based on the browser configuration
-
-        Returns:
-            'WebDriver Instance'
-        """
-
-        # baseURL = "https://letskodeit.teachable.com/"
-        # baseURL = "https://opensource-demo.orangehrmlive.com"
-
-        if self.browser == "chrome":
+        if browser_name.lower() == "chrome":
             driver = webdriver.Chrome()
-        elif self.browser == "firefox":
+
+        elif browser_name.lower() == "firefox":
             driver = webdriver.Firefox()
-        elif self.browser == "iexplorer":
-            driver = webdriver.Ie()
+
+        elif browser_name.lower() == "edge":
+            driver = webdriver.Edge()
+
         else:
-            raise ValueError(f"Unsupported browser: {self.browser}")
+            raise ValueError(f"Browser {browser_name} not supported")
 
-
-        # # Setting Driver Implicit Time out for An Element
-        # driver.implicitly_wait(5)
-        #
-        # # Maximize the window
-        # driver.maximize_window()
-        
-        # Loading browser with App URL
-        # driver.get(baseURL)
+        driver.maximize_window()
+        log.info(f"{browser_name} driver created successfully")
         return driver
+
+
+
+    # def get_driver_instance(self):
+    #     """
+    #    Get WebDriver Instance based on the browser configuration
+    #
+    #     Returns:
+    #         'WebDriver Instance'
+    #     """
+    #
+    #     # baseURL = "https://letskodeit.teachable.com/"
+    #     # baseURL = "https://opensource-demo.orangehrmlive.com"
+    #
+    #     if self.browser == "chrome":
+    #         driver = webdriver.Chrome()
+    #     elif self.browser == "firefox":
+    #         driver = webdriver.Firefox()
+    #     elif self.browser == "iexplorer":
+    #         driver = webdriver.Ie()
+    #     else:
+    #         raise ValueError(f"Unsupported browser: {self.browser}")
+    #
+    #
+    #     # # Setting Driver Implicit Time out for An Element
+    #     # driver.implicitly_wait(5)
+    #     #
+    #     # # Maximize the window
+    #     driver.maximize_window()
+    #
+    #     # Loading browser with App URL
+    #     # driver.get(baseURL)
+    #     return driver

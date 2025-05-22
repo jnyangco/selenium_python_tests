@@ -1,9 +1,8 @@
 import allure
-import time
 import utils.custom_logger as cl
 import logging
 from conftest import driver
-from pages.saucedemo_page import SauceDemoPage
+from pages.saucedemo.saucedemo_page import SauceDemoPage
 
 
 class Template:

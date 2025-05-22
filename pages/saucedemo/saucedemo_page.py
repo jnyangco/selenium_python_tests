@@ -8,24 +8,30 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 # from conftest import driver
 # from base.selenium_driver import SeleniumDriver
-from utils import custom_logger as cl
+# from utils import custom_logger as cl
 import logging
 from base.base_page import BasePage
-from utils.report_status import ReportStatus
+# from utils.report_status import ReportStatus
 
 
-class SauceDemoPage:
+class SauceDemoPage(BasePage):
 
-    log = cl.custom_logger(logging.INFO)
+    # log = cl.custom_logger(logging.INFO)
 
-    def __init__(self, driver):
-        self.driver = driver
-        self.base_url = "https://www.saucedemo.com/"
-        self.wait = WebDriverWait(driver, 10)
+    # def __init__(self, driver):
+    #     self.driver = driver
+    #     self.base_url = "https://www.saucedemo.com/"
+    #     self.wait = WebDriverWait(driver, 10)
+
+    # def __init__(self):
+    #     self.log = logging.getLogger(self.__class__.__name__)
+
+    # log = logging.getLogger(__name__)
 
     # Variables
     item_price_1 = 0
     item_price_2 = 0
+
 
     # Login Page
     _username_textbox = (By.XPATH, "//input[@id='user-name']")
@@ -74,10 +80,11 @@ class SauceDemoPage:
 
     @allure.step("Open SauceDemo Website")
     def open_saucedemo_website(self):
-        self.driver.get(self.base_url)
+        # self.driver.get(self.base_url)
+        self.driver.get("https://www.google.com")
 
 
-    @allure.step("Login using username and password")
+    @allure.step("Login using username - {username} and password - {password}")
     def login_with_username_and_password(self, username, password):
         try:
             username_textbox = self.wait.until(EC.visibility_of_element_located(self._username_textbox))

@@ -11,3 +11,6 @@ allure-pytest==2.13.5       # for allure reports
 Faker==35.0.0               # to generate random names
 # edit
 # edit from local
+
+# NEW ----
+pytest-timeout==2.2.0
