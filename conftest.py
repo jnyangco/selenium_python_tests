@@ -11,7 +11,10 @@ from base.driver_factory import DriverFactory
 from config.config import TestConfig
 from utils.logger import setup_logger
 from utils.screenshot_utils import ScreenshotUtils
-# logger = setup_logger()
+
+
+# Initialize logger
+logger = setup_logger()
 
 
 @pytest.fixture(scope="function")
