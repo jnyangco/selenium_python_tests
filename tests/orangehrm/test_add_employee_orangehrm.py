@@ -1,16 +1,15 @@
 import allure
-import time
 import logging
 import inspect
-from conftest import driver
 from pages.orangehrm.orangehrm_page import OrangeHrmPage
 from utils.config_reader import read_config as data
+import time
 
 
-class TestOrangeHrmInvalidLogin:
+class TestOrangeAddEmployee:
 
-    @allure.title("OrangeHrm: Error message should show up when using invalid password")
-    def test_orangehrm_invalid_password(self, driver):
+    @allure.title("OrangeHrm: Add Employee")
+    def test_orangehrm_add_employee(self, driver):
         log = logging.getLogger(__name__)
         log.info(f"Starting test: {inspect.currentframe().f_code.co_name}")
         steps = OrangeHrmPage(driver)
@@ -18,14 +17,21 @@ class TestOrangeHrmInvalidLogin:
         log.info("Step: Open the OrangeHrm website")
         steps.open_orangehrm_website()
 
-        log.info("Step: Login using username and incorrect password")
+        log.info("Step: Login using username and password")
         username = data("orangehrm", "username")
-        password = "Password#%&!3278"
+        password = data("orangehrm", "password")
         steps.login_with_username_and_password(username, password)
 
-        log.info("Step: Verify error message is displayed.")
-        steps.show_login_error_message("Invalid credentials")
+        log.info("Step: Click PIM side bar menu")
+        steps.click_side_bar_menu("PIM")
         time.sleep(2)
+
+        log.info("Step: Click Add Employee top bar menu")
+        steps.click_top_bar_menu("Add Employee")
+        # steps.add_employee()
+
+
+        time.sleep(5)
 
 
 

@@ -2,15 +2,14 @@ import allure
 import time
 import logging
 import inspect
-from conftest import driver
 from pages.orangehrm.orangehrm_page import OrangeHrmPage
 from utils.config_reader import read_config as data
 
+@allure.feature("Login")
+class TestOrangeHrmLogin:
 
-class TestOrangeAddEmployee:
-
-    @allure.title("OrangeHrm: Add Employee")
-    def test_orangehrm_add_employee(self, driver):
+    @allure.title("OrangeHrm: Valid Login")
+    def test_orangehrm_valid_login(self, driver, config):
         log = logging.getLogger(__name__)
         log.info(f"Starting test: {inspect.currentframe().f_code.co_name}")
         steps = OrangeHrmPage(driver)
@@ -23,16 +22,9 @@ class TestOrangeAddEmployee:
         password = data("orangehrm", "password")
         steps.login_with_username_and_password(username, password)
 
-        log.info("Step: Click PIM side bar menu")
-        steps.click_side_bar_menu("PIM")
+        log.info("Step: User is landed on dashboard page")
+        steps.user_landed_on_dashboard_page()
         time.sleep(2)
-
-        log.info("Step: Click Add Employee top bar menu")
-        steps.click_top_bar_menu("Add Employee")
-        # steps.add_employee()
-
-
-        time.sleep(5)
 
 
 

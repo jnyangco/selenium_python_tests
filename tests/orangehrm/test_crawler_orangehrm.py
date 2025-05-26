@@ -1,15 +1,16 @@
 import allure
 import logging
 import inspect
-from conftest import driver
 from pages.orangehrm.orangehrm_page import OrangeHrmPage
 from utils.config_reader import read_config as data
+import time
 
 
-class TestOrangeHrmUIVerification:
+@allure.feature("User Interface")
+class TestUIVerificationOrangehrm:
 
     @allure.title("OrangeHrm: Side bar menu crawler")
-    def test_orangehrm_ui_verification(self, driver):
+    def test_orangehrm_ui_verification(self, driver, config):
         log = logging.getLogger(__name__)
         log.info(f"Starting test: {inspect.currentframe().f_code.co_name}")
         steps = OrangeHrmPage(driver)
