@@ -1,8 +1,7 @@
 import allure
 import time
-
-import utils.custom_logger as cl
 import logging
+import inspect
 from conftest import driver
 from pages.orangehrm.orangehrm_page import OrangeHrmPage
 from utils.config_reader import read_config as data
@@ -12,8 +11,8 @@ class TestOrangeHrmInvalidLogin:
 
     @allure.title("OrangeHrm: Error message should show up when using invalid password")
     def test_orangehrm_invalid_password(self, driver):
-        log = cl.custom_logger(logging.INFO)
-        log.info("Starting test: test_orangehrm_invalid_password")
+        log = logging.getLogger(__name__)
+        log.info(f"Starting test: {inspect.currentframe().f_code.co_name}")
         steps = OrangeHrmPage(driver)
 
         log.info("Step: Open the OrangeHrm website")

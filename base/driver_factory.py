@@ -63,7 +63,7 @@ class DriverFactory:
         if browser_name.lower() == "chrome":
             options = webdriver.ChromeOptions()
             if headless:
-                print(f">>>>> CHROME HEADLESS >>>>>")
+                log.info(f"Headless: True")
                 options.add_argument("--headless") # Run headless (optional)
                 options.add_argument("--start-maximized")  # Maximize browser
                 options.add_argument("--disable-infobars")  # Disable infobar
@@ -78,7 +78,7 @@ class DriverFactory:
                     options=options
                 )
             else:
-                print(f">>>>> CHROME NOT HEADLESS >>>>>")
+                log.info(f"Headless: False")
                 driver = webdriver.Chrome(options=options)
 
         elif browser_name.lower() == "firefox":

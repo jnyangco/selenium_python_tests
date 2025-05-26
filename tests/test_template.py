@@ -27,5 +27,5 @@ class TestTemplate:
         time.sleep(10)
 
         log.info("Step: Swag Labs logo should be displayed")
-        login_page.swag_labs_logo_should_be_displayed()
+        login_page.user_sucessfully_logged_in()
 
