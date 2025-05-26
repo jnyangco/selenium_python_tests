@@ -16,11 +16,11 @@ services:
       - SE_EVENT_BUS_HOST=selenium-hub
       - SE_EVENT_BUS_PUBLISH_PORT=4442
       - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
-      - SE_NODE_MAX_SESSIONS=5  # Maximum sessions per node
+      - SE_NODE_MAX_SESSIONS=4  # Maximum sessions per node
       - SE_NODE_OVERRIDE_MAX_SESSIONS=true  # Allow overriding default max sessions
     # ports:
       # - "5900:5900"  # For VNC access if needed
-    shm_size: "2g" # Increase shared memory for Chrome
+    shm_size: "1g" # Increase shared memory for Chrome
     platform: linux/amd64
 
   chrome-node-2:
@@ -32,11 +32,11 @@ services:
       - SE_EVENT_BUS_HOST=selenium-hub
       - SE_EVENT_BUS_PUBLISH_PORT=4442
       - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
-      - SE_NODE_MAX_SESSIONS=5
+      - SE_NODE_MAX_SESSIONS=4
       - SE_NODE_OVERRIDE_MAX_SESSIONS=true
     # ports:
       # - "5900:5900"
-    shm_size: "2g"
+    shm_size: "1g"
     platform: linux/amd64
 
   chrome-node-3:
@@ -48,10 +48,58 @@ services:
       - SE_EVENT_BUS_HOST=selenium-hub
       - SE_EVENT_BUS_PUBLISH_PORT=4442
       - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
-      - SE_NODE_MAX_SESSIONS=5
+      - SE_NODE_MAX_SESSIONS=4
       - SE_NODE_OVERRIDE_MAX_SESSIONS=true
       # ports:
       # - "5900:5900"
-    shm_size: "2g"
+    shm_size: "1g"
+    platform: linux/amd64
+
+  chrome-node-4:
+    image: selenium/node-chrome:4.10.0
+    container_name: chrome-node-4
+    depends_on:
+      - selenium-hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_SESSIONS=4
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+      # ports:
+      # - "5900:5900"
+    shm_size: "1g"
+    platform: linux/amd64
+
+  chrome-node-5:
+    image: selenium/node-chrome:4.10.0
+    container_name: chrome-node-5
+    depends_on:
+      - selenium-hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_SESSIONS=4
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+      # ports:
+      # - "5900:5900"
+    shm_size: "1g"
+    platform: linux/amd64
+
+  chrome-node-6:
+    image: selenium/node-chrome:4.10.0
+    container_name: chrome-node-6
+    depends_on:
+      - selenium-hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_SESSIONS=4
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+      # ports:
+      # - "5900:5900"
+    shm_size: "1g"
     platform: linux/amd64
 
