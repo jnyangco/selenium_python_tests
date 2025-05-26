@@ -19,7 +19,7 @@ class TestLoginSaucedemo:
         login_page = LoginPageSaucedemo(driver)
 
         log.info("Step: Open SauceDemo Website")
-        login_page.open_url(config.BASE_URL_SAUCEDEMO)
+        login_page.open_url(data("saucedemo", "base_url"))
 
         log.info("Step: Login using username and password")
         username = data("saucedemo", "username")
