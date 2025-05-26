@@ -3,6 +3,7 @@
 # import shutil
 # import subprocess
 # from email.policy import default
+import logging
 
 import pytest
 import allure
@@ -17,6 +18,8 @@ from utils.screenshot_utils import ScreenshotUtils
 def driver(request):
     """Create and yield WebDriver instance"""
 
+    log = logging.getLogger(__name__)
+
     config = TestConfig()
 
     # Get parameters from command line run
@@ -24,7 +27,8 @@ def driver(request):
     os_type = request.config.getoption("--os_type").lower()
     env = request.config.getoption("--env").lower()
 
-    print(f">>>>> ENV = {env}")
+
+    log.info(f"--env = {env}")
     if env == "docker":
         # Create driver - webdriver.Remote()
         driver = DriverFactory.create_driver(

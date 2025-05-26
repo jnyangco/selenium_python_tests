@@ -1,8 +1,10 @@
 import allure
 import logging
+import inspect
 from pages.saucedemo.login_page_saucedemo import LoginPageSaucedemo
 from utils.config_reader import read_config as data
 import time
+
 
 
 @allure.feature("Login")
@@ -13,20 +15,19 @@ class TestLoginSaucedemo:
     def test_login_valid_credentials(self, driver, config):
         """Test login with valid credentials"""
         log = logging.getLogger(__name__)
-
-        log.info("Starting test: test_login_valid_credentials")
+        log.info(f"Starting test: {inspect.currentframe().f_code.co_name}")
         login_page = LoginPageSaucedemo(driver)
 
         log.info("Step: Open SauceDemo Website")
-        login_page.open_url(data("saucedemo", "base_url"))
+        login_page.open_url(config.BASE_URL_SAUCEDEMO)
 
         log.info("Step: Login using username and password")
         username = data("saucedemo", "username")
         password = data("saucedemo", "password")
         login_page.login(username, password)
 
-        log.info("Step: Swag Labs logo should be displayed")
-        login_page.swag_labs_logo_should_be_displayed()
+        log.info("Step: User is successfully logged in")
+        login_page.user_successfully_logged_in()
 
 
     @allure.title("Invalid Login Test - Invalid Password")
@@ -34,8 +35,7 @@ class TestLoginSaucedemo:
     def test_login_invalid_password(self, driver, config):
         """Test login with valid credentials"""
         log = logging.getLogger(__name__)
-
-        log.info("Starting test: test_login_invalid_password")
+        log.info(f"Starting test: {inspect.currentframe().f_code.co_name}")
         login_page = LoginPageSaucedemo(driver)
 
         log.info("Step: Open SauceDemo Website")
@@ -45,10 +45,8 @@ class TestLoginSaucedemo:
         username = data("saucedemo", "username")
         login_page.login(username, "secret 78234349")
 
-        log.info("Step: Swag Labs logo should be displayed")
-        # login_page.swag_labs_logo_should_be_displayed2()
-        # login_page.is_element_displayed('test');
-        login_page.is_swag_labs_logo_displayed()
+        log.info("Step: Verify error message is displayed")
+        login_page.verify_invalid_login_error_message("Epic sadface: Username and password do not match any user in this service")
 
 
     @allure.title("Invalid Login Test - Locked Out User")
@@ -56,8 +54,7 @@ class TestLoginSaucedemo:
     def test_login_locked_out_user(self, driver, config):
         """Test login with valid credentials"""
         log = logging.getLogger(__name__)
-
-        log.info("Starting test: test_login_locked_out_user")
+        log.info(f"Starting test: {inspect.currentframe().f_code.co_name}")
         login_page = LoginPageSaucedemo(driver)
 
         log.info("Step: Open SauceDemo Website")
@@ -68,7 +65,7 @@ class TestLoginSaucedemo:
         password = data("saucedemo", "locked_out_password")
         login_page.login(username, password)
 
-        log.info("Step: Verify the error message")
+        log.info("Step: Verify error message is displayed")
         login_page.verify_invalid_login_error_message("Epic sadface: Sorry, this user has been locked out.")
 
 
