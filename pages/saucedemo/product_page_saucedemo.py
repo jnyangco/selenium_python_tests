@@ -6,12 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-# from conftest import driver
-# from base.selenium_driver import SeleniumDriver
-# from utils import custom_logger as cl
-import logging
 from base.base_page import BasePage
-# from utils.report_status import ReportStatus
 
 
 class ProductPageSaucedemo(BasePage):
@@ -19,13 +14,11 @@ class ProductPageSaucedemo(BasePage):
     # Locators
     _product_cards = (By.XPATH, "//div[@class='inventory_list']//div[@class='inventory_item_name ']")
     _product_price = (By.XPATH, "//div[@class='inventory_list']//div[@class='inventory_item_price']")
-    # _add_to_cart_item_button_dynamic_xpath = "//div[@class='inventory_item_name ' and contains(.,'{}')]/../../..//button[1]"
     _add_to_cart_item_button_dynamic_xpath = "//div[@class='inventory_item_name ' and contains(.,'{}')]/../../..//button[1]"
     _product_item_price_added_to_cart_dynamic_xpath = "//div[@class='inventory_item_name ' and contains(.,'{}')]/../../..//div[@class='inventory_item_price']"
     _cart_total_text = (By.XPATH, "//div[@id='shopping_cart_container']//span")
     _cart_icon = (By.XPATH, "//a[@class='shopping_cart_link']")
     _filter_product = (By.XPATH, "//select[@class='product_sort_container']")
-
     _burger_menu = (By.XPATH, "//button[@id='react-burger-menu-btn']")
     _burger_menu_list = (By.XPATH, "//nav[@class='bm-item-list']/a")
 
@@ -69,7 +62,6 @@ class ProductPageSaucedemo(BasePage):
             actual_element = element.text
             assert actual_element == expected_element, \
                 pytest.fail(f"Element not matched. Expected = {expected_element}, Actual = {actual_element}")
-
     # pytest.fail(f"Element not matched. Expected = {expected_element}, Actual = {actual_element}")
 
 
@@ -80,7 +72,8 @@ class ProductPageSaucedemo(BasePage):
         print(f"actual_total_list -> {actual_total_list}")
         for element in product_cards:
             print(f"Element = {element.text}")
-        assert actual_total_list == expected_total_list, pytest.fail(f"Total product cards displayed does not matched. Actual = {actual_total_list}, Expected = {expected_total_list}")
+        assert actual_total_list == expected_total_list, pytest.fail(f"Total product cards displayed does not matched. \
+                                                        Actual = {actual_total_list}, Expected = {expected_total_list}")
 
 
     @allure.step("Verify cart total")
@@ -92,7 +85,6 @@ class ProductPageSaucedemo(BasePage):
 
     @allure.step("Open Cart")
     def open_cart(self):
-        cart_icon = self.wait.until(EC.element_to_be_clickable(self._cart_icon))
         cart_icon = self.wait.until(EC.element_to_be_clickable(self._cart_icon))
         cart_icon.click()
 
@@ -129,14 +121,12 @@ class ProductPageSaucedemo(BasePage):
         # print(f"self.item_price = item_price = {self.item_price_1}")
         return item_price
 
+
     @allure.step("Add To Cart should be change to Remove")
     def add_to_cart_button_change_to_remove(self, item_name):
         add_to_cart_xpath = self._add_to_cart_item_button_dynamic_xpath.format(item_name)
         add_to_cart_button = self.wait.until(EC.element_to_be_clickable((By.XPATH, add_to_cart_xpath)))
         assert add_to_cart_button.text == "Remove", pytest.fail(f"Incorrect button text. Expected = 'Remove', Actual = {add_to_cart_button.text}")
-
-
-
 
 
     @allure.step("Select dropdown filter")

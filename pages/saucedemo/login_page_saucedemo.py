@@ -6,12 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-# from conftest import driver
-# from base.selenium_driver import SeleniumDriver
-# from utils import custom_logger as cl
-import logging
 from base.base_page import BasePage
-# from utils.report_status import ReportStatus
 
 
 class LoginPageSaucedemo(BasePage):

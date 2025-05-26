@@ -8,6 +8,7 @@ from pages.saucedemo.product_page_saucedemo import ProductPageSaucedemo
 from utils.config_reader import read_config as data
 
 
+@allure.feature("Filter")
 class TestProductFilterSaucedemo:
 
     @allure.title("SauceDemo: Verify Product Cards in Ascending Order")
