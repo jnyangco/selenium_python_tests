@@ -24,8 +24,8 @@ class TestTemplate:
         username = data("saucedemo", "username")
         password = data("saucedemo", "password")
         login_page.login(username, password)
-        time.sleep(10)
+        # time.sleep(10)
 
         log.info("Step: Swag Labs logo should be displayed")
-        login_page.user_sucessfully_logged_in()
+        login_page.user_successfully_logged_in()
 
