@@ -63,6 +63,7 @@ class DriverFactory:
         if browser_name.lower() == "chrome":
             options = webdriver.ChromeOptions()
             if headless:
+                """ Run in Docker"""
                 log.info(f"Headless: True")
                 options.add_argument("--headless") # Run headless (optional)
                 options.add_argument("--start-maximized")  # Maximize browser
@@ -78,7 +79,15 @@ class DriverFactory:
                     options=options
                 )
             else:
+                """ Run in Local"""
                 log.info(f"Headless: False")
+
+                # Enhanced preferences to disable chrome password manager popup
+                prefs = {
+                    "profile.password_manager_leak_detection": False,
+                }
+                options.add_experimental_option("prefs", prefs)
+
                 driver = webdriver.Chrome(options=options)
 
         elif browser_name.lower() == "firefox":
