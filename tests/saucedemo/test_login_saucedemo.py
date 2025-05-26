@@ -6,7 +6,6 @@ from utils.config_reader import read_config as data
 import time
 
 
-
 @allure.feature("Login")
 class TestLoginSaucedemo:
 
