@@ -7,7 +7,7 @@ from pages.saucedemo.product_page_saucedemo import ProductPageSaucedemo
 from utils.config_reader import read_config as data
 
 
-@allure.feature("UI")
+@allure.feature("User Interface")
 class TestUIVerificationSaucedemo:
 
     @allure.title("SauceDemo: Verify Hamburger List")

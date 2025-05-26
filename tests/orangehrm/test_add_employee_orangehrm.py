@@ -1,15 +1,16 @@
 import allure
 import logging
 import inspect
-from pages.orangehrm.orangehrm_page import OrangeHrmPage
+from pages.orangehrm.login_page_orangehrm import OrangeHrmPage
 from utils.config_reader import read_config as data
 import time
 
 
-class TestOrangeAddEmployee:
+@allure.feature("Add Employee")
+class TestAddEmployeeOrangehrm:
 
     @allure.title("OrangeHrm: Add Employee")
-    def test_orangehrm_add_employee(self, driver):
+    def test_orangehrm_add_employee(self, driver, config):
         log = logging.getLogger(__name__)
         log.info(f"Starting test: {inspect.currentframe().f_code.co_name}")
         steps = OrangeHrmPage(driver)
