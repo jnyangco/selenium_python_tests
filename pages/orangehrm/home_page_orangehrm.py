@@ -15,6 +15,7 @@ class HomepageOrangehrm(BasePage):
     # Locators - Homepage (hp)
     _hp_sidebar_menus = (By.XPATH, "//ul[@class='oxd-main-menu']/li//span")
     _hp_sidebar_menus_dynamic_xpath = "//ul[@class='oxd-main-menu']/li//span[text()='{}']"
+    _dp_search_menu = (By.XPATH, "//input[@placeholder='Search']")
 
 
     # Functions
