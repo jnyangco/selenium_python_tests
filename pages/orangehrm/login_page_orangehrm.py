@@ -7,10 +7,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from base.base_page import BasePage
+from pages.orangehrm.base_page_orangehrm import BasePageOrangehrm
 from utils.config_reader import read_config as data
 
 
-class LoginPageOrangehrm(BasePage):
+class LoginPageOrangehrm(BasePageOrangehrm):
 
     # Locators - Login Page (lp)
     _lp_username_textbox = (By.XPATH, "//input[@name='username']")

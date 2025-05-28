@@ -10,12 +10,35 @@ from base.base_page import BasePage
 from utils.config_reader import read_config as data
 
 
-class HomepageOrangehrm(BasePage):
+class BasePageOrangehrm(BasePage):
+
+    # Locators - Global Page (gp)
+    _gp_topbar_menu_dynamic_xpath = "//a[text()='{}']/.."
+    # _gp_topbar_menu_dynamic_xpath = "//nav[@aria-label='Topbar Menu']/ul/li/a[text()='{}']"
+    _gp_topbar_menu_add_employee = (By.XPATH, "//a[text()='Add Employee']")
+    # _gp_topbar_menu_add_employee = (By.XPATH, "//nav[@aria-label='Topbar Menu']/ul/li/a[text()='Add Employee']/..")
 
     # Locators - Homepage (hp)
     _hp_sidebar_menus = (By.XPATH, "//ul[@class='oxd-main-menu']/li//span")
     _hp_sidebar_menus_dynamic_xpath = "//ul[@class='oxd-main-menu']/li//span[text()='{}']"
     _dp_search_menu = (By.XPATH, "//input[@placeholder='Search']")
+
+
+    # Functions
+    @allure.step("Click top bar menu")
+    def click_top_bar_menu(self, menu):
+        # top_bar_menu = self.wait.until(EC.element_to_be_clickable((By.XPATH, self._gp_topbar_menu_dynamic_xpath.format(menu))))
+        # top_bar_menu.click()
+
+        # Try Javascript click
+        top_bar_menu_add_employee = self.driver.find_element(*self._gp_topbar_menu_add_employee)
+        self.driver.execute_script("arguments[0].click();", top_bar_menu_add_employee)
+
+        # Try ACTIONS
+        # top_bar_menu_add_employee = self.driver.find_element(*self._gp_topbar_menu_add_employee)
+        # actions = ActionChains(self.driver)
+        # actions.click(top_bar_menu_add_employee)
+        # actions.perform()
 
 
     # Functions
@@ -95,6 +118,19 @@ class HomepageOrangehrm(BasePage):
     def click_side_bar_menu(self, menu):
         side_bar_menu = self.wait.until(EC.element_to_be_clickable((By.XPATH, self._hp_sidebar_menus_dynamic_xpath.format(menu))))
         side_bar_menu.click()
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
