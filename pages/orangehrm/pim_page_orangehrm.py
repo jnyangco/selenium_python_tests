@@ -28,17 +28,17 @@ class PimPageOrangehrm(BasePage):
 
 
     # Functions
-    def add_employee(self):
-        random_name = util.generate_random_names()
-        random_name = random_name.split(" ")
-        self.wait.until(EC.visibility_of_element_located(self._pim_first_name)).send_keys(random_name[0])
-        self.wait.until(EC.visibility_of_element_located(self._pim_last_name)).send_keys(random_name[1])
-        self.wait.until(EC.element_to_be_clickable(self._pim_create_login_details_toggle)).click()
-        time.sleep(1)
-        self.wait.until(EC.visibility_of_element_located(self._pim_username)).send_keys(random_name[0]+random_name[1])
-        self.wait.until(EC.visibility_of_element_located(self._pim_password)).send_keys("Password#1")
-        # self.wait.until(EC.visibility_of_element_located(self._pim_confirm_password)).send_keys("Password#1")
-        # self.wait.until(EC.element_to_be_clickable(self._pim_save_button)).click()
+    # def add_employee(self):
+    #     random_name = util.generate_random_names()
+    #     random_name = random_name.split(" ")
+    #     self.wait.until(EC.visibility_of_element_located(self._pim_first_name)).send_keys(random_name[0])
+    #     self.wait.until(EC.visibility_of_element_located(self._pim_last_name)).send_keys(random_name[1])
+    #     self.wait.until(EC.element_to_be_clickable(self._pim_create_login_details_toggle)).click()
+    #     time.sleep(1)
+    #     self.wait.until(EC.visibility_of_element_located(self._pim_username)).send_keys(random_name[0]+random_name[1])
+    #     self.wait.until(EC.visibility_of_element_located(self._pim_password)).send_keys("Password#1")
+    #     # self.wait.until(EC.visibility_of_element_located(self._pim_confirm_password)).send_keys("Password#1")
+    #     # self.wait.until(EC.element_to_be_clickable(self._pim_save_button)).click()
 
 
 

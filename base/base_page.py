@@ -30,11 +30,8 @@ from utils.config_reader import read_config
 class BasePage:
     """Base class for all page objects"""
 
-    # log = cl.custom_logger(logging.DEBUG)
     def __init__(self, driver):
-        """
-        Init BasePage class
-
+        """ Init BasePage class
         Returns:
             None
         """
@@ -156,9 +153,6 @@ class BasePage:
 
 
 
-
-
-
     # ======================= OLD FUNCTIONS ===========================================================================
     # positional argument -> by default it will open the base_url
     # if url is provided, it will open the provided url
@@ -201,11 +195,6 @@ class BasePage:
         except:
             self.log.info("Element list not found with locator: " + str(locator))
         return element
-
-
-
-
-
 
 
     def verify_page_title(self, title_to_verify):

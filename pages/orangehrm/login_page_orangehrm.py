@@ -24,7 +24,7 @@ class LoginPageOrangehrm(BasePage):
     def open_orangehrm_website(self):
         self.log.info("Open OrangeHRM Website")
         base_url = data("orangehrm", "base_url")
-        self.driver.get(base_url)
+        self.open_url(base_url)
 
     @allure.step("Login using username and password")
     def login_with_username_and_password(self, username, password):
