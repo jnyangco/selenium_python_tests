@@ -9,19 +9,19 @@ import pytest
 import allure
 from base.driver_factory import DriverFactory
 from config.config import TestConfig
-from utils.logger import setup_logger
+from utils.logger import setup_logger, get_logger  # import logger
 from utils.screenshot_utils import ScreenshotUtils
 
 
-# Initialize logger
-logger = setup_logger()
+# Initialize logger at the very beginning
+setup_logger()
+logger = get_logger(__name__)
 
 
 @pytest.fixture(scope="function")
 def driver(request):
     """Create and yield WebDriver instance"""
-
-    log = logging.getLogger(__name__)
+    log = get_logger(__name__)
 
     config = TestConfig()
 

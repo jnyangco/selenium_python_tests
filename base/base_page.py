@@ -18,7 +18,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from utils.screenshot_utils import ScreenshotUtils
-import logging
+from utils.logger import get_logger  # Import the logger utility
 from selenium.common.exceptions import *
 import traceback
 from traceback import print_stack
@@ -38,7 +38,12 @@ class BasePage:
         # super(BasePage, self).__init__(driver)
         self.driver = driver
         self.wait = WebDriverWait(driver, 10)
-        self.log = logging.getLogger(self.__class__.__name__)
+
+        # using logger directly
+        # self.log = logging.getLogger(self.__class__.__name__)
+
+        # using centralized logger from utils > logger.py
+        self.log = get_logger(self.__class__.__name__)
         self.screenshot_util = ScreenshotUtils(driver)
 
     @allure.step("Opening URL: {url}")

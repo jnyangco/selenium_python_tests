@@ -3,6 +3,7 @@ import logging
 import inspect
 from pages.saucedemo.login_page_saucedemo import LoginPageSaucedemo
 from utils.config_reader import read_config as data
+from utils.logger import get_logger  # Import the logger utility
 import time
 
 
