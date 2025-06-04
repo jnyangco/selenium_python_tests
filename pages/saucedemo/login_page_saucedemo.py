@@ -24,51 +24,47 @@ class LoginPageSaucedemo(BasePage):
     def login(self, username, password):
         """Perform login action"""
         try:
-            self.enter_text(self._username_textbox, username)
-            self.enter_text(self._password_textbox, password)
-            self.click_element(self._login_button)
-        except Exception as e:
+            self.wait.until(EC.visibility_of_element_located(self._username_textbox)).send_keys(username)
+            self.wait.until(EC.visibility_of_element_located(self._password_textbox)).send_keys(password)
+            self.wait.until(EC.element_to_be_clickable(self._login_button)).click()
+        except TimeoutException:
             self.screenshot_util.take_screenshot()
-            self.log.error(f"User is unable to login. \nError -> {e}")
-            pytest.fail(f"User is unable to login. \nError -> {e}")
+            self.log.error(f"Failed to login with {username} and {password}.")
+            pytest.fail(f"Failed to login with {username} and {password}.")
 
 
     @allure.step("User is successfully logged in")
     def user_successfully_logged_in(self):
         try:
-            swag_labs_logo = self.wait.until(EC.visibility_of_element_located(self._swag_labs_logo)).is_displayed()
-            assert swag_labs_logo == True
-        except TimeoutException:
+            swag_labs_logo_is_displayed = self.wait.until(EC.visibility_of_element_located(self._swag_labs_logo)).is_displayed()
+            assert swag_labs_logo_is_displayed, "Swag labs logo should be displayed"
+        except (TimeoutException, AssertionError):
             self.screenshot_util.take_screenshot()
-            self.log.error(f"User is unable to login")
-            pytest.fail(f"User is unable to login")
+            self.log.error("Failed to login.")
+            raise
 
 
     @allure.step("Enter username and password")
     def enter_username_and_password(self, username, password):
         try:
-            self.enter_text(self._username_textbox, username)
-            self.enter_text(self._password_textbox, password)
-        except Exception as e:
+            self.wait.until(EC.visibility_of_element_located(self._username_textbox)).send_keys(username)
+            self.wait.until(EC.visibility_of_element_located(self._password_textbox)).send_keys(password)
+        except TimeoutException:
             self.screenshot_util.take_screenshot()
-            self.log.error(f"User is unable to enter username and password. Error -> {e}")
-            pytest.fail(f"User is unable to enter username and password. Error -> {e}")
-
-
-    @allure.step("Click Login Button")
-    def click_login_button(self):
-        self.click_element(self._login_button)
+            self.log.error("Failed to enter username and password.")
+            pytest.fail("Failed to enter username and password.")
 
 
     @allure.step("Verify invalid login error message is displayed")
     def verify_invalid_login_error_message(self, expected_error_message):
-        error_message = self.wait.until(EC.visibility_of_element_located(self._invalid_login_error_message)).text
-        self.log.info(f"Actual Error Message = {error_message}")
         try:
-            assert error_message == expected_error_message
-        except Exception:
+            error_message = self.wait.until(EC.visibility_of_element_located(self._invalid_login_error_message)).text
+            self.log.info(f"Actual Error Message = {error_message}")
+            assert error_message == expected_error_message, \
+                f"Error message mismatch: Expected = '{expected_error_message}', Actual = '{error_message}'"
+        except (TimeoutException, AssertionError):
             self.screenshot_util.take_screenshot()
-            self.log.error(f"Incorrect error message displayed: Expected = {expected_error_message}, Actual = {error_message}.")
-            pytest.fail(f"Incorrect error message displayed: Expected = {expected_error_message}, Actual = {error_message}.")
+            self.log.error("Failed to verify error message.")
+            raise
 
 

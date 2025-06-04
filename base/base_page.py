@@ -67,9 +67,7 @@ class BasePage:
         # element = wait.until(EC.visibility_of_element_located(locator))
 
         try:
-            element = WebDriverWait(self.driver, timeout).until(
-                EC.presence_of_element_located(locator)
-            )
+            element = WebDriverWait(self.driver, timeout).until(EC.presence_of_element_located(locator))
             self.log.info(f"Found element: {locator}")
             return element
         except TimeoutException:
@@ -77,7 +75,8 @@ class BasePage:
             self.screenshot_util.take_screenshot()
             self.log.error(f"Element not found: {locator}")
             pytest.fail(f"Element not found: {locator}")
-            raise
+            # raise
+            return None
 
     @allure.step("Finding elements: {locator}")
     def find_web_elements(self, locator, timeout=10):
