@@ -20,20 +20,38 @@ class CheckoutCompletePageSaucedemo(BasePage):
 
     @allure.step("Verify secondary header text")
     def verify_secondary_header_text(self, expected_secondary_text):
-        actual_secondary_text = self.wait.until(EC.visibility_of_element_located(self._secondary_header_text)).text
-        assert actual_secondary_text == expected_secondary_text, pytest.fail(f"Incorrect secondary header text. Expected = {expected_secondary_text}, Actual = {actual_secondary_text}")
+        try:
+            actual_secondary_text = self.wait.until(EC.visibility_of_element_located(self._secondary_header_text)).text
+            assert actual_secondary_text == expected_secondary_text, \
+                f"Incorrect secondary header text: Expected = '{expected_secondary_text}', Actual = '{actual_secondary_text}'"
+        except (TimeoutException, AssertionError):
+            self.screenshot_util.take_screenshot()
+            self.log.error("Failed to verify secondary header text.")
+            raise
 
 
     @allure.step("Verify checkout success message text")
     def verify_checkout_success_message_text(self, expected_text):
-        actual_text = self.wait.until(EC.visibility_of_element_located(self._checkout_success_message_text)).text
-        assert actual_text == expected_text, pytest.fail(f"FAILED: Incorrect checkout success message text. Expected = {expected_text}, Actual = {actual_text}")
+        try:
+            actual_text = self.wait.until(EC.visibility_of_element_located(self._checkout_success_message_text)).text
+            assert actual_text == expected_text, \
+                f"FAILED: Incorrect checkout success message text: Expected = '{expected_text}', Actual = '{actual_text}'"
+        except (TimeoutException, AssertionError):
+            self.screenshot_util.take_screenshot()
+            self.log.error("Failed to verify checkout success message text.")
+            raise
 
 
     @allure.step("Verify checkout success message description")
     def verify_checkout_success_message_description(self, expected_text):
-        actual_text = self.wait.until(EC.visibility_of_element_located(self._checkout_success_message_description)).text
-        assert actual_text == expected_text, pytest.fail(f"Incorrect checkout success message description. Expected = {expected_text}, Actual = {actual_text}")
+        try:
+            actual_text = self.wait.until(EC.visibility_of_element_located(self._checkout_success_message_description)).text
+            assert actual_text == expected_text, \
+                f"Incorrect checkout success message description: Expected = '{expected_text}', Actual = '{actual_text}'"
+        except (TimeoutException, AssertionError):
+            self.screenshot_util.take_screenshot()
+            self.log.error("Failed to verify checkout success message description.")
+            raise
 
 
 

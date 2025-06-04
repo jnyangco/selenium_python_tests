@@ -21,7 +21,6 @@ class TestOrderSaucedemo(BaseTest):
 
         # variables
         item_name = "Sauce Labs Backpack"
-        item_price_1 = 0
 
         self.log.info("Step: Open SauceDemo Website")
         login_page = LoginPageSaucedemo(driver)
@@ -92,8 +91,6 @@ class TestOrderSaucedemo(BaseTest):
         # variables
         item_name1 = "Sauce Labs Backpack"
         item_name2 = "Sauce Labs Bike Light"
-        item_price_1 = 0
-        item_price_2 = 0
 
         self.log.info("Step: Open SauceDemo Website")
         login_page = LoginPageSaucedemo(driver)
