@@ -27,25 +27,36 @@ class LoginPageOrangehrm(BasePageOrangehrm):
         base_url = data("orangehrm", "base_url")
         self.open_url(base_url)
 
+
+    @allure.step("Login to Orangehrm website")
+    def login(self):
+        self.log.info("Login to Orangehrm website")
+        base_url = data("orangehrm", "base_url")
+        self.open_url(base_url)
+
+        username = data("orangehrm", "username")
+        password = data("orangehrm", "password")
+        self.login_with_username_and_password(username, password)
+
+
     @allure.step("Login using username and password")
     def login_with_username_and_password(self, username, password):
         self.log.info("Login using username and password")
-        self.log.info(f"Enter username '{username}'")
-        username_textbox = self.wait.until(EC.element_to_be_clickable(self._lp_username_textbox))
-        username_textbox.send_keys(username)
-
-        self.log.info(f"Enter password '{password}'")
-        password_textbox = self.wait.until(EC.element_to_be_clickable(self._lp_password_textbox))
-        password_textbox.send_keys(password)
-
-        self.log.info("Click Login button")
-        login_button = self.wait.until(EC.element_to_be_clickable(self._lp_login_button))
-        login_button.click()
+        self.enter_text(self._lp_username_textbox, username)
+        self.enter_text(self._lp_password_textbox, password)
+        self.click_element(self._lp_login_button)
 
 
-    @allure.step("Verify error message using invalid login.")
+    @allure.step("Verify error message using invalid login: {expected_error_message}.")
     def show_login_error_message(self, expected_error_message):
         actual_error_message = self.wait.until(EC.visibility_of_element_located(self._lp_error_message)).text
-        assert actual_error_message == expected_error_message, pytest.fail(f"Incorrect error message. Expected = {expected_error_message}, Actual = {actual_error_message}")
+
+        try:
+            assert self.get_text(self._lp_error_message) == expected_error_message, \
+                f"Error message mismatch: Expected = '{expected_error_message}', Actual = '{actual_error_message}'"
+        except AssertionError:
+            self.screenshot_util.take_screenshot()
+            self.log.error(f"Error message mismatch: Expected = '{expected_error_message}', Actual = '{actual_error_message}'.")
+            raise
 
 

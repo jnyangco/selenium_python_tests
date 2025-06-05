@@ -52,12 +52,14 @@ class BasePage:
         self.log.info(f"Opening URL: {url}")
         self.driver.get(url)
 
+
     @allure.step("Getting page title")
     def get_page_title(self):
         """Get page title"""
         title = self.driver.title
         self.log.info(f"Page title: {title}")
         return title
+
 
     # @allure.step("Finding element: {locator}")
     def find_web_element(self, locator, timeout=10):
@@ -92,12 +94,19 @@ class BasePage:
             self.screenshot_util.take_screenshot("elements_not_found")
             return []
 
+
     # @allure.step("Clicking element: {locator}")
     def click_element(self, locator):
         """Click an element"""
-        element = self.wait.until(EC.element_to_be_clickable(locator))
-        self.log.info(f"Clicking element: {locator}")
-        element.click()
+        try:
+            element = self.wait.until(EC.element_to_be_clickable(locator))
+            self.log.info(f"Clicking element: {locator}")
+            element.click()
+        except TimeoutException:
+            self.screenshot_util.take_screenshot()
+            self.log.error(f"Element not clickable: {locator}.")
+            pytest.fail(f"Element not clickable: {locator}.")
+
 
     # @allure.step("Typing text: {text} into element: {locator}")
     def enter_text(self, locator, text):
@@ -112,7 +121,7 @@ class BasePage:
         """Get text from an element"""
         element = self.find_web_element(locator)
         text = element.text
-        self.log.info(f"Got text: {text} from element: {locator}")
+        self.log.info(f"Got text: '{text}' from element: {locator}")
         return text
 
     @allure.step("Checking if element is displayed: {locator}")
@@ -252,31 +261,31 @@ class BasePage:
             print_stack()
 
 
-    def get_text(self, locator="", info=""):
-        """
-        NEW METHOD
-        Get 'Text' on an element
-        Either provide element or a combination of locator and locatorType
-        """
-        try:
-            self.log.debug("In locator condition")
-            element = self.get_element(locator)
-
-            self.log.debug("Before finding text")
-            text = element.text
-            self.log.debug("After finding element, size is: " + str(len(text)))
-
-            if len(text) == 0:
-                text = element.get_attribute("innerText")
-            if len(text) != 0:
-                self.log.info("Getting text on element :: " +  info)
-                self.log.info("The text is :: '" + text + "'")
-                text = text.strip()
-        except:
-            self.log.error("Failed to get text on element " + info)
-            print_stack()
-            text = None
-        return text
+    # def get_text(self, locator="", info=""):
+    #     """
+    #     NEW METHOD
+    #     Get 'Text' on an element
+    #     Either provide element or a combination of locator and locatorType
+    #     """
+    #     try:
+    #         self.log.debug("In locator condition")
+    #         element = self.get_element(locator)
+    #
+    #         self.log.debug("Before finding text")
+    #         text = element.text
+    #         self.log.debug("After finding element, size is: " + str(len(text)))
+    #
+    #         if len(text) == 0:
+    #             text = element.get_attribute("innerText")
+    #         if len(text) != 0:
+    #             self.log.info("Getting text on element :: " +  info)
+    #             self.log.info("The text is :: '" + text + "'")
+    #             text = text.strip()
+    #     except:
+    #         self.log.error("Failed to get text on element " + info)
+    #         print_stack()
+    #         text = None
+    #     return text
 
 
     # def is_element_present(self, locator, locator_type="xpath"):

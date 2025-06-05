@@ -15,14 +15,9 @@ class TestLoginOrangehrm(BaseTest):
     def test_valid_login_orangehrm(self, driver):
         """Test login with valid credentials"""
 
-        self.log.info("Step: Open the OrangeHrm website")
+        self.log.info("Step: Login to Orangehrm website")
         login_page = LoginPageOrangehrm(driver)
-        login_page.open_orangehrm_website()
-
-        self.log.info("Step: Login using username and password")
-        username = data("orangehrm", "username")
-        password = data("orangehrm", "password")
-        login_page.login_with_username_and_password(username, password)
+        login_page.login()
 
         self.log.info("Step: User is landed on dashboard page")
         dashboard_page = DashboardPageOrangehrm(driver)
