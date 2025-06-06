@@ -14,7 +14,7 @@ Example:
             self.log.info("Test started")
 """
 
-from utils.logger import get_logger
+from utils.logger_utils import get_logger
 
 
 class BaseTest:

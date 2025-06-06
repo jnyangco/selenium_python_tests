@@ -5,7 +5,7 @@ import inspect
 from pages.orangehrm.base_page_orangehrm import BasePageOrangehrm
 from pages.orangehrm.dashboard_page_orangehrm import DashboardPageOrangehrm
 from pages.orangehrm.login_page_orangehrm import LoginPageOrangehrm
-from utils.config_reader import read_config as data
+from utils.data_utils import get_data as data
 import time
 from base.base_test import BaseTest
 
@@ -21,29 +21,42 @@ class TestCrawlerOrangehrm(BaseTest):
         login_page.open_orangehrm_website()
 
         self.log.info("Step: Login using username and password")
-        username = data("orangehrm", "username")
-        password = data("orangehrm", "password")
-        login_page.login_with_username_and_password(username, password)
-
-        self.log.info("Step: User is landed on dashboard page")
-        dashboard_page = DashboardPageOrangehrm(driver)
-        dashboard_page.user_landed_on_dashboard_page()
+        login_page.login()
 
         self.log.info("Step: Verify search menu is displayed")
         base_page = BasePageOrangehrm(driver)
         base_page.verify_search_menu_displayed()
 
         self.log.info("Step: Verify side bar menus are correct")
-        base_page.verify_side_bar_menus(["Admin", "PIM", "Leave", "Time",
-                                     "Recruitment", "My Info", "Performance", "Dashboard",
-                                     "Directory", "Maintenance", "Claim", "Buzz"])
+        # side_bar_menus = []
+        base_page.verify_side_bar_menus_displayed([
+            "Admin",
+            "PIM",
+            "Leave",
+            "Time",
+            "Recruitment",
+            "My Info",
+            "Performance",
+            "Dashboard",
+            "Directory",
+            "Maintenance",
+            "Claim",
+            "Buzz"
+        ])
 
         self.log.info("Step: Click on each menu and user should be redirected to correct url")
-        base_page.side_bar_menu_crawler(["Admin", "PIM", "Leave", "Time",
-                                     "Recruitment", "My Info", "Performance", "Dashboard",
-                                     "Directory", "Maintenance", "Claim", "Buzz"])
-
-
-
-
+        base_page.side_bar_menu_crawler([
+            "Admin",
+            "PIM",
+            "Leave",
+            "Time",
+            "Recruitment",
+            "My Info",
+            "Performance",
+            "Dashboard",
+            "Directory",
+            "Maintenance",
+            "Claim",
+            "Buzz"
+        ])
 

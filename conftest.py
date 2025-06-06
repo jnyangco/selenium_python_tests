@@ -9,7 +9,7 @@ import pytest
 import allure
 from base.driver_factory import DriverFactory
 from config.config import TestConfig
-from utils.logger import setup_logger, get_logger  # import logger
+from utils.logger_utils import setup_logger, get_logger  # import logger
 from utils.screenshot_utils import ScreenshotUtils
 
 

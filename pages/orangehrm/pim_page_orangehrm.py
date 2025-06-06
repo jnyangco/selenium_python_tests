@@ -8,7 +8,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from base.base_page import BasePage
 from pages.orangehrm.base_page_orangehrm import BasePageOrangehrm
-from utils.config_reader import read_config as data
+from utils.data_utils import get_data as data
 
 
 class PimPageOrangehrm(BasePageOrangehrm):

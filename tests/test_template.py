@@ -1,7 +1,7 @@
 import allure
 import logging
 from pages.saucedemo.login_page_saucedemo import LoginPageSaucedemo
-from utils.config_reader import read_config as data
+from utils.data_utils import get_data as data
 import time
 
 

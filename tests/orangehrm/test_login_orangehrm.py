@@ -3,7 +3,7 @@ import logging
 import inspect
 from pages.orangehrm.dashboard_page_orangehrm import DashboardPageOrangehrm
 from pages.orangehrm.login_page_orangehrm import LoginPageOrangehrm
-from utils.config_reader import read_config as data
+from utils.data_utils import get_data as data
 import time
 from base.base_test import BaseTest
 
@@ -38,7 +38,7 @@ class TestLoginOrangehrm(BaseTest):
         login_page.login_with_username_and_password(username, password)
 
         self.log.info("Step: Verify error message is displayed.")
-        login_page.show_login_error_message("Invalid credentials")
+        login_page.verify_login_error_message("Invalid credentials")
         time.sleep(2)
 
 

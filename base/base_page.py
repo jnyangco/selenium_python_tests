@@ -13,19 +13,20 @@ Example:
 
 import allure
 import pytest
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from utils.screenshot_utils import ScreenshotUtils
-from utils.logger import get_logger  # Import the logger utility
+from utils.logger_utils import get_logger  # Import the logger utility
 from selenium.common.exceptions import *
 import traceback
 from traceback import print_stack
 # for reports
 import time
 import os
-from utils.config_reader import read_config
+from utils.data_utils import get_data
 
 class BasePage:
     """Base class for all page objects"""
@@ -42,7 +43,7 @@ class BasePage:
         # using logger directly
         # self.log = logging.getLogger(self.__class__.__name__)
 
-        # using centralized logger from utils > logger.py
+        # using centralized logger from utils > logger_utils.py
         self.log = get_logger(self.__class__.__name__)
         self.screenshot_util = ScreenshotUtils(driver)
 
@@ -61,6 +62,13 @@ class BasePage:
         return title
 
 
+    @allure.step("Getting current url {page}")
+    def get_current_url(self, page=""):
+        url = self.driver.current_url
+        self.log.info(f"Current url: {url}")
+        return url
+
+
     # @allure.step("Finding element: {locator}")
     def find_web_element(self, locator, timeout=10):
         """Find element with explicit wait"""
@@ -69,7 +77,8 @@ class BasePage:
         # element = wait.until(EC.visibility_of_element_located(locator))
 
         try:
-            element = WebDriverWait(self.driver, timeout).until(EC.presence_of_element_located(locator))
+            # element = WebDriverWait(self.driver, timeout).until(EC.presence_of_element_located(locator))
+            element = WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
             self.log.info(f"Found element: {locator}")
             return element
         except TimeoutException:
@@ -107,6 +116,20 @@ class BasePage:
             self.log.error(f"Element not clickable: {locator}.")
             pytest.fail(f"Element not clickable: {locator}.")
 
+    # @allure.step("Clicking element with dynamic xpath: {locator}")
+    def click_element_dynamic_xpath(self, locator_dynamic_xpath):
+        """Click an element with dynamic xpath"""
+        locator = None
+        try:
+            locator = (By.XPATH, locator_dynamic_xpath)
+            self.wait.until(EC.element_to_be_clickable(locator))
+            self.log.info(f"Clicking element: {locator}")
+            self.click_element(locator)
+        except TimeoutException:
+            self.screenshot_util.take_screenshot()
+            self.log.error(f"Element dynamic xpath not clickable: {locator}.")
+            pytest.fail(f"Element dynamic xpath not clickable: {locator}.")
+
 
     # @allure.step("Typing text: {text} into element: {locator}")
     def enter_text(self, locator, text):
@@ -116,6 +139,7 @@ class BasePage:
         self.log.info(f"Typing: {text} into element: {locator}")
         element.send_keys(text)
 
+
     @allure.step("Getting text from element: {locator}")
     def get_text(self, locator):
         """Get text from an element"""
@@ -123,6 +147,7 @@ class BasePage:
         text = element.text
         self.log.info(f"Got text: '{text}' from element: {locator}")
         return text
+
 
     @allure.step("Checking if element is displayed: {locator}")
     def is_element_displayed(self, locator):
@@ -135,6 +160,7 @@ class BasePage:
         except (TimeoutException, NoSuchElementException):
             self.log.info(f"Element {locator} is not displayed")
             return False
+
 
     @allure.step("Waiting for element to be visible: {locator}")
     def wait_for_element_visible(self, locator, timeout=10):
@@ -150,6 +176,7 @@ class BasePage:
             self.screenshot_util.take_screenshot("element_not_visible")
             raise
 
+
     @allure.step("Hovering over element: {locator}")
     def hover(self, locator):
         """Hover over an element"""
@@ -157,12 +184,33 @@ class BasePage:
         ActionChains(self.driver).move_to_element(element).perform()
         self.log.info(f"Hovered over element: {locator}")
 
+
     @allure.step("Scrolling to element: {locator}")
     def scroll_to_element(self, locator):
         """Scroll to element"""
         element = self.find_web_element(locator)
         self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
         self.log.info(f"Scrolled to element: {locator}")
+
+
+    @allure.step("Assert element text matches: {expected_text}")
+    def assert_element_text_matches(self, locator, expected_text, assert_message="Element text mismatch"):
+        actual_text = ""
+        try:
+            actual_text = self.find_web_element(locator).text.strip()
+            assert actual_text == expected_text, \
+                f"{assert_message}: Expected = '{expected_text}', Actual = '{actual_text}'"
+        except AssertionError:
+            self.screenshot_util.take_screenshot()
+            self.log.error(f"{assert_message}: Expected = '{expected_text}', Actual = '{actual_text}'")
+            raise
+
+
+
+
+
+
+
 
 
 
@@ -229,20 +277,21 @@ class BasePage:
 
 
     # def element_click(self, locator, locator_type="xpath"):
-    def element_click(self, locator=""):
-        """
-        Click on an element -> MODIFIED
-        Either provide element or a combination of locator and locatorType
-        """
-        try:
-            element = self.get_element(locator)
-            element.click()
-            # print("Clicked on element with locator: " + locator + " locator Type: " + locator_type)
-            self.log.info("Clicked on element with locator: " + str(locator))
-        except:
-            # print("Cannot click on the element with locator: " + locator + " locator Type: " + locator_type)
-            self.log.info("Cannot click on the element with locator: " + str(locator))
-            print_stack()
+    # def element_click(self, locator=""):
+    #     """
+    #     Click on an element -> MODIFIED
+    #     Either provide element or a combination of locator and locatorType
+    #     """
+    #     try:
+    #         # element = self.get_element(locator)
+    #         element = self.find_web_element(locator)
+    #         element.click()
+    #         # print("Clicked on element with locator: " + locator + " locator Type: " + locator_type)
+    #         self.log.info("Clicked on element with locator: " + str(locator))
+    #     except:
+    #         # print("Cannot click on the element with locator: " + locator + " locator Type: " + locator_type)
+    #         self.log.info("Cannot click on the element with locator: " + str(locator))
+    #         print_stack()
 
 
     def send_text(self, text, locator=""):
@@ -312,24 +361,24 @@ class BasePage:
             self.log.info("Element not found")
             return False
 
-    def is_element_displayed(self, locator=""):
-        """
-        NEW METHOD
-        Check if element is displayed
-        Either provide element or a combination of locator and locatorType
-        """
-        is_displayed = False
-        try:
-            element = self.get_element(locator)
-            if element is not None:
-                is_displayed = element.is_displayed()  # is_displayed = True
-                self.log.info("Element is displayed with locator: " + str(locator))
-            else:
-                self.log.info("Element not displayed with locator: " + str(locator))
-            return is_displayed
-        except:
-            print("Element not found")
-            return False
+    # def is_element_displayed(self, locator=""):
+    #     """
+    #     NEW METHOD
+    #     Check if element is displayed
+    #     Either provide element or a combination of locator and locatorType
+    #     """
+    #     is_displayed = False
+    #     try:
+    #         element = self.get_element(locator)
+    #         if element is not None:
+    #             is_displayed = element.is_displayed()  # is_displayed = True
+    #             self.log.info("Element is displayed with locator: " + str(locator))
+    #         else:
+    #             self.log.info("Element not displayed with locator: " + str(locator))
+    #         return is_displayed
+    #     except:
+    #         print("Element not found")
+    #         return False
 
 
     # check list of elements
@@ -476,13 +525,9 @@ class BasePage:
 
     # @allure.step("Wait for seconds")
     def wait_seconds(self, sec, info=""):
-        """
-        Put the program to wait for the specified amount of time
-        """
-        if info != "":
-            # self.log.info("Wait :: '" + str(sec) + "' seconds for " + info)
-            self.log.info("Wait :: '" + str(sec) + "' seconds." + info)
+        """Wait for the specified amount of time"""
         try:
+            self.log.info(f"Waiting for {str(sec)} seconds...")
             time.sleep(sec)
         except InterruptedError:
             traceback.print_stack()

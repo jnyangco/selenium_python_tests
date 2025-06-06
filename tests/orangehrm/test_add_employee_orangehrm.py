@@ -3,7 +3,7 @@ import logging
 import inspect
 from pages.orangehrm.base_page_orangehrm import BasePageOrangehrm
 from pages.orangehrm.login_page_orangehrm import LoginPageOrangehrm
-from utils.config_reader import read_config as data
+from utils.data_utils import get_data as data
 import time
 from base.base_test import BaseTest
 
