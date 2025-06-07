@@ -1,15 +1,20 @@
 import allure
 import logging
 import inspect
+
+import pytest
 from pages.saucedemo.login_page_saucedemo import LoginPageSaucedemo
 from utils.data_utils import get_data as data
 import time
 from base.base_test import BaseTest
 
 
+@pytest.mark.saucedemo
+@pytest.mark.login
 @allure.feature("Login")
 class TestLoginSaucedemo(BaseTest):
 
+    @pytest.mark.test
     @allure.title("Valid Login Test")
     @allure.description("Test description: Test Login with valid credentials")
     def test_login_valid_credentials(self, driver, config):

@@ -2,6 +2,8 @@ import allure
 import time
 import logging
 import inspect
+
+import pytest
 from conftest import driver
 from pages.saucedemo.cart_page_saucedemo import CartPageSaucedemo
 from pages.saucedemo.checkout_complete_page_saucedemo import CheckoutCompletePageSaucedemo
@@ -13,6 +15,8 @@ from utils.data_utils import get_data as data
 from base.base_test import BaseTest
 
 
+@pytest.mark.saucedemo
+@pytest.mark.order
 @allure.feature("Order")
 class TestOrderSaucedemo(BaseTest):
 

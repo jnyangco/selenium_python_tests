@@ -1,6 +1,6 @@
 # TEST SUITE - using PYTHON FILE
 # Run test_suite.py python file
-# cmd: python tests/_suite_3.py
+# cmd: python tests/_suite_python_file1.py
 
 import pytest
 

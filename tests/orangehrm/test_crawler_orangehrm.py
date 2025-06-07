@@ -2,6 +2,7 @@ import allure
 import logging
 import inspect
 
+import pytest
 from pages.orangehrm.base_page_orangehrm import BasePageOrangehrm
 from pages.orangehrm.dashboard_page_orangehrm import DashboardPageOrangehrm
 from pages.orangehrm.login_page_orangehrm import LoginPageOrangehrm
@@ -10,6 +11,8 @@ import time
 from base.base_test import BaseTest
 
 
+@pytest.mark.orangehrm
+@pytest.mark.crawler
 @allure.feature("Crawler")
 class TestCrawlerOrangehrm(BaseTest):
 

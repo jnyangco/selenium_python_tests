@@ -2,6 +2,8 @@ import allure
 import time
 import logging
 import inspect
+
+import pytest
 from conftest import driver
 from pages.saucedemo.login_page_saucedemo import LoginPageSaucedemo
 from pages.saucedemo.product_page_saucedemo import ProductPageSaucedemo
@@ -9,6 +11,8 @@ from utils.data_utils import get_data as data
 from base.base_test import BaseTest
 
 
+@pytest.mark.saucedemo
+@pytest.mark.filter
 @allure.feature("Filter")
 class TestProductFilterSaucedemo(BaseTest):
 

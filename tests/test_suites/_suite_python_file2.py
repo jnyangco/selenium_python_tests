@@ -1,6 +1,6 @@
 # TEST SUITE - using PYTHON FILE
 # Run using TAGS -> i.e: "-m login" -> Add fixture to def: pytest.mark.login
-# cmd: python tests/_suite_4.py
+# cmd: python tests/_suite_python_file2.py
 
 import pytest
 

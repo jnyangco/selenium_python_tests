@@ -1,0 +1,63 @@
+## DRY RUN - VERIFY TEST BEFORE RUN
+pytest --collect-only -m test
+
+# ----------------------------------------------------------------------------------------------
+## Run test (test type)
+pytest -s -v -m regression --env=docker -n auto
+
+# Run test (application)
+pytest -s -v -m saucedemo --env=docker -n auto
+
+# Run test (application + feature)
+pytest -s -v -m "saucedemo and login" --env=docker -n auto
+
+# Run test (2 applications) - different folders
+pytest -s -v -m "saucedemo or orangehrm" --env=docker -n auto
+
+# Run test (2x application + feature)
+pytest -s -v -m "(saucedemo and login) or (orangehrm and login)" --env=docker -n auto
+
+
+## ----------------------------------------------------------------------------------------------
+OPTION 1: RUN USING SHELL SCRIPT FILE (without shebang)
+1. Create shell .sh file
+# scripts/run_smoke_tests.sh
+
+#!/usr/bin/env bash
+set -e  # Exit on error
+echo "🚀 Running Smoke Tests..."
+pytest -m smoke --browser=chrome --env=docker -v --alluredir=reports/allure-results
+
+
+## ----------------------------------------------------------------------------------------------
+OPTION 2: RUN USING SHELL SCRIPT FILE (with shebang)
+
+Steps:
+1. Create shell .sh file
+# scripts/run_smoke_tests.sh
+
+#!/usr/bin/env bash
+set -e  # Exit on error
+echo "🚀 Running Smoke Tests..."
+pytest -m smoke --browser=chrome --env=docker -v --alluredir=reports/allure-results
+
+2. Make file executable
+chmod +x tests/test_suites/run_smoke_tests.sh
+./test_suite/run_smoke_tests.sh    # Works directly
+
+run shell using command line:
+./tests/test_suites/run_saucedemo_test_suite.sh
+
+## ----------------------------------------------------------------------------------------------
+Daily Smoke Tests:
+pytest -m smoke --browser=chrome --env=docker -v
+
+Weekly Regression:
+pytest -m regression --browser=chrome --env=docker -v -n auto
+
+Feature-Specific Testing:
+# When working on login features
+pytest -m login --browser=chrome --env=local -v
+
+# When working on checkout features
+pytest -m checkout --browser=chrome --env=local -v
