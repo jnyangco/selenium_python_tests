@@ -13,7 +13,7 @@ from base.base_test import BaseTest
 
 @pytest.mark.saucedemo
 @pytest.mark.ui
-@allure.feature("User Interface")
+@allure.feature("Saucedemo: User Interface")
 class TestUIVerificationSaucedemo(BaseTest):
 
     @allure.title("SauceDemo: Verify Hamburger List")

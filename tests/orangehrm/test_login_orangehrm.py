@@ -12,10 +12,10 @@ from base.base_test import BaseTest
 
 @pytest.mark.orangehrm
 @pytest.mark.login
-@allure.feature("Login")
+@allure.feature("Orangehrm: Login")
 class TestLoginOrangehrm(BaseTest):
 
-    @allure.title("OrangeHrm: Valid Login")
+    @allure.title("Orangehrm: User should be able to login using valid credentials")
     def test_valid_login_orangehrm(self, driver):
         """Test login with valid credentials"""
 
@@ -29,7 +29,7 @@ class TestLoginOrangehrm(BaseTest):
         time.sleep(2)
 
 
-    @allure.title("OrangeHrm: Error message should show up when using invalid password")
+    @allure.title("Orangehrm: Error message should show up when using invalid password")
     def test_invalid_password_orangehrm(self, driver):
 
         self.log.info("Step: Open the OrangeHrm website")

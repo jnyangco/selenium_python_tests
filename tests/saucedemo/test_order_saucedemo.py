@@ -17,7 +17,7 @@ from base.base_test import BaseTest
 
 @pytest.mark.saucedemo
 @pytest.mark.order
-@allure.feature("Order")
+@allure.feature("Saucedemo: Order")
 class TestOrderSaucedemo(BaseTest):
 
     @allure.title("SauceDemo: Order One Product")

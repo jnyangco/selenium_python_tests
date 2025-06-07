@@ -13,7 +13,7 @@ from base.base_test import BaseTest
 
 @pytest.mark.saucedemo
 @pytest.mark.filter
-@allure.feature("Filter")
+@allure.feature("Saucedemo: Filter")
 class TestProductFilterSaucedemo(BaseTest):
 
     @allure.title("SauceDemo: Verify Product Cards in Ascending Order")

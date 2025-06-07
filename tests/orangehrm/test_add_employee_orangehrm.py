@@ -12,10 +12,10 @@ from base.base_test import BaseTest
 
 @pytest.mark.orangehrm
 @pytest.mark.employee
-@allure.feature("Employee")
+@allure.feature("Orangehrm: Employee")
 class TestAddEmployeeOrangehrm(BaseTest):
 
-    @allure.title("OrangeHrm: Add Employee")
+    @allure.title("Orangehrm: Add Employee")
     def test_orangehrm_add_employee(self, driver, config):
 
         self.log.info("Step: Open the OrangeHrm website")

@@ -13,7 +13,7 @@ from base.base_test import BaseTest
 
 @pytest.mark.orangehrm
 @pytest.mark.crawler
-@allure.feature("Crawler")
+@allure.feature("Orangehrm: Crawler")
 class TestCrawlerOrangehrm(BaseTest):
 
     @allure.title("OrangeHrm: Side bar menu crawler")

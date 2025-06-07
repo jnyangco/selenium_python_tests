@@ -11,11 +11,11 @@ from base.base_test import BaseTest
 
 @pytest.mark.saucedemo
 @pytest.mark.login
-@allure.feature("Login")
+@allure.feature("Saucedemo: Login")
 class TestLoginSaucedemo(BaseTest):
 
     @pytest.mark.test
-    @allure.title("Valid Login Test")
+    @allure.title("Saucedemo: Valid Login Test")
     @allure.description("Test description: Test Login with valid credentials")
     def test_login_valid_credentials(self, driver, config):
         """Test login with valid credentials"""
@@ -33,7 +33,7 @@ class TestLoginSaucedemo(BaseTest):
         login_page.user_successfully_logged_in()
 
 
-    @allure.title("Invalid Login Test - Invalid Password")
+    @allure.title("Saucedemo: Invalid Login Test - Invalid Password")
     @allure.description("Test description: Test Login with invalid password secret_sauce78234")
     def test_login_invalid_password(self, driver, config):
         """Test login with valid credentials"""
@@ -50,7 +50,7 @@ class TestLoginSaucedemo(BaseTest):
         login_page.verify_invalid_login_error_message("Epic sadface: Username and password do not match any user in this service")
 
 
-    @allure.title("Invalid Login Test - Locked Out User")
+    @allure.title("Saucedemo: Invalid Login Test - Locked Out User")
     @allure.description("Test description: Invalid Login Test - Locked Out User")
     def test_login_locked_out_user(self, driver, config):
         """Test login with valid credentials"""
