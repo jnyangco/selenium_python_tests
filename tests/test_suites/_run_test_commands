@@ -28,6 +28,8 @@ set -e  # Exit on error
 echo "🚀 Running Smoke Tests..."
 pytest -m smoke --browser=chrome --env=docker -v --alluredir=reports/allure-results
 
+2. Run shell script
+sh tests/test_suites/run_test.sh
 
 ## ----------------------------------------------------------------------------------------------
 OPTION 2: RUN USING SHELL SCRIPT FILE (with shebang)
@@ -45,7 +47,7 @@ pytest -m smoke --browser=chrome --env=docker -v --alluredir=reports/allure-resu
 chmod +x tests/test_suites/run_smoke_tests.sh
 ./test_suite/run_smoke_tests.sh    # Works directly
 
-run shell using command line:
+3. run shell using command line:
 ./tests/test_suites/run_saucedemo_test_suite.sh
 
 ## ----------------------------------------------------------------------------------------------

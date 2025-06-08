@@ -14,7 +14,6 @@ from base.base_test import BaseTest
 @allure.feature("Saucedemo: Login")
 class TestLoginSaucedemo(BaseTest):
 
-    @pytest.mark.test
     @allure.title("Saucedemo: Valid Login Test")
     @allure.description("Test description: Test Login with valid credentials")
     def test_login_valid_credentials(self, driver, config):

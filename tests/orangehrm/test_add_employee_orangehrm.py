@@ -5,6 +5,7 @@ import inspect
 import pytest
 from pages.orangehrm.base_page_orangehrm import BasePageOrangehrm
 from pages.orangehrm.login_page_orangehrm import LoginPageOrangehrm
+from pages.orangehrm.pim_page_orangehrm import PimPageOrangehrm
 from utils.data_utils import get_data as data
 import time
 from base.base_test import BaseTest
@@ -15,6 +16,7 @@ from base.base_test import BaseTest
 @allure.feature("Orangehrm: Employee")
 class TestAddEmployeeOrangehrm(BaseTest):
 
+    @pytest.mark.test
     @allure.title("Orangehrm: Add Employee")
     def test_orangehrm_add_employee(self, driver, config):
 
@@ -35,7 +37,10 @@ class TestAddEmployeeOrangehrm(BaseTest):
 
         self.log.info("Step: Click Add Employee top bar menu")
         base_page.click_top_bar_menu("Add Employee")
-        # steps.add_employee()
+
+        self.log.info("Step: Add an employee")
+        pim_page = PimPageOrangehrm(driver)
+        pim_page.add_employee()
 
         time.sleep(5)
 

@@ -294,20 +294,20 @@ class BasePage:
     #         print_stack()
 
 
-    def send_text(self, text, locator=""):
-        """
-        Send keys to an element -> MODIFIED
-        Either provide element or a combination of locator and locatorType
-        """
-        try:
-            element = self.get_element(locator)
-            element.send_keys(text)
-            # print("Send text on element with locator: " + locator + " locator Type: " + locator_type)
-            self.log.info("Send text on element with locator: " + str(locator))
-        except:
-            # print("Cannot send text on the element with locator: " + locator + " locator Type: " + locator_type)
-            self.log.info("Cannot send text on the element with locator: " + str(locator))
-            print_stack()
+    # def send_text(self, text, locator=""):
+    #     """
+    #     Send keys to an element -> MODIFIED
+    #     Either provide element or a combination of locator and locatorType
+    #     """
+    #     try:
+    #         element = self.get_element(locator)
+    #         element.send_keys(text)
+    #         # print("Send text on element with locator: " + locator + " locator Type: " + locator_type)
+    #         self.log.info("Send text on element with locator: " + str(locator))
+    #     except:
+    #         # print("Cannot send text on the element with locator: " + locator + " locator Type: " + locator_type)
+    #         self.log.info("Cannot send text on the element with locator: " + str(locator))
+    #         print_stack()
 
 
     # def get_text(self, locator="", info=""):

@@ -6,7 +6,7 @@ pytest-order==1.3.0         # for test order
 pytest-html==4.1.1          # for basic html report (optional)
 ddt==1.7.2                  # for data driven testing (optional)
 pytest-xdist==2.5.0         # for running tests in parallel (optional)
-# urllib3==1.26.7             # urllib3
+urllib3==2.4.0             # urllib3
 allure-pytest==2.13.5       # for allure reports
 Faker==35.0.0               # to generate random names
 # edit
