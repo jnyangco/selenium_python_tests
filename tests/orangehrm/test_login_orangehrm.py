@@ -15,6 +15,7 @@ from base.base_test import BaseTest
 @allure.feature("Orangehrm: Login")
 class TestLoginOrangehrm(BaseTest):
 
+    @pytest.mark.single_test
     @allure.title("Orangehrm: User should be able to login using valid credentials")
     def test_valid_login_orangehrm(self, driver):
         """Test login with valid credentials"""
