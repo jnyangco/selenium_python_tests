@@ -16,7 +16,7 @@ from base.base_test import BaseTest
 @allure.feature("Orangehrm: Employee")
 class TestAddEmployeeOrangehrm(BaseTest):
 
-    @pytest.mark.test
+    @pytest.mark.single_test
     @allure.title("Orangehrm: Add Employee")
     def test_orangehrm_add_employee(self, driver, config):
 
