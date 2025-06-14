@@ -25,7 +25,7 @@ class BasePageOrangehrm(BasePage):
 
 
     # Functions
-    @allure.step("Click top bar menu")
+    @allure.step("Click top bar menu: {menu}")
     def click_top_bar_menu(self, menu):
         # top_bar_menu = self.wait.until(EC.element_to_be_clickable((By.XPATH, self._gp_topbar_menu_dynamic_xpath.format(menu))))
         # top_bar_menu.click()
@@ -131,7 +131,7 @@ class BasePageOrangehrm(BasePage):
                 raise
 
 
-    @allure.step("Click side bar menu")
+    @allure.step("Click side bar menu: {menu}")
     def click_side_bar_menu(self, menu):
         # side_bar_menu = self.wait.until(EC.element_to_be_clickable((By.XPATH, self._sidebar_menus_dynamic_xpath.format(menu))))
         # side_bar_menu.click()

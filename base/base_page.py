@@ -27,6 +27,8 @@ from traceback import print_stack
 import time
 import os
 from utils.data_utils import get_data
+from utils.simple_context import context
+
 
 class BasePage:
     """Base class for all page objects"""
@@ -46,6 +48,9 @@ class BasePage:
         # using centralized logger from utils > logger_utils.py
         self.log = get_logger(self.__class__.__name__)
         self.screenshot_util = ScreenshotUtils(driver)
+
+        # context
+        self.context = context
 
     @allure.step("Opening URL: {url}")
     def open_url(self, url):

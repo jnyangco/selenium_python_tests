@@ -29,7 +29,10 @@ class TestAddEmployeeOrangehrm(BaseTest):
         login_page.login_with_username_and_password(username, password)
 
         self.log.info("Step: Click PIM side bar menu")
-        login_page.click_side_bar_menu("PIM")
+        # login_page inherit base_page_orangehrm
+        # login_page.click_side_bar_menu("PIM") # make test confusing? - check code
+
+        # use base_page_orangehrm
         base_page = BasePageOrangehrm(driver)
         base_page.click_side_bar_menu("PIM")
         time.sleep(2)
@@ -40,8 +43,32 @@ class TestAddEmployeeOrangehrm(BaseTest):
         self.log.info("Step: Add an employee")
         pim_page = PimPageOrangehrm(driver)
         pim_page.add_employee()
+        pim_page.search_newly_added_employee()
 
-        time.sleep(5)
+
+    # TRY TO USE DIFFERENT TEST AND ACCESS CONTEXT VARIABLE
+    @allure.title("Orangehrm: Search newly added employee")
+    def test_search_newly_added_employee(self, driver, config):
+        self.log.info("Step: Open the OrangeHrm website")
+        login_page = LoginPageOrangehrm(driver)
+        login_page.open_orangehrm_website()
+
+        self.log.info("Step: Login using username and password")
+        username = data("orangehrm", "username")
+        password = data("orangehrm", "password")
+        login_page.login_with_username_and_password(username, password)
+
+        self.log.info("Step: Click PIM side bar menu")
+        base_page = BasePageOrangehrm(driver)
+        base_page.click_side_bar_menu("PIM")
+
+        self.log.info("Step: Click Add Employee top bar menu")
+        base_page.click_top_bar_menu("Add Employee")
+
+        self.log.info("Step: Add an employee")
+        pim_page = PimPageOrangehrm(driver)
+        pim_page.search_newly_added_employee()
+
 
 
 
