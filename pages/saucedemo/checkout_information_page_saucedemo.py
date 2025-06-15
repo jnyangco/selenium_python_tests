@@ -1,12 +1,9 @@
-import time
 import allure
 import pytest
 from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.select import Select
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from base.base_page import BasePage
+from core.base.base_page import BasePage
 
 
 class CheckoutInformationPageSaucedemo(BasePage):
@@ -25,7 +22,7 @@ class CheckoutInformationPageSaucedemo(BasePage):
             continue_button = self.wait.until(EC.element_to_be_clickable(self._continue_button))
             continue_button.click()
         except TimeoutException:
-            self.screenshot_util.take_screenshot()
+            self.screenshot_util.capture_screenshot()
             self.log.error("Failed to click continue button.")
             pytest.fail("Failed to click continue button.")
 
@@ -37,7 +34,7 @@ class CheckoutInformationPageSaucedemo(BasePage):
             assert actual_secondary_text == expected_secondary_text, \
                 f"Incorrect secondary header text: Expected = {expected_secondary_text}, Actual = {actual_secondary_text}"
         except (TimeoutException, AssertionError):
-            self.screenshot_util.take_screenshot()
+            self.screenshot_util.capture_screenshot()
             self.log.error("Failed to verify secondary header text.")
             raise
 
@@ -52,7 +49,7 @@ class CheckoutInformationPageSaucedemo(BasePage):
             zip_code_element = self.wait.until(EC.element_to_be_clickable(self._zip_code_info))
             zip_code_element.send_keys(zip_code)
         except TimeoutException:
-            self.screenshot_util.take_screenshot()
+            self.screenshot_util.capture_screenshot()
             self.log.error("Failed to fillup checkout information.")
             pytest.fail("Failed to fillup checkout information.")
 

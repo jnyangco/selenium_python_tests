@@ -1,4 +1,4 @@
-# utils/simple_context.py
+# utils/context_utils.py
 """
 Simple Context Manager with dot notation access
 
@@ -18,7 +18,7 @@ Usage:
 import threading
 
 
-class SimpleContext:
+class ContextUtils:
     """Simple context manager with dot notation access"""
 
     _instance = None
@@ -29,7 +29,7 @@ class SimpleContext:
         if cls._instance is None:
             with cls._lock:
                 if cls._instance is None:
-                    cls._instance = super(SimpleContext, cls).__new__(cls)
+                    cls._instance = super(ContextUtils, cls).__new__(cls)
         return cls._instance
 
     def clear(self):
@@ -44,4 +44,4 @@ class SimpleContext:
 
 
 # Create global context instance
-context = SimpleContext()
+context = ContextUtils()

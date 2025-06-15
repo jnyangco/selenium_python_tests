@@ -1,7 +1,7 @@
 import os
 import allure
 from datetime import datetime
-from config.config import TestConfig
+from config.test_config import TestConfig
 
 
 class ScreenshotUtils:
@@ -17,7 +17,7 @@ class ScreenshotUtils:
             os.makedirs(self.screenshots_dir)
 
     # @allure.step("Taking screenshot: {name}")
-    def take_screenshot(self, name="screenshot"):
+    def capture_screenshot(self, name="screenshot"):
         """Take screenshot and attach to Allure report"""
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"{name}_{timestamp}.png"
@@ -30,3 +30,9 @@ class ScreenshotUtils:
             allure.attach(file.read(), name=filename, attachment_type=allure.attachment_type.PNG)
 
         return filepath
+
+
+def take_screenshot(driver, name="screenshot"):
+    """Standalone function to take screenshot"""
+    screenshot_util = ScreenshotUtils(driver)
+    return screenshot_util.capture_screenshot(name)

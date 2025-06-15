@@ -3,12 +3,10 @@
 # import shutil
 # import subprocess
 # from email.policy import default
-import logging
 
 import pytest
-import allure
-from base.driver_factory import DriverFactory
-from config.config import TestConfig
+from core.driver.driver_factory import DriverFactory
+from config.test_config import TestConfig
 from utils.logger_utils import setup_logger, get_logger  # import logger
 from utils.screenshot_utils import ScreenshotUtils
 
@@ -26,9 +24,13 @@ def driver(request):
     config = TestConfig()
 
     # Get parameters from command line run
-    browser = request.config.getoption("--browser").lower()
-    os_type = request.config.getoption("--os_type").lower()
-    env = request.config.getoption("--env").lower()
+    # browser = request.config.getoption("--browser").lower()
+    # os_type = request.config.getoption("--os_type").lower()
+    # env = request.config.getoption("--env").lower()
+
+    browser = request.config.getoption("--browser", default="chrome").lower() # point to config default value
+    os_type = request.config.getoption("--os_type", default="False") # point to config default value
+    env = request.config.getoption("--env", default="local").lower() # point to config default value
 
 
     log.info(f"--env = {env}")
@@ -54,9 +56,10 @@ def driver(request):
     yield driver
 
     # Take screenshot on failure
-    if hasattr(pytest, "_test_failed") and pytest._test_failed:
-        screenshot_util = ScreenshotUtils(driver)
-        screenshot_util.take_screenshot("test_failure")
+    # NOT WORKING
+    # if hasattr(pytest, "_test_failed") and pytest._test_failed:
+    #     screenshot_util = ScreenshotUtils(driver)
+    #     screenshot_util.take_screenshot("test_failure")
 
     # Suite driver
     driver.quit()
@@ -82,6 +85,10 @@ def pytest_runtest_makereport(item, call):
 
 def pytest_addoption(parser):
     """Add CLI option for selecting the browser."""
-    parser.addoption("--browser", action="store", default="chrome", help="Type of browser to use: 'chrome' or 'firefox'")
-    parser.addoption("--os_type", action="store", default="", help="Type of operating system: 'mac', 'windows', 'linux'")
-    parser.addoption("--env", action="store", default="local", help="Where to run the tests: 'local' or 'docker'")
+    # parser.addoption("--browser", action="store", default="chrome", help="Type of browser to use: 'chrome' or 'firefox'")
+    # parser.addoption("--os_type", action="store", default="", help="Type of operating system: 'mac', 'windows', 'linux'")
+    # parser.addoption("--env", action="store", default="local", help="Where to run the tests: 'local' or 'docker'")
+
+    parser.addoption("--browser", action="store", help="Type of browser to use: 'chrome' or 'firefox'")
+    parser.addoption("--os_type", action="store", help="Type of operating system: 'mac', 'windows', 'linux'")
+    parser.addoption("--env", action="store", help="Where to run the tests: 'local' or 'docker'")

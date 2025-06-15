@@ -1,15 +1,8 @@
-import time
 import allure
-import pytest
-from selenium.common import TimeoutException
-from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from utils.faker_utils import generate_random_fullname
-from base.base_page import BasePage
 from pages.orangehrm.base_page_orangehrm import BasePageOrangehrm
-from utils.data_utils import get_data as data
 
 
 class PimPageOrangehrm(BasePageOrangehrm):
@@ -90,14 +83,14 @@ class PimPageOrangehrm(BasePageOrangehrm):
         success_message = self.get_text(self._saved_success_message).split("\n")
         print(f">>> message = {success_message}")
 
-        self.screenshot_util.take_screenshot()
+        self.screenshot_util.capture_screenshot()
         try:
             assert success_message[0] == "Success", \
                 f"Success message mismatch: Expected = 'Success', Actual = '{success_message[0]}'"
             assert success_message[1] == "Successfully Saved", \
                 f"Success message mismatch: Expected = 'Successfully Saved', Actual = '{success_message[1]}'"
         except AssertionError:
-            self.screenshot_util.take_screenshot()
+            self.screenshot_util.capture_screenshot()
             self.log.error("Success message mismatch")
             raise
 
@@ -111,6 +104,7 @@ class PimPageOrangehrm(BasePageOrangehrm):
         self.click_element(self._employee_list_tab)
         self.wait_seconds(4)
         self.enter_text(self._employee_id_textbox, self.context.employee_id)
+        self.wait_seconds(2)
         self.click_element(self._search_button)
         self.wait_seconds(5)
 

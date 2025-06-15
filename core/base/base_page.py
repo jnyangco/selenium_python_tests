@@ -27,7 +27,10 @@ from traceback import print_stack
 import time
 import os
 from utils.data_utils import get_data
-from utils.simple_context import context
+from utils.context_utils import context
+from config.test_config import TestConfig as config
+
+from utils.decorators_utils import screenshot_on_failure, log_step
 
 
 class BasePage:
@@ -38,16 +41,16 @@ class BasePage:
         Returns:
             None
         """
-        # super(BasePage, self).__init__(driver)
         self.driver = driver
-        self.wait = WebDriverWait(driver, 10)
-
-        # using logger directly
-        # self.log = logging.getLogger(self.__class__.__name__)
+        self.wait = WebDriverWait(driver, config.EXPLICIT_WAIT)
+        self.short_wait = WebDriverWait(driver, 5)
+        self.long_wait = WebDriverWait(driver, 30)
 
         # using centralized logger from utils > logger_utils.py
         self.log = get_logger(self.__class__.__name__)
         self.screenshot_util = ScreenshotUtils(driver)
+
+        self.actions = ActionChains(driver)
 
         # context
         self.context = context
@@ -75,6 +78,7 @@ class BasePage:
 
 
     # @allure.step("Finding element: {locator}")
+    # @screenshot_on_failure
     def find_web_element(self, locator, timeout=10):
         """Find element with explicit wait"""
 
@@ -87,12 +91,8 @@ class BasePage:
             self.log.info(f"Found element: {locator}")
             return element
         except TimeoutException:
-            # self.screenshot_util.take_screenshot("element_not_found")
-            self.screenshot_util.take_screenshot()
             self.log.error(f"Element not found: {locator}")
-            pytest.fail(f"Element not found: {locator}")
-            # raise
-            return None
+            raise TimeoutException(f"Element not found: {locator}")
 
     @allure.step("Finding elements: {locator}")
     def find_web_elements(self, locator, timeout=10):
@@ -105,11 +105,11 @@ class BasePage:
             return elements
         except TimeoutException:
             self.log.error(f"Elements not found: {locator}")
-            self.screenshot_util.take_screenshot("elements_not_found")
             return []
 
 
     # @allure.step("Clicking element: {locator}")
+    @screenshot_on_failure
     def click_element(self, locator):
         """Click an element"""
         try:
@@ -117,11 +117,12 @@ class BasePage:
             self.log.info(f"Clicking element: {locator}")
             element.click()
         except TimeoutException:
-            self.screenshot_util.take_screenshot()
             self.log.error(f"Element not clickable: {locator}.")
-            pytest.fail(f"Element not clickable: {locator}.")
+            raise TimeoutException(f"Element not clickable: {locator}.")
+
 
     # @allure.step("Clicking element with dynamic xpath: {locator}")
+    @screenshot_on_failure
     def click_element_dynamic_xpath(self, locator_dynamic_xpath):
         """Click an element with dynamic xpath"""
         locator = None
@@ -131,12 +132,12 @@ class BasePage:
             self.log.info(f"Clicking element: {locator}")
             self.click_element(locator)
         except TimeoutException:
-            self.screenshot_util.take_screenshot()
             self.log.error(f"Element dynamic xpath not clickable: {locator}.")
-            pytest.fail(f"Element dynamic xpath not clickable: {locator}.")
+            raise TimeoutException(f"Element dynamic xpath not clickable: {locator}.")
 
 
     # @allure.step("Typing text: {text} into element: {locator}")
+    @screenshot_on_failure
     def enter_text(self, locator, text):
         """Type text into an element after clearing it"""
         element = self.find_web_element(locator)
@@ -145,6 +146,7 @@ class BasePage:
         element.send_keys(text)
 
 
+    @screenshot_on_failure
     @allure.step("Getting text from element: {locator}")
     def get_text(self, locator):
         """Get text from an element"""
@@ -154,6 +156,7 @@ class BasePage:
         return text
 
 
+    @screenshot_on_failure
     @allure.step("Checking if element is displayed: {locator}")
     def is_element_displayed(self, locator):
         """Check if element is displayed"""
@@ -162,11 +165,13 @@ class BasePage:
             is_displayed = element.is_displayed()
             self.log.info(f"Element {locator} is {'displayed' if is_displayed else 'not displayed'}")
             return is_displayed
-        except (TimeoutException, NoSuchElementException):
+        # except (TimeoutException, NoSuchElementException):
+        except TimeoutException:
             self.log.info(f"Element {locator} is not displayed")
             return False
 
 
+    @screenshot_on_failure
     @allure.step("Waiting for element to be visible: {locator}")
     def wait_for_element_visible(self, locator, timeout=10):
         """Wait for element to be visible"""
@@ -178,7 +183,6 @@ class BasePage:
             return element
         except TimeoutException:
             self.log.error(f"Element not visible: {locator}")
-            self.screenshot_util.take_screenshot("element_not_visible")
             raise
 
 
@@ -186,7 +190,8 @@ class BasePage:
     def hover(self, locator):
         """Hover over an element"""
         element = self.find_web_element(locator)
-        ActionChains(self.driver).move_to_element(element).perform()
+        # ActionChains(self.driver).move_to_element(element).perform()
+        self.actions.move_to_element(element).perform()
         self.log.info(f"Hovered over element: {locator}")
 
 
@@ -198,6 +203,7 @@ class BasePage:
         self.log.info(f"Scrolled to element: {locator}")
 
 
+    @screenshot_on_failure
     @allure.step("Assert element text matches: {expected_text}")
     def assert_element_text_matches(self, locator, expected_text, assert_message="Element text mismatch"):
         actual_text = ""
@@ -206,7 +212,6 @@ class BasePage:
             assert actual_text == expected_text, \
                 f"{assert_message}: Expected = '{expected_text}', Actual = '{actual_text}'"
         except AssertionError:
-            self.screenshot_util.take_screenshot()
             self.log.error(f"{assert_message}: Expected = '{expected_text}', Actual = '{actual_text}'")
             raise
 

@@ -1,12 +1,9 @@
 import allure
-import logging
-import inspect
 
 import pytest
 from pages.saucedemo.login_page_saucedemo import LoginPageSaucedemo
 from utils.data_utils import get_data as data
-import time
-from base.base_test import BaseTest
+from core.base.base_test import BaseTest
 
 
 @pytest.mark.saucedemo

@@ -9,7 +9,7 @@ from pages.saucedemo.checkout_overview_page_saucedemo import CheckoutOverviewPag
 from pages.saucedemo.login_page_saucedemo import LoginPageSaucedemo
 from pages.saucedemo.product_page_saucedemo import ProductPageSaucedemo
 from utils.data_utils import get_data as data
-from base.base_test import BaseTest
+from core.base.base_test import BaseTest
 
 
 @pytest.mark.saucedemo

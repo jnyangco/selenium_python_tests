@@ -1,12 +1,9 @@
-import time
 import allure
 import pytest
 from selenium.common import TimeoutException
-from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from base.base_page import BasePage
+from core.base.base_page import BasePage
 from utils.data_utils import get_data as data
 
 
@@ -48,7 +45,7 @@ class BasePageOrangehrm(BasePage):
             search_menu = self.is_element_displayed(self._search_menu)
             assert search_menu, f"Search menu is not displayed."
         except AssertionError:
-            self.screenshot_util.take_screenshot()
+            self.screenshot_util.capture_screenshot()
             self.log.error("Search menu is not displayed.")
             raise
 
@@ -126,7 +123,7 @@ class BasePageOrangehrm(BasePage):
                 assert current_url == expected_url, \
                     f"Incorrect url for '{menu}': Expected = {expected_url}, Actual = {current_url}"
             except (TimeoutException, AssertionError):
-                self.screenshot_util.take_screenshot()
+                self.screenshot_util.capture_screenshot()
                 self.log.error(f"Incorrect url for menu '{menu}': Expected = {expected_url}, Actual = {current_url}")
                 raise
 

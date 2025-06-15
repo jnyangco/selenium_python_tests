@@ -1,12 +1,10 @@
-import time
 import allure
 import pytest
 from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from base.base_page import BasePage
+from core.base.base_page import BasePage
 
 
 class ProductPageSaucedemo(BasePage):
@@ -63,7 +61,7 @@ class ProductPageSaucedemo(BasePage):
                 assert actual_element == expected_element, \
                     f"Element mismatch at index {index}. Expected = {expected_element}, Actual = {actual_element}"
         except (TimeoutException, AssertionError):
-            self.screenshot_util.take_screenshot()
+            self.screenshot_util.capture_screenshot()
             self.log.error(f"Hamburger menu list verification failed.")
             raise
 
@@ -79,7 +77,7 @@ class ProductPageSaucedemo(BasePage):
             assert actual_total_list == expected_total_list, \
                 f"Total product cards displayed mismatch: Actual = {actual_total_list}, Expected = {expected_total_list}"
         except (TimeoutException, AssertionError):
-            self.screenshot_util.take_screenshot()
+            self.screenshot_util.capture_screenshot()
             self.log.error(f"Total products verification failed.")
             raise
 
@@ -91,7 +89,7 @@ class ProductPageSaucedemo(BasePage):
             assert int(cart_total_text) == expected_total, \
                 f"Incorrect cart total: Expected = {expected_total}, Actual = {cart_total_text}"
         except (TimeoutException, AssertionError):
-            self.screenshot_util.take_screenshot()
+            self.screenshot_util.capture_screenshot()
             self.log.error(f"Cart total verification failed.")
             raise
 
@@ -102,7 +100,7 @@ class ProductPageSaucedemo(BasePage):
             cart_icon = self.wait.until(EC.element_to_be_clickable(self._cart_icon))
             cart_icon.click()
         except TimeoutException:
-            self.screenshot_util.take_screenshot()
+            self.screenshot_util.capture_screenshot()
             self.log.error("Failed to open cart.")
             pytest.fail("Failed to open cart.")
 
@@ -116,7 +114,7 @@ class ProductPageSaucedemo(BasePage):
             item_price_1 = self.get_item_price(item_name)
             print(f">>> self.item_price_1 = {item_price_1}")
         except TimeoutException:
-            self.screenshot_util.take_screenshot()
+            self.screenshot_util.capture_screenshot()
             self.log.error("Failed to click add to cart button.")
             pytest.fail("Failed to click add to cart button.")
 
@@ -130,7 +128,7 @@ class ProductPageSaucedemo(BasePage):
             item_price_2 = self.get_item_price(item_name)
             print(f">>> self.item_price_2 = {item_price_2}")
         except TimeoutException:
-            self.screenshot_util.take_screenshot()
+            self.screenshot_util.capture_screenshot()
             self.log.error("Failed to click add to cart button.")
             pytest.fail("Failed to click add to cart button.")
 
@@ -143,7 +141,7 @@ class ProductPageSaucedemo(BasePage):
             item_price = item_price.replace("$","")
             return item_price
         except TimeoutException:
-            self.screenshot_util.take_screenshot()
+            self.screenshot_util.capture_screenshot()
             self.log.error("Failed to get item price.")
             pytest.fail("Failed to get item price.")
             return None
@@ -155,7 +153,7 @@ class ProductPageSaucedemo(BasePage):
             add_to_cart_button = self.wait.until(EC.element_to_be_clickable((By.XPATH, add_to_cart_xpath)))
             assert add_to_cart_button.text == "Remove", f"Button text mismatch. Expected = 'Remove', Actual = '{add_to_cart_button.text}'"
         except (TimeoutException, AssertionError):
-            self.screenshot_util.take_screenshot()
+            self.screenshot_util.capture_screenshot()
             self.log.error("Failed to verify add to cart change to remove.")
             raise
 
@@ -167,7 +165,7 @@ class ProductPageSaucedemo(BasePage):
             dropdown = Select(dropdown)
             dropdown.select_by_visible_text(sort_by)
         except TimeoutException:
-            self.screenshot_util.take_screenshot()
+            self.screenshot_util.capture_screenshot()
             self.log.error("Failed to select dropdown filter.")
             pytest.fail("Failed to select dropdown filter.")
 
@@ -228,7 +226,7 @@ class ProductPageSaucedemo(BasePage):
                     f"Product price is not in descending order: Expected = \n'{expected_product_price}', Actual = \n'{actual_product_price}'"
 
         except (TimeoutException, AssertionError):
-            self.screenshot_util.take_screenshot()
+            self.screenshot_util.capture_screenshot()
             self.log.error("Failed to verify product cards ordering.")
             raise
 

@@ -1,12 +1,9 @@
-import time
 import allure
 import pytest
 from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.select import Select
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from base.base_page import BasePage
+from core.base.base_page import BasePage
 
 
 class LoginPageSaucedemo(BasePage):
@@ -28,7 +25,7 @@ class LoginPageSaucedemo(BasePage):
             self.wait.until(EC.visibility_of_element_located(self._password_textbox)).send_keys(password)
             self.wait.until(EC.element_to_be_clickable(self._login_button)).click()
         except TimeoutException:
-            self.screenshot_util.take_screenshot()
+            self.screenshot_util.capture_screenshot()
             self.log.error(f"Failed to login with {username} and {password}.")
             pytest.fail(f"Failed to login with {username} and {password}.")
 
@@ -39,7 +36,7 @@ class LoginPageSaucedemo(BasePage):
             swag_labs_logo_is_displayed = self.wait.until(EC.visibility_of_element_located(self._swag_labs_logo)).is_displayed()
             assert swag_labs_logo_is_displayed, "Swag labs logo should be displayed"
         except (TimeoutException, AssertionError):
-            self.screenshot_util.take_screenshot()
+            self.screenshot_util.capture_screenshot()
             self.log.error("Failed to login.")
             raise
 
@@ -50,7 +47,7 @@ class LoginPageSaucedemo(BasePage):
             self.wait.until(EC.visibility_of_element_located(self._username_textbox)).send_keys(username)
             self.wait.until(EC.visibility_of_element_located(self._password_textbox)).send_keys(password)
         except TimeoutException:
-            self.screenshot_util.take_screenshot()
+            self.screenshot_util.capture_screenshot()
             self.log.error("Failed to enter username and password.")
             pytest.fail("Failed to enter username and password.")
 
@@ -63,7 +60,7 @@ class LoginPageSaucedemo(BasePage):
             assert error_message == expected_error_message, \
                 f"Error message mismatch: Expected = '{expected_error_message}', Actual = '{error_message}'"
         except (TimeoutException, AssertionError):
-            self.screenshot_util.take_screenshot()
+            self.screenshot_util.capture_screenshot()
             self.log.error("Failed to verify error message.")
             raise
 

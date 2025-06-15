@@ -1,12 +1,8 @@
-import time
 import allure
-import pytest
 from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.select import Select
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from base.base_page import BasePage
+from core.base.base_page import BasePage
 
 
 class CheckoutCompletePageSaucedemo(BasePage):
@@ -25,7 +21,7 @@ class CheckoutCompletePageSaucedemo(BasePage):
             assert actual_secondary_text == expected_secondary_text, \
                 f"Incorrect secondary header text: Expected = '{expected_secondary_text}', Actual = '{actual_secondary_text}'"
         except (TimeoutException, AssertionError):
-            self.screenshot_util.take_screenshot()
+            self.screenshot_util.capture_screenshot()
             self.log.error("Failed to verify secondary header text.")
             raise
 
@@ -37,7 +33,7 @@ class CheckoutCompletePageSaucedemo(BasePage):
             assert actual_text == expected_text, \
                 f"FAILED: Incorrect checkout success message text: Expected = '{expected_text}', Actual = '{actual_text}'"
         except (TimeoutException, AssertionError):
-            self.screenshot_util.take_screenshot()
+            self.screenshot_util.capture_screenshot()
             self.log.error("Failed to verify checkout success message text.")
             raise
 
@@ -49,7 +45,7 @@ class CheckoutCompletePageSaucedemo(BasePage):
             assert actual_text == expected_text, \
                 f"Incorrect checkout success message description: Expected = '{expected_text}', Actual = '{actual_text}'"
         except (TimeoutException, AssertionError):
-            self.screenshot_util.take_screenshot()
+            self.screenshot_util.capture_screenshot()
             self.log.error("Failed to verify checkout success message description.")
             raise
 

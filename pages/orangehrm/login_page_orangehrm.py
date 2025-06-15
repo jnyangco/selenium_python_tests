@@ -1,12 +1,5 @@
-import time
 import allure
-import pytest
-from selenium.common import TimeoutException
-from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from base.base_page import BasePage
 from pages.orangehrm.base_page_orangehrm import BasePageOrangehrm
 from utils.data_utils import get_data as data
 
@@ -21,9 +14,9 @@ class LoginPageOrangehrm(BasePageOrangehrm):
 
 
     # Functions
-    @allure.step("Open OrangeHRM Website")
+    @allure.step("Open Orangehrm website")
     def open_orangehrm_website(self):
-        self.log.info("Open OrangeHRM Website")
+        self.log.info("Open Orangehrm Website")
         base_url = data("orangehrm", "base_url")
         self.open_url(base_url)
 

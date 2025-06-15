@@ -1,12 +1,9 @@
-import time
 import allure
 import pytest
 from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.select import Select
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from base.base_page import BasePage
+from core.base.base_page import BasePage
 
 
 class CartPageSaucedemo(BasePage):
@@ -29,7 +26,7 @@ class CartPageSaucedemo(BasePage):
             item_price = item_price.replace("$", "")
             return item_price
         except TimeoutException:
-            self.screenshot_util.take_screenshot()
+            self.screenshot_util.capture_screenshot()
             self.log.error("Failed to get item price in the cart page.")
             pytest.fail("Failed to get item price in the cart page.")
             return None
@@ -44,7 +41,7 @@ class CartPageSaucedemo(BasePage):
             assert actual_item_price == expected_item_price, \
                 f"Incorrect item price: Expected: {expected_item_price}, Actual: {actual_item_price}"
         except (TimeoutException, AssertionError):
-            self.screenshot_util.take_screenshot()
+            self.screenshot_util.capture_screenshot()
             self.log.error("Failed to verify item price.")
             raise
 
@@ -57,7 +54,7 @@ class CartPageSaucedemo(BasePage):
             assert int(actual_item_quantity) == expected_item_quantity, \
                 f"Incorrect item quantity for '{item_name}': Expected = {expected_item_quantity}, Actual = {actual_item_quantity}"
         except (TimeoutException, AssertionError):
-            self.screenshot_util.take_screenshot()
+            self.screenshot_util.capture_screenshot()
             self.log.error("Failed to verify item displayed in cart page - item name and quantity.")
             raise
 
@@ -68,7 +65,7 @@ class CartPageSaucedemo(BasePage):
             checkout_button = self.wait.until(EC.element_to_be_clickable(self._checkout_button))
             checkout_button.click()
         except TimeoutException:
-            self.screenshot_util.take_screenshot()
+            self.screenshot_util.capture_screenshot()
             self.log.error("Failed to click checkout button.")
             pytest.fail("Failed to click checkout button.")
 
@@ -80,7 +77,7 @@ class CartPageSaucedemo(BasePage):
             assert actual_secondary_text == expected_secondary_text, \
                 f"Incorrect secondary header text: Expected = '{expected_secondary_text}', Actual = '{actual_secondary_text}'"
         except (TimeoutException, AssertionError):
-            self.screenshot_util.take_screenshot()
+            self.screenshot_util.capture_screenshot()
             self.log.error("Failed to verify secondary header text.")
             raise
 
