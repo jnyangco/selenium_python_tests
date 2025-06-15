@@ -25,3 +25,6 @@ class TestConfig:
     # Logging settings
     LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
     LOG_FILE: str = os.getenv("LOG_FILE", "reports/test.log")
+
+    # Test data
+    DATA_DIR: str = os.getenv("DATA_DIR", "../config/data/test_data.ini")

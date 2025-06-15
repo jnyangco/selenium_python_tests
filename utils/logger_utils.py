@@ -1,6 +1,6 @@
 import logging
 import os
-from config.config import TestConfig
+from config.test_config import TestConfig
 
 # Global flag to ensure we only configure logging once
 _logger_configured = False
