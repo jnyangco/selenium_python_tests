@@ -1,0 +1,33 @@
+import allure
+from selenium.webdriver.common.by import By
+from core.base.base_page import BasePage
+from utils.data_utils import get_data as data
+
+
+class HeaderPageBank(BasePage):
+
+    XYZ_BANK_HEADER = (By.XPATH, "//strong[text()='XYZ Bank']")
+    HEADER = (By.XPATH, "//*[@class='mainHeading']")
+    HOME_BUTTON = (By.XPATH, "//button[@class='btn home']")
+
+
+    @allure.step("Get Header text")
+    def get_header_text(self):
+        header_text = self.get_text(self.HEADER)
+        return header_text
+
+
+    @allure.step("Click Home button")
+    def click_home_button(self):
+        self.click_element(self.HOME_BUTTON)
+
+
+    @allure.step("Get display status of header elements")
+    def get_display_status_header_elements(self):
+        elements_status = {
+            'HEADER': self.is_element_displayed(self.HEADER),
+            'HOME_BUTTON': self.is_element_displayed(self.HOME_BUTTON)
+        }
+        return elements_status
+
+

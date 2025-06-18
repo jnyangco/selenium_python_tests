@@ -15,8 +15,8 @@ class TestConfig:
     # BASE_URL_ORANGEHRM: str = os.getenv("BASE_URL_ORANGEHRM", "https://opensource-demo.orangehrmlive.com")
 
     # Wait settings
-    IMPLICIT_WAIT: int = int(os.getenv("IMPLICIT_WAIT", "10"))
-    EXPLICIT_WAIT: int = int(os.getenv("EXPLICIT_WAIT", "10"))
+    IMPLICIT_WAIT: int = int(os.getenv("IMPLICIT_WAIT", "5")) # original value = 10
+    EXPLICIT_WAIT: int = int(os.getenv("EXPLICIT_WAIT", "5")) # original value = 10
 
     # Report settings
     SCREENSHOTS_DIR: str = os.getenv("SCREENSHOTS_DIR", "reports/screenshots")

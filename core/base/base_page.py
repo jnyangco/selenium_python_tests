@@ -109,7 +109,7 @@ class BasePage:
 
 
     # @allure.step("Clicking element: {locator}")
-    @screenshot_on_failure
+    # @screenshot_on_failure
     def click_element(self, locator):
         """Click an element"""
         try:

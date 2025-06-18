@@ -13,7 +13,7 @@ Example:
         def test_login(self):
             self.log.info("Test started")
 """
-
+import allure
 from utils.logger_utils import get_logger
 
 
@@ -34,3 +34,29 @@ class BaseTest:
         if not hasattr(self, '_log'):
             self._log = get_logger(self.__class__.__name__)
         return self._log
+
+
+    # ===========================================================
+    # Custom Assert functions with allure.step
+
+    @allure.step("Verify {element_name} text is equal to {expected_text}")
+    def assert_text_equal(self, actual_text, expected_text, element_name):
+        """Assert that two text values are equal"""
+        error_message = f"[{element_name}] text mismatch: expected '{expected_text}', actual '{actual_text}'"
+        assert actual_text == expected_text, error_message
+
+        # attach useful information to allure report (i.e: query, text, etc)
+        # allure.attach(f"Text assertion passed: '{actual_text}' equals '{expected_text}'",
+        #               name="Assertion Result", attachment_type=allure.attachment_type.TEXT)
+
+
+    @allure.step("Verify {element_name} is displayed")
+    def assert_element_displayed(self, is_element_displayed, element_name):
+        assert is_element_displayed, f"[{element_name}] is not displayed"
+
+
+    @allure.step("Verify elements are displayed: {elements_dictionary}")
+    def assert_elements_displayed(self, elements_dictionary):
+        for element_name, status in elements_dictionary:
+            assert status, f"'{element_name}' is not displayed"
+

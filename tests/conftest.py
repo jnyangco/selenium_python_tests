@@ -55,8 +55,7 @@ def driver(request):
 
     yield driver
 
-    # Take screenshot on failure
-    # NOT WORKING
+    # Automatic take screenshot on failure - NOT WORKING
     # if hasattr(pytest, "_test_failed") and pytest._test_failed:
     #     screenshot_util = ScreenshotUtils(driver)
     #     screenshot_util.take_screenshot("test_failure")
@@ -73,14 +72,36 @@ def config():
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
-    """Hook to add screenshot on test failure"""
+    """
+    Automatically capture screenshot on test failure
+    This works for ALL tests, regardless of where assertions fail
+    """
     outcome = yield
     rep = outcome.get_result()
 
+    # Only capture screenshot on test failure during 'call' phase
     if rep.when == "call" and rep.failed:
-        pytest._test_failed = True
-    else:
-        pytest._test_failed = False
+        # Check if driver fixture is available
+        if hasattr(item, 'funcargs') and 'driver' in item.funcargs:
+            driver = item.funcargs['driver']
+
+            try:
+                # Create screenshot utility and take screenshot
+                screenshot_util = ScreenshotUtils(driver)
+                screenshot_util.capture_screenshot(f"test_failure_{item.name}")
+                logger.info(f"Screenshot captured for failed test: {item.name}")
+            except Exception as e:
+                logger.error(f"Failed to capture screenshot: {str(e)}")
+
+
+    # Hook to add screenshot on test failure
+    # OLD - NOT WORKING
+    # outcome = yield
+    # rep = outcome.get_result()
+    # if rep.when == "call" and rep.failed:
+    #     pytest._test_failed = True
+    # else:
+    #     pytest._test_failed = False
 
 
 def pytest_addoption(parser):
