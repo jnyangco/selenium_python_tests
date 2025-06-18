@@ -1,47 +1,78 @@
 import allure
 import pytest
 
-from pages.bank.header_page_bank import HeaderPageBank
+from pages.bank.customer_login_page import CustomerLoginPage
+from pages.bank.header_page import HeaderPage
+from pages.bank.manager_login_page import ManagerLoginPage
 from utils.data_utils import get_data as data
 import time
 from core.base.base_test import BaseTest
-from pages.bank.home_page_bank import HomePageBank
+from pages.bank.home_page import HomePage
 from utils.decorators_utils import screenshot_on_failure
 
 
 @pytest.mark.bank
-# @pytest.mark.login
+@pytest.mark.ui
 @allure.feature("Bank: UI & Navigation")
 class TestUINavigationBank(BaseTest):
 
     @allure.title("Bank: Verify home page elements are displayed")
     def test_home_page_elements_bank(self, driver):
-
         # use assert helper in base test
-        home_page = HomePageBank(driver)
+        home_page = HomePage(driver)
         home_page.open_bank_website()
-        homepage_element_status = home_page.get_display_status_home_page_elements().items()
+        homepage_element_status = home_page.get_elements_displayed_status().items()
         for element, status in homepage_element_status:
             assert status, f"Element '{element}' is not displayed"
 
         # use assert helper in base test
-        header_page = HeaderPageBank(driver)
-        header_page_element_status = header_page.get_display_status_header_elements().items()
+        header_page = HeaderPage(driver)
+        header_page_element_status = header_page.get_header_elements_displayed_status().items()
         for element, status in header_page_element_status:
             assert status, f"Element '{element}' is not displayed"
 
         # use assert helper in base test
         header_text = header_page.get_header_text()
-        assert header_text == "XYZ Bank", f"Text mismatch: Expected = 'XYZ Bank', Actual = '{header_text}'"
+        assert header_text == "XYZ Bank", f"Incorrect header text. Expected 'XYZ Bank', but got = '{header_text}'"
 
 
     @allure.title("Verify bank home page title")
     def test_home_page_title_bank(self, driver):
-        home_page = HomePageBank(driver)
+        home_page = HomePage(driver)
         home_page.open_bank_website()
 
         page_title = home_page.get_bank_page_title()
-        assert page_title == "XYZ Bank", f"Incorrect page title. Expected = 'XYZ Bank', Actual = '{page_title}'"
+        assert page_title == "XYZ Bank", f"Incorrect page title. Expected = 'XYZ Bank', but got = '{page_title}'"
+
+
+    @allure.title("Navigate between pages")
+    def test_navigation_between_pages(self, driver):
+        home_page = HomePage(driver)
+        home_page.open_bank_website()
+        home_page.click_customer_login_button()
+
+        customer_login_page = CustomerLoginPage(driver)
+        element_status = customer_login_page.is_customer_dropdown_visible()
+        assert element_status, f"Element 'CUSTOMER_DROPDOWN' is not displayed"
+
+        home_page = HomePage(driver)
+        home_page.click_home_button()
+        elements_status = home_page.get_elements_displayed_status().items()
+        for element, status in elements_status:
+            assert status, f"Element '{element}' is not displayed"
+
+        home_page.click_bank_manager_login_button()
+        manager_login_page = ManagerLoginPage(driver)
+        elements_status = manager_login_page.get_elements_displayed_status().items()
+        for element, status in elements_status:
+            assert status, f"Element '{element}' is not displayed"
+
+
+
+
+
+
+
 
 
 

@@ -4,13 +4,15 @@ from core.base.base_page import BasePage
 from utils.data_utils import get_data as data
 
 
-class HeaderPageBank(BasePage):
+class HeaderPage(BasePage):
 
+    # Locators
     XYZ_BANK_HEADER = (By.XPATH, "//strong[text()='XYZ Bank']")
     HEADER = (By.XPATH, "//*[@class='mainHeading']")
     HOME_BUTTON = (By.XPATH, "//button[@class='btn home']")
 
 
+    # Functions
     @allure.step("Get Header text")
     def get_header_text(self):
         header_text = self.get_text(self.HEADER)
@@ -22,8 +24,8 @@ class HeaderPageBank(BasePage):
         self.click_element(self.HOME_BUTTON)
 
 
-    @allure.step("Get display status of header elements")
-    def get_display_status_header_elements(self):
+    @allure.step("Get header elements displayed status")
+    def get_header_elements_displayed_status(self):
         elements_status = {
             'HEADER': self.is_element_displayed(self.HEADER),
             'HOME_BUTTON': self.is_element_displayed(self.HOME_BUTTON)
