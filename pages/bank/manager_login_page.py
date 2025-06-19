@@ -2,7 +2,7 @@ import allure
 from selenium.webdriver.common.by import By
 from pages.bank.header_page import HeaderPage
 from utils.data_utils import get_data as data
-
+from utils.decorators_utils import allure_step
 
 class ManagerLoginPage(HeaderPage):
 
@@ -13,7 +13,7 @@ class ManagerLoginPage(HeaderPage):
 
 
     # Functions
-    @allure.step("Get elements displayed status")
+    @allure_step("Get elements displayed status")
     def get_elements_displayed_status(self):
         elements_status = {
             'ADD_CUSTOMER_BUTTON': self.is_element_displayed(self.ADD_CUSTOMER_BUTTON),

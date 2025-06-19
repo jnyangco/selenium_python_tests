@@ -2,6 +2,7 @@ import allure
 from selenium.webdriver.common.by import By
 from core.base.base_page import BasePage
 from utils.data_utils import get_data as data
+from utils.decorators_utils import allure_step
 
 
 class HeaderPage(BasePage):
@@ -13,18 +14,18 @@ class HeaderPage(BasePage):
 
 
     # Functions
-    @allure.step("Get Header text")
+    @allure_step("Get Header text")
     def get_header_text(self):
         header_text = self.get_text(self.HEADER)
         return header_text
 
 
-    @allure.step("Click Home button")
+    @allure_step("Click Home button")
     def click_home_button(self):
         self.click_element(self.HOME_BUTTON)
 
 
-    @allure.step("Get header elements displayed status")
+    @allure_step("Get header elements displayed status")
     def get_header_elements_displayed_status(self):
         elements_status = {
             'HEADER': self.is_element_displayed(self.HEADER),

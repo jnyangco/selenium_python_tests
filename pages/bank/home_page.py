@@ -2,6 +2,7 @@ import allure
 from selenium.webdriver.common.by import By
 from pages.bank.header_page import HeaderPage
 from utils.data_utils import get_data as data
+from utils.decorators_utils import allure_step
 
 
 class HomePage(HeaderPage):
@@ -12,31 +13,29 @@ class HomePage(HeaderPage):
 
 
     # Functions
-    @allure.step("Open banking website")
+    @allure_step("Open banking website")
     def open_bank_website(self):
-        self.log.info("Open banking website")
         url = data("banking", "base_url")
         self.open_url(url)
 
 
-    @allure.step("Click Customer Login button")
+    @allure_step("Click Customer Login button")
     def click_customer_login_button(self):
-        self.log.info("Click Customer Login button")
         self.click_element(self.CUSTOMER_LOGIN_BUTTON)
 
 
-    @allure.step("Click Bank Manager Login button")
+    @allure_step("Click Bank Manager Login button")
     def click_bank_manager_login_button(self):
         self.click_element(self.BANK_MANAGER_LOGIN_BUTTON)
 
 
-    @allure.step("Get banking page title")
+    @allure_step("Get banking page title")
     def get_bank_page_title(self):
         """Get the current page title"""
         return self.get_page_title()
 
 
-    @allure.step("Get elements displayed status")
+    @allure_step("Get elements displayed status")
     def get_elements_displayed_status(self):
         """Get home page elements display status"""
         elements_status = {

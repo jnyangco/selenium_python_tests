@@ -5,6 +5,7 @@ from selenium.webdriver.support.select import Select
 from pages.bank.header_page import HeaderPage
 from utils.data_utils import get_data as data
 from selenium.webdriver.support import expected_conditions as EC
+from utils.decorators_utils import allure_step
 
 
 class CustomerAccountPage(HeaderPage):
@@ -15,17 +16,20 @@ class CustomerAccountPage(HeaderPage):
     DEPOSIT_BUTTON = (By.XPATH, "//button[normalize-space()='Deposit']")
     WITHDRAWL_BUTTON = (By.XPATH, "//button[normalize-space()='Withdrawl']")
     ACCOUNT_LABELS = (By.XPATH, "//div[@ng-hide='noAccount'][1]")
+    ACCOUNT_NUMBER = (By.XPATH, "//div[@ng-hide='noAccount']/strong[1]")
+    BALANCE = (By.XPATH, "//div[@ng-hide='noAccount']/strong[2]")
+    CURRENCY = (By.XPATH, "//div[@ng-hide='noAccount']/strong[3]")
 
 
     # Functions
-    @allure.step("Get welcome message")
+    @allure_step("Get welcome message")
     def get_welcome_message(self):
         welcome_message = self.wait.until(EC.visibility_of_element_located(self.WELCOME_MESSAGE)).text
         self.log.info(f">>> welcome_message = {welcome_message}")
         return welcome_message
 
 
-    @allure.step("Get button elements displayed status")
+    @allure_step("Get button elements displayed status")
     def get_button_elements_displayed_status(self):
         elements_status = {
             "TRANSACTIONS_BUTTON": self.is_element_displayed(self.TRANSACTIONS_BUTTON),
@@ -34,7 +38,7 @@ class CustomerAccountPage(HeaderPage):
         }
         return elements_status
 
-    @allure.step("Get account labels displayed status")
+    @allure_step("Get account labels displayed status")
     def get_account_labels_displayed_status(self):
         label_text = self.find_web_element(self.ACCOUNT_LABELS).text
         self.log.info(f">>> label_text = {label_text}")
@@ -44,6 +48,20 @@ class CustomerAccountPage(HeaderPage):
             "Currency": "Currency" in label_text
         }
         return labels_status
+
+
+    @allure_step("Get account number")
+    def get_account_number(self):
+        return self.find_web_element(self.ACCOUNT_NUMBER).text.strip()
+
+    @allure_step("Get balance")
+    def get_balance(self):
+        return int(self.find_web_element(self.BALANCE).text.strip())
+
+    @allure.step("Get currency")
+    def get_currency(self):
+        return self.find_web_element(self.CURRENCY).text.strip()
+
 
 
 
