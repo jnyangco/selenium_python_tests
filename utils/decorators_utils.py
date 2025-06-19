@@ -17,15 +17,51 @@ def screenshot_on_failure(func):
     return wrapper
 
 
-def log_step(func):
-    """Log method execution as Allure step"""
-    @functools.wraps(func)
-    @allure.step("{func.__name__}")
-    def wrapper(self, *args, **kwargs):
-        # self.logger.info(f"Executing: {func.__name__}")
-        self.logger.info(f"Step: {func.__name__}")
-        return func(self, *args, **kwargs)
-    return wrapper
+# def allure_step(step_description):
+#     """
+#     Simple decorator that combines @allure.step and self.log.info
+#     Usage:
+#         @allure_step("Customer dropdown is displayed")
+#         def is_customer_dropdown_visible(self):
+#             return self.is_element_displayed(self.CUSTOMER_DROPDOWN)
+#     """
+#     def decorator(func):
+#         @allure.step(step_description)
+#         @functools.wraps(func)
+#         def wrapper(self, *args, **kwargs):
+#             # Automatically log the step
+#             if hasattr(self, 'log'):
+#                 self.log.info(step_description)
+#
+#             # Execute the original function
+#             return func(self, *args, **kwargs)
+#         return wrapper
+#     return decorator
+
+
+
+
+# def log_step(func):
+#     """Log method execution as Allure step"""
+#     @functools.wraps(func)
+#     @allure.step("{func.__name__}")
+#     def wrapper(self, *args, **kwargs):
+#         # self.logger.info(f"Executing: {func.__name__}")
+#         self.logger.info(f"Step: {func.__name__}")
+#         return func(self, *args, **kwargs)
+#     return wrapper
+
+# *** adds both logging and Allure step in one place:
+# def log_step(step_description):
+#     def decorator(func):
+#         @functools.wraps(func)
+#         def wrapper(self, *args, **kwargs):
+#             msg = step_description.format(*args, **kwargs)
+#             self.log.info(msg)
+#             with allure.step(msg):
+#                 return func(self, *args, **kwargs)
+#         return wrapper
+#     return decorator
 
 
 def retry(max_attempts=3, delay=1):

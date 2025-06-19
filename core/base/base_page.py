@@ -30,7 +30,8 @@ from utils.data_utils import get_data
 from utils.context_utils import context
 from config.test_config import TestConfig as config
 
-from utils.decorators_utils import screenshot_on_failure, log_step
+from utils.decorators_utils import screenshot_on_failure
+
 
 
 class BasePage:

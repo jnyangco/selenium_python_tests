@@ -11,12 +11,12 @@ from pages.bank.home_page import HomePage
 from utils.decorators_utils import screenshot_on_failure
 
 
-@pytest.mark.bank
+@pytest.mark.banking
 @pytest.mark.ui
-@allure.feature("Bank: UI & Navigation")
+@allure.feature("Banking: UI & Navigation")
 class TestUINavigationBank(BaseTest):
 
-    @allure.title("Bank: Verify home page elements are displayed")
+    @allure.title("Verify home page elements are displayed")
     def test_home_page_elements_bank(self, driver):
         # use assert helper in base test
         home_page = HomePage(driver)
@@ -36,7 +36,7 @@ class TestUINavigationBank(BaseTest):
         assert header_text == "XYZ Bank", f"Incorrect header text. Expected 'XYZ Bank', but got = '{header_text}'"
 
 
-    @allure.title("Verify bank home page title")
+    @allure.title("Verify banking home page title")
     def test_home_page_title_bank(self, driver):
         home_page = HomePage(driver)
         home_page.open_bank_website()

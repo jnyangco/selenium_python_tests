@@ -15,12 +15,13 @@ class HomePage(HeaderPage):
     @allure.step("Open banking website")
     def open_bank_website(self):
         self.log.info("Open banking website")
-        url = data("bank", "base_url")
+        url = data("banking", "base_url")
         self.open_url(url)
 
 
     @allure.step("Click Customer Login button")
     def click_customer_login_button(self):
+        self.log.info("Click Customer Login button")
         self.click_element(self.CUSTOMER_LOGIN_BUTTON)
 
 
@@ -29,7 +30,7 @@ class HomePage(HeaderPage):
         self.click_element(self.BANK_MANAGER_LOGIN_BUTTON)
 
 
-    @allure.step("Get bank page title")
+    @allure.step("Get banking page title")
     def get_bank_page_title(self):
         """Get the current page title"""
         return self.get_page_title()
