@@ -88,7 +88,7 @@ class TestTransactions(BaseTest):
 
 
     @allure.title("Banking: View transaction history for deposit and withdraw details")
-    def test_view_transaction_history_for_deposit_and_withdraw(self, driver):
+    def test_view_transaction_history(self, driver):
         customer_account_page = self.login_as_customer(driver)
 
         # Perform som transactions - deposit and withdraw
@@ -114,19 +114,15 @@ class TestTransactions(BaseTest):
         assert transaction_count == 2, f"Transaction count should be 2, but found '{transaction_count}'"
 
 
-        # ******* NOTE: TRY AGAIN WITHOUT LOOKING
-        # Test the following parameters:
-        # Date, Amount, Transaction Type
-
+        # Verify row: Date, Amount, Transaction Type
         # Check transaction rows exists for deposit(credit) and withdraw(debit)
-        all_transactions = transactions_page.get_all_transactions()
         transaction_exist = transactions_page.is_transaction_exists(deposit_amount, "Credit")
         assert transaction_exist, \
-            f"Deposit transaction is not exists for:  Deposit Amount {deposit_amount}, Transaction Type 'Credit'"
+            f"Deposit transaction is not exists for:  Date 'todays date', Deposit Amount {deposit_amount}, Transaction Type 'Credit'"
 
         transaction_exist = transactions_page.is_transaction_exists(withdraw_amount, "Debit")
         assert transaction_exist, \
-            f"Withdraw transaction is not exists for:  Withdraw Amount {withdraw_amount}, Transaction Type 'Debit'"
+            f"Withdraw transaction is not exists for:  Date 'todays date', Withdraw Amount {withdraw_amount}, Transaction Type 'Debit'"
 
 
 

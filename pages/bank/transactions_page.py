@@ -1,11 +1,11 @@
 import allure
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
-
 from pages.bank.header_page import HeaderPage
 from utils.data_utils import get_data as data
 from selenium.webdriver.support import expected_conditions as EC
 from utils.decorators_utils import allure_step
+from datetime import datetime
 
 
 class TransactionsPage(HeaderPage):
@@ -41,36 +41,44 @@ class TransactionsPage(HeaderPage):
 
     @allure_step("Get transaction count")
     def get_transaction_count(self):
-        transaction_rows = self.find_web_elements(self.TRANSACTION_ROWS)
-        self.log.info(f"Transaction count = {len(transaction_rows)}")
-        return len(transaction_rows)
+        transaction_count = len(self.find_web_elements(self.TRANSACTION_ROWS))
+        self.log.info(f"transaction_count = {transaction_count}")
+        return transaction_count
 
 
     @allure_step("Get all transactions")
     def get_all_transactions(self):
         all_transactions = []
+        row_cell_details = {}
         transaction_rows = self.find_web_elements(self.TRANSACTION_ROWS)
+        self.log.info(f"transaction_rows.text = {transaction_rows[0].text}")
+        self.log.info(f"transaction_rows.text = {transaction_rows[1].text}")
 
         for row in transaction_rows:
             cells = row.find_elements(By.TAG_NAME, "td")
-            if len(cells) >= 3:
-                transaction = {
+            if cells: # not 0, empty, none, etc
+                row_cell_details = {
                     'date_time': cells[0].text,
                     'amount': cells[1].text,
                     'transaction_type': cells[2].text
                 }
-                all_transactions.append(transaction)
+            all_transactions.append(row_cell_details)
         self.log.info(f"all_transactions = {all_transactions}")
-        return all_transactions
+        return all_transactions # list [{row 1 details}, {row 2 details}, ...]
 
 
     @allure_step("Is transaction exists: Amount '{amount}', Transaction type '{transaction_type}'")
     def is_transaction_exists(self, amount, transaction_type):
         all_transactions = self.get_all_transactions()
 
+        current_datetime = datetime.now().strftime("%b %d, %Y")
+        self.log.info(f"current_datetime = {current_datetime}")
+
         for transaction in all_transactions:
-            if str(amount) in transaction['amount'] and transaction_type in transaction['transaction_type']:
-                self.log.info(f"Transaction exists: amount '{transaction['amount']}', transaction_type '{transaction['transaction_type']}'")
+            if (current_datetime in transaction['date_time']
+                    and str(amount) in transaction['amount']
+                    and transaction_type in transaction['transaction_type']):
+                self.log.info(f"Transaction exists: Date '{transaction['date_time']}', Amount '{amount}', Transaction type '{transaction_type}'")
                 return True
         return False
 
@@ -79,9 +87,21 @@ class TransactionsPage(HeaderPage):
     def click_back_button(self):
         self.click_element(self.BACK_BUTTON)
 
+
     @allure_step("Click Reset button")
     def click_reset_button(self):
         self.click_element(self.RESET_BUTTON)
+
+
+
+
+
+
+
+
+
+
+
 
 
 

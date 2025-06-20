@@ -74,6 +74,32 @@ class TestCustomerLogin(BaseTest):
         assert currency == "Dollar", f"Currency '{currency}' should be 'Dollar'"
 
 
+    @allure_step("Banking: Customer logout")
+    def test_customer_logout(self, driver):
+        home_page = HomePage(driver)
+        home_page.open_bank_website()
+        home_page.click_customer_login_button()
+
+        customer_login_page = CustomerLoginPage(driver)
+        customer_name = data("banking", "customer_name")  # Harry Potter
+        customer_login_page.login_as_customer(customer_name)
+
+        customer_account_page = CustomerAccountPage(driver)
+        welcome_message = customer_account_page.get_welcome_message()
+        assert welcome_message.strip() == f"Welcome {customer_name} !!"
+
+        # Logout
+        customer_account_page.click_logout_button()
+        customer_login_page = CustomerLoginPage(driver)
+        customer_dropdown_options = customer_login_page.get_customer_dropdown_options()
+        assert customer_dropdown_options, f"Customer dropdown option is empty"
+
+
+
+
+
+
+
 
 
 
