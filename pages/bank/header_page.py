@@ -11,6 +11,7 @@ class HeaderPage(BasePage):
     XYZ_BANK_HEADER = (By.XPATH, "//strong[text()='XYZ Bank']")
     HEADER = (By.XPATH, "//*[@class='mainHeading']")
     HOME_BUTTON = (By.XPATH, "//button[@class='btn home']")
+    LOGOUT_BUTTON = (By.XPATH, "//button[@class='btn logout']")
 
 
     # Functions
@@ -23,6 +24,10 @@ class HeaderPage(BasePage):
     @allure_step("Click Home button")
     def click_home_button(self):
         self.click_element(self.HOME_BUTTON)
+
+    @allure_step("Click Logout button")
+    def click_logout_button(self):
+        self.click_element(self.LOGOUT_BUTTON)
 
 
     @allure_step("Get header elements displayed status")
