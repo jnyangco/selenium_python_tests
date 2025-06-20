@@ -22,7 +22,7 @@ class CustomerAccountPage(HeaderPage):
     AMOUNT_TO_DEPOSIT_TEXTBOX = (By.XPATH, "//label[contains(.,'Deposit')]/following-sibling::input")
     AMOUNT_TO_WITHDRAW_TEXTBOX = (By.XPATH, "//label[contains(.,'Withdraw')]/following-sibling::input")
     DEPOSIT_SAVE_BUTTON = (By.XPATH, "(//button[normalize-space()='Deposit'])[2]")
-    TRANSACTION_SUCCESS_MESSAGE = (By.XPATH, "//span[@ng-show='message']")
+    TRANSACTION_MESSAGE = (By.XPATH, "//span[@ng-show='message']")
     WITHDRAW_SAVE_BUTTON = (By.XPATH, "(//button[normalize-space()='Withdraw'])[1]")
 
 
@@ -72,16 +72,30 @@ class CustomerAccountPage(HeaderPage):
         self.click_element(self.DEPOSIT_BUTTON)
         self.enter_text(self.AMOUNT_TO_DEPOSIT_TEXTBOX, amount)
         self.click_element(self.DEPOSIT_SAVE_BUTTON)
+        self.wait_seconds(1)
 
-    @allure_step("Get transaction success message")
-    def get_transaction_success_message(self):
-        return self.get_text(self.TRANSACTION_SUCCESS_MESSAGE)
+    @allure_step("Get transaction message")
+    def get_transaction_message(self):
+        return self.get_text(self.TRANSACTION_MESSAGE)
 
     @allure_step("Withdraw money: {amount}")
     def withdraw_money(self, amount):
         self.click_element(self.WITHDRAWL_BUTTON)
         self.enter_text(self.AMOUNT_TO_WITHDRAW_TEXTBOX, amount)
         self.click_element(self.WITHDRAW_SAVE_BUTTON)
+        self.wait_seconds(1)
+
+    @allure_step("Click Transactions button")
+    def click_transactions_button(self):
+        self.click_element(self.TRANSACTIONS_BUTTON)
+
+    @allure_step("Click Deposit button")
+    def click_deposit_button(self):
+        self.click_element(self.DEPOSIT_BUTTON)
+
+    @allure_step("Click Withdraw button")
+    def click_withdraw_button(self):
+        self.click_element(self.WITHDRAWL_BUTTON)
 
 
 
