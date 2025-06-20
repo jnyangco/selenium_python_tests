@@ -141,7 +141,8 @@ class BasePage:
     # @screenshot_on_failure
     def enter_text(self, locator, text):
         """Type text into an element after clearing it"""
-        element = self.find_web_element(locator)
+        # element = self.find_web_element(locator)
+        element = self.wait.until(EC.element_to_be_clickable(locator))
         element.clear()
         # self.log.info(f"Typing: {text} into element: {locator}")
         element.send_keys(text)
