@@ -16,9 +16,14 @@ class CustomerAccountPage(HeaderPage):
     DEPOSIT_BUTTON = (By.XPATH, "//button[normalize-space()='Deposit']")
     WITHDRAWL_BUTTON = (By.XPATH, "//button[normalize-space()='Withdrawl']")
     ACCOUNT_LABELS = (By.XPATH, "//div[@ng-hide='noAccount'][1]")
-    ACCOUNT_NUMBER = (By.XPATH, "//div[@ng-hide='noAccount']/strong[1]")
-    BALANCE = (By.XPATH, "//div[@ng-hide='noAccount']/strong[2]")
-    CURRENCY = (By.XPATH, "//div[@ng-hide='noAccount']/strong[3]")
+    ACCOUNT_NUMBER_TEXT = (By.XPATH, "//div[@ng-hide='noAccount']/strong[1]")
+    BALANCE_TEXT = (By.XPATH, "//div[@ng-hide='noAccount']/strong[2]")
+    CURRENCY_TEXT = (By.XPATH, "//div[@ng-hide='noAccount']/strong[3]")
+    AMOUNT_TO_DEPOSIT_TEXTBOX = (By.XPATH, "//label[contains(.,'Deposit')]/following-sibling::input")
+    AMOUNT_TO_WITHDRAW_TEXTBOX = (By.XPATH, "//label[contains(.,'Withdraw')]/following-sibling::input")
+    DEPOSIT_SAVE_BUTTON = (By.XPATH, "(//button[normalize-space()='Deposit'])[2]")
+    TRANSACTION_SUCCESS_MESSAGE = (By.XPATH, "//span[@ng-show='message']")
+    WITHDRAW_SAVE_BUTTON = (By.XPATH, "(//button[normalize-space()='Withdraw'])[1]")
 
 
     # Functions
@@ -52,15 +57,34 @@ class CustomerAccountPage(HeaderPage):
 
     @allure_step("Get account number")
     def get_account_number(self):
-        return self.find_web_element(self.ACCOUNT_NUMBER).text.strip()
+        return self.find_web_element(self.ACCOUNT_NUMBER_TEXT).text.strip()
 
     @allure_step("Get balance")
     def get_balance(self):
-        return int(self.find_web_element(self.BALANCE).text.strip())
+        return int(self.find_web_element(self.BALANCE_TEXT).text.strip())
 
-    @allure.step("Get currency")
+    @allure_step("Get currency")
     def get_currency(self):
-        return self.find_web_element(self.CURRENCY).text.strip()
+        return self.find_web_element(self.CURRENCY_TEXT).text.strip()
+
+    @allure_step("Deposit money: {amount}")
+    def deposit_money(self, amount):
+        self.click_element(self.DEPOSIT_BUTTON)
+        self.enter_text(self.AMOUNT_TO_DEPOSIT_TEXTBOX, amount)
+        self.click_element(self.DEPOSIT_SAVE_BUTTON)
+
+    @allure_step("Get transaction success message")
+    def get_transaction_success_message(self):
+        return self.get_text(self.TRANSACTION_SUCCESS_MESSAGE)
+
+    @allure_step("Withdraw money: {amount}")
+    def withdraw_money(self, amount):
+        self.click_element(self.WITHDRAWL_BUTTON)
+        self.enter_text(self.AMOUNT_TO_WITHDRAW_TEXTBOX, amount)
+        self.click_element(self.WITHDRAW_SAVE_BUTTON)
+
+
+
 
 
 
