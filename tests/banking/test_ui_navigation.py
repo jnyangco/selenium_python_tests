@@ -57,15 +57,17 @@ class TestUINavigationBank(BaseTest):
 
         home_page = HomePage(driver)
         home_page.click_home_button()
-        elements_status = home_page.get_elements_displayed_status().items()
-        for element, status in elements_status:
-            assert status, f"Element '{element}' is not displayed"
+        elements_status = home_page.get_elements_displayed_status()
+        assert elements_status['CUSTOMER_LOGIN_BUTTON'], f"Element 'CUSTOMER_LOGIN_BUTTON' is not displayed"
+        assert elements_status['BANK_MANAGER_LOGIN_BUTTON'], f"Element 'BANK_MANAGER_LOGIN_BUTTON' is not displayed"
 
         home_page.click_bank_manager_login_button()
         manager_login_page = ManagerLoginPage(driver)
-        elements_status = manager_login_page.get_elements_displayed_status().items()
-        for element, status in elements_status:
-            assert status, f"Element '{element}' is not displayed"
+        elements_status = manager_login_page.get_elements_displayed_status()
+        assert elements_status['ADD_CUSTOMER_BUTTON'], f"Element 'ADD_CUSTOMER_BUTTON' is not displayed"
+        assert elements_status['OPEN_ACCOUNT_BUTTON'], f"Element 'OPEN_ACCOUNT_BUTTON' is not displayed"
+        assert elements_status['CUSTOMERS_BUTTON'], f"Element 'CUSTOMERS_BUTTON' is not displayed"
+
 
 
 
