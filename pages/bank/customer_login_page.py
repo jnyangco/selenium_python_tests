@@ -34,7 +34,7 @@ class CustomerLoginPage(HeaderPage):
         #     print(option.text)
         # print(f">>> options = {options[1:]}")
 
-    @allure_step("Login as customer: {customer_name}")
+    @allure_step("Login as customer: '{customer_name}'")
     def login_as_customer(self, customer_name):
         dropdown = self.wait.until(EC.visibility_of_element_located(self.CUSTOMER_DROPDOWN))
         select = Select(dropdown)

@@ -228,7 +228,23 @@ class FakerUtils:
             'security_code': self.fake.credit_card_security_code()
         }
 
+    def generate_random_postal_code(self):
+        """
+        Generate a random postal code
 
+        Returns:
+            str: Random Postal code
+
+        Example:
+            "11234"
+        """
+        return self.fake.postalcode()
+
+
+
+
+
+# ==================================================================
 # Create a default instance for convenience functions
 _faker_utils = FakerUtils()
 
@@ -331,6 +347,10 @@ def generate_random_customer_data():
         'address': address,
         'company': generate_random_company()
     }
+
+def generate_random_postal_code():
+    """Generate a random postal code"""
+    return _faker_utils.generate_random_postal_code()
 
 
 # Example usage and testing

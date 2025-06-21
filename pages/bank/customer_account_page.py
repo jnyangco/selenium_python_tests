@@ -78,7 +78,7 @@ class CustomerAccountPage(HeaderPage):
     def get_transaction_message(self):
         return self.get_text(self.TRANSACTION_MESSAGE)
 
-    @allure_step("Withdraw money: {amount}")
+    @allure_step("Withdraw money: '{amount}'")
     def withdraw_money(self, amount):
         self.click_element(self.WITHDRAWL_BUTTON)
         self.enter_text(self.AMOUNT_TO_WITHDRAW_TEXTBOX, amount)
