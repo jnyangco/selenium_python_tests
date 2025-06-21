@@ -4,7 +4,7 @@ import pytest
 from pages.bank.customer_account_page import CustomerAccountPage
 from pages.bank.customer_login_page import CustomerLoginPage
 from pages.bank.header_page import HeaderPage
-from pages.bank.manager_login_page import ManagerLoginPage
+from pages.bank.manager_page import ManagerPage
 from pages.bank.transactions_page import TransactionsPage
 from utils.data_utils import get_data as data
 import time
@@ -15,7 +15,7 @@ from utils.decorators_utils import allure_step
 @pytest.mark.banking
 @pytest.mark.transactions
 @allure.feature("Banking: Transactions")
-class TestTransactions(BaseTest):
+class TestCustomerTransactions(BaseTest):
 
     def login_as_customer(self, driver):
         """Helper method to login as customer"""
@@ -123,6 +123,11 @@ class TestTransactions(BaseTest):
         transaction_exist = transactions_page.is_transaction_exists(withdraw_amount, "Debit")
         assert transaction_exist, \
             f"Withdraw transaction is not exists for:  Date 'todays date', Withdraw Amount {withdraw_amount}, Transaction Type 'Debit'"
+
+
+    @allure.title("Banking: Reset transaction")
+    def test_reset_transaction(self):
+        self.log.info("Test Case")
 
 
 
