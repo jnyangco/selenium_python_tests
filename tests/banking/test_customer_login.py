@@ -4,7 +4,7 @@ import pytest
 from pages.bank.customer_account_page import CustomerAccountPage
 from pages.bank.customer_login_page import CustomerLoginPage
 from pages.bank.header_page import HeaderPage
-from pages.bank.manager_login_page import ManagerLoginPage
+from pages.bank.manager_page import ManagerPage
 from utils.data_utils import get_data as data
 import time
 from core.base.base_test import BaseTest

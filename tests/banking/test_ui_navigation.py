@@ -3,7 +3,7 @@ import pytest
 
 from pages.bank.customer_login_page import CustomerLoginPage
 from pages.bank.header_page import HeaderPage
-from pages.bank.manager_login_page import ManagerLoginPage
+from pages.bank.manager_page import ManagerPage
 from utils.data_utils import get_data as data
 import time
 from core.base.base_test import BaseTest
@@ -51,6 +51,7 @@ class TestUINavigationBank(BaseTest):
         home_page.open_bank_website()
         home_page.click_customer_login_button()
 
+        # Customer Login Page
         customer_login_page = CustomerLoginPage(driver)
         element_status = customer_login_page.is_customer_dropdown_visible()
         assert element_status, f"Element 'CUSTOMER_DROPDOWN' is not displayed"
@@ -61,8 +62,9 @@ class TestUINavigationBank(BaseTest):
         assert elements_status['CUSTOMER_LOGIN_BUTTON'], f"Element 'CUSTOMER_LOGIN_BUTTON' is not displayed"
         assert elements_status['BANK_MANAGER_LOGIN_BUTTON'], f"Element 'BANK_MANAGER_LOGIN_BUTTON' is not displayed"
 
+        # Manager Login Page
         home_page.click_bank_manager_login_button()
-        manager_login_page = ManagerLoginPage(driver)
+        manager_login_page = ManagerPage(driver)
         elements_status = manager_login_page.get_elements_displayed_status()
         assert elements_status['ADD_CUSTOMER_BUTTON'], f"Element 'ADD_CUSTOMER_BUTTON' is not displayed"
         assert elements_status['OPEN_ACCOUNT_BUTTON'], f"Element 'OPEN_ACCOUNT_BUTTON' is not displayed"
