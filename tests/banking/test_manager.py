@@ -6,6 +6,7 @@ from pages.bank.customer_login_page import CustomerLoginPage
 from pages.bank.header_page import HeaderPage
 from pages.bank.manager_add_customer_page import ManagerAddCustomerPage
 from pages.bank.manager_customers_page import ManagerCustomersPage
+from pages.bank.manager_open_account_page import ManagerOpenAccountPage
 from pages.bank.manager_page import ManagerPage
 from pages.bank.transactions_page import TransactionsPage
 from utils.data_utils import get_data as data
@@ -91,6 +92,63 @@ class TestManager(BaseTest):
 
         manager_customers_page = ManagerCustomersPage(driver)
         manager_customers_page.is_customer_exists(first_name, last_name, postal_code)
+
+
+    @allure.title("Banking: Open an account")
+    def test_open_account(self, driver):
+        home_page = HomePage(driver)
+        home_page.open_bank_website()
+        home_page.click_bank_manager_login_button()
+
+        manager_page = ManagerPage(driver)
+        manager_page.click_add_customer_button()
+
+        # Manager Add Customer
+        manager_add_customer_page = ManagerAddCustomerPage(driver)
+        first_name = "QA"
+        last_name = generate_random_last_name()
+        postal_code = generate_random_postal_code()
+
+        manager_add_customer_page.fill_up_new_customer_form(first_name, last_name, postal_code)
+        manager_add_customer_page.click_add_customer_save_button()
+        manager_add_customer_page.accept_alert_popup()
+
+        manager_page = ManagerPage(driver)
+        manager_page.click_customers_button()
+        manager_page.click_open_account_button()
+
+        # Manager Open Account Page
+        manager_open_account_page = ManagerOpenAccountPage(driver)
+        manager_open_account_page.select_customer(first_name + " " +last_name)
+        manager_open_account_page.select_currency("Dollar")
+        manager_open_account_page.click_process_button()
+
+        alert_text = manager_open_account_page.get_alert_text()
+
+        alert_text_body = "Account created successfully with account Number :"
+        assert alert_text_body in alert_text['alert_text_body'], \
+            f"Alert text body mismatch. Expected '{alert_text_body}', but found '{alert_text['alert_text_body']}'"
+
+        alert_text_account_number = alert_text['alert_text_account_number']
+        assert len(alert_text_account_number) == 4, f"Invalid account number: {alert_text_account_number}"
+        assert int(alert_text_account_number) > 0, f"Invalid account number: {alert_text_account_number}"
+
+        manager_open_account_page.accept_alert()
+
+        # Check dropdown values are cleared
+        customer_dropdown_text = manager_open_account_page.get_text_customer_dropdown()
+        currency_dropdown_text = manager_open_account_page.get_text_currency_dropdown()
+
+        assert "---Customer Name---" in customer_dropdown_text, \
+            f"Customer dropdown is not cleared. Expected '---Customer Name---', but found '{customer_dropdown_text}'"
+
+        assert "---Currency---" in currency_dropdown_text, \
+            f"Currency dropdown is not cleared. Expected '---Currency---', but found '{currency_dropdown_text}'"
+
+
+
+
+
 
 
 
