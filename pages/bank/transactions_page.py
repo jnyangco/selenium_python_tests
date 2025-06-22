@@ -15,8 +15,9 @@ class TransactionsPage(HeaderPage):
     RESET_BUTTON = (By.XPATH, "//button[text()='Reset']")
     CALENDAR_START = (By.XPATH, "//input[@id='start']")
     CALENDAR_END = (By.XPATH, "//input[@id='end']")
-    TRANSACTIONS_TABLE = (By.XPATH, "//table[@class='table table-bordered table-striped']")
+    TRANSACTIONS_TABLE = (By.XPATH, "//table[@class='table table-bordered table-striped']/tbody")
     TRANSACTIONS_TABLE_DYNAMIC_XPATH = "//tr/td[@class='ng-binding'][2][text()='{amount}']/following-sibling::td[text()='{transaction_type}']"
+
 
     TRANSACTION_ROWS = (By.XPATH, "//table/tbody/tr")
 
@@ -46,7 +47,8 @@ class TransactionsPage(HeaderPage):
         return transaction_count
 
 
-    @allure_step("Get all transactions")
+    # Helper method for is_transaction_exists
+    # @allure_step("Get all transactions")
     def get_all_transactions(self):
         all_transactions = []
         row_cell_details = {}
@@ -91,6 +93,14 @@ class TransactionsPage(HeaderPage):
     @allure_step("Click Reset button")
     def click_reset_button(self):
         self.click_element(self.RESET_BUTTON)
+
+
+    @allure_step("Verify transaction is cleared")
+    def is_transactions_cleared(self):
+        table = self.find_web_element(self.TRANSACTIONS_TABLE)
+        total_rows = len(table.find_elements(By.TAG_NAME, "tr"))
+        self.log.info(f"Total table rows = {total_rows}")
+        return total_rows == 0
 
 
 

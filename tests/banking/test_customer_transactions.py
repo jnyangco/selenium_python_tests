@@ -126,8 +126,28 @@ class TestCustomerTransactions(BaseTest):
 
 
     @allure.title("Banking: Reset transaction")
-    def test_reset_transaction(self):
-        self.log.info("Test Case")
+    def test_reset_transaction(self, driver):
+        customer_account_page = self.login_as_customer(driver)
+
+        # Perform som transactions - deposit and withdraw
+        deposit_amount = 1000
+        customer_account_page.deposit_money(deposit_amount)
+
+        withdraw_amount = 500
+        customer_account_page.withdraw_money(withdraw_amount)
+
+        customer_account_page.click_transactions_button()
+        transactions_page = TransactionsPage(driver)
+
+        # Check transaction table is visible with records
+        transaction_count = transactions_page.get_transaction_count()
+        assert transaction_count == 2, f"Transaction count should be 2, but found '{transaction_count}'"
+
+        # Verify transactions are cleared
+        transactions_page.click_reset_button()
+        is_transactions_cleared = transactions_page.is_transactions_cleared()
+        assert is_transactions_cleared, f"Transactions are not cleared."
+
 
 
 
