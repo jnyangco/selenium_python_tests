@@ -9,6 +9,7 @@ services:
       - SE_SESSION_REQUEST_TIMEOUT=300
       - SE_SESSION_RETRY_INTERVAL=5
       - SE_GRID_MAX_SESSION=24  # Reduced from default
+      - TZ=America/New_York # Set to your timezone
     platform: linux/amd64
 
 
@@ -24,6 +25,7 @@ services:
       - SE_NODE_MAX_SESSIONS=4  # browser maximum sessions per node
       - SE_NODE_OVERRIDE_MAX_SESSIONS=true  # Allow overriding default max sessions
       - SE_NODE_SESSION_TIMEOUT=300 # add session timeout
+      - TZ=America/New_York # Set to your timezone
     # ports:
       # - "5900:5900"  # For VNC access if needed
     shm_size: "2g" # Increase shared memory for Chrome
@@ -42,6 +44,7 @@ services:
       - SE_NODE_MAX_SESSIONS=4
       - SE_NODE_OVERRIDE_MAX_SESSIONS=true
       - SE_NODE_SESSION_TIMEOUT=300
+      - TZ=America/New_York
     shm_size: "2g"
     platform: linux/amd64
 
@@ -58,6 +61,7 @@ services:
       - SE_NODE_MAX_SESSIONS=4
       - SE_NODE_OVERRIDE_MAX_SESSIONS=true
       - SE_NODE_SESSION_TIMEOUT=300
+      - TZ=America/New_York
     shm_size: "2g"
     platform: linux/amd64
 
@@ -74,6 +78,7 @@ services:
       - SE_NODE_MAX_SESSIONS=4
       - SE_NODE_OVERRIDE_MAX_SESSIONS=true
       - SE_NODE_SESSION_TIMEOUT=300
+      - TZ=America/New_York
     shm_size: "2g"
     platform: linux/amd64
 
@@ -90,6 +95,7 @@ services:
       - SE_NODE_MAX_SESSIONS=4
       - SE_NODE_OVERRIDE_MAX_SESSIONS=true
       - SE_NODE_SESSION_TIMEOUT=300
+      - TZ=America/New_York
     shm_size: "2g"
     platform: linux/amd64
 
@@ -106,6 +112,7 @@ services:
       - SE_NODE_MAX_SESSIONS=4
       - SE_NODE_OVERRIDE_MAX_SESSIONS=true
       - SE_NODE_SESSION_TIMEOUT=300
+      - TZ=America/New_York
     shm_size: "2g"
     platform: linux/amd64
 
