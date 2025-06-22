@@ -13,7 +13,7 @@ from utils.data_utils import get_data as data
 import time
 from core.base.base_test import BaseTest
 from pages.bank.home_page import HomePage
-from utils.decorators_utils import allure_step
+from utils.decorators_utils import step
 from utils.faker_utils import generate_random_last_name, generate_random_postal_code
 
 @pytest.mark.banking
@@ -136,14 +136,16 @@ class TestManager(BaseTest):
         manager_open_account_page.accept_alert()
 
         # Check dropdown values are cleared
-        customer_dropdown_text = manager_open_account_page.get_text_customer_dropdown()
-        currency_dropdown_text = manager_open_account_page.get_text_currency_dropdown()
+        with step("Verify Customer and Currency dropdown values are cleared"):
+            customer_dropdown_text = manager_open_account_page.get_text_customer_dropdown()
+            currency_dropdown_text = manager_open_account_page.get_text_currency_dropdown()
 
-        assert "---Customer Name---" in customer_dropdown_text, \
-            f"Customer dropdown is not cleared. Expected '---Customer Name---', but found '{customer_dropdown_text}'"
+            assert "---Customer Name---" in customer_dropdown_text, \
+                f"Customer dropdown is not cleared. Expected '---Customer Name---', but found '{customer_dropdown_text}'"
 
-        assert "---Currency---" in currency_dropdown_text, \
-            f"Currency dropdown is not cleared. Expected '---Currency---', but found '{currency_dropdown_text}'"
+            assert "---Currency---" in currency_dropdown_text, \
+                f"Currency dropdown is not cleared. Expected '---Currency---', but found '{currency_dropdown_text}'"
+
 
 
 

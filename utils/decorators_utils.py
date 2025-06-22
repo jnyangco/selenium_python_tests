@@ -1,9 +1,13 @@
 # utils/decorators_utils.py
 import functools
 import allure
+import sys
 from utils.screenshot_utils import take_screenshot
 import time
 import inspect
+from contextlib import contextmanager
+from utils.logger_utils import get_logger
+
 
 
 def screenshot_on_failure(func):
@@ -62,8 +66,6 @@ def allure_step(step_description):
     return decorator
 
 
-
-
 # def log_step(func):
 #     """Log method execution as Allure step"""
 #     @functools.wraps(func)
@@ -101,3 +103,22 @@ def retry(max_attempts=3, delay=1):
                     time.sleep(delay)
         return wrapper
     return decorator
+
+
+# ==============================================================
+@contextmanager
+def step(description):
+    """
+    Simple context manager for creating allure steps with logging
+
+    Usage:
+        with step("Login with valid credentials"):
+            login_page.login(username, password)
+    """
+    # Use centralized logger
+    log = get_logger(__name__)
+    log.info(description)
+
+    # Create allure step
+    with allure.step(description):
+        yield
