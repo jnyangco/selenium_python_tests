@@ -4,6 +4,8 @@ import pytest
 from pages.bank.customer_account_page import CustomerAccountPage
 from pages.bank.customer_login_page import CustomerLoginPage
 from pages.bank.header_page import HeaderPage
+from pages.bank.manager_add_customer_page import ManagerAddCustomerPage
+from pages.bank.manager_customers_page import ManagerCustomersPage
 from pages.bank.manager_page import ManagerPage
 from pages.bank.transactions_page import TransactionsPage
 from utils.data_utils import get_data as data
@@ -40,13 +42,15 @@ class TestManager(BaseTest):
 
         manager_page = ManagerPage(driver)
         manager_page.click_add_customer_button()
+
+        manager_add_customer_page = ManagerAddCustomerPage(driver)
         first_name = "QA"
         last_name = generate_random_last_name()
         postal_code = generate_random_postal_code()
 
-        manager_page.fill_up_new_customer_form(first_name, last_name, postal_code)
-        manager_page.click_add_customer_save_button()
-        alert_text = manager_page.get_alert_text_details()
+        manager_add_customer_page.fill_up_new_customer_form(first_name, last_name, postal_code)
+        manager_add_customer_page.click_add_customer_save_button()
+        alert_text = manager_add_customer_page.get_alert_text_details()
 
         alert_text_body = alert_text['alert_text_body']
         assert alert_text_body == "Customer added successfully with customer id :", \
@@ -55,18 +59,45 @@ class TestManager(BaseTest):
         alert_text_customer_id = int(alert_text['alert_text_customer_id'])
         assert alert_text_customer_id >= 0, f"Invalid Customer Id: Expected to be a number, but got '{alert_text_customer_id}'"
 
-        manager_page.accept_alert_popup()
+        manager_add_customer_page.accept_alert_popup()
 
         # Customer form should be cleared
-        new_customer_form_values = manager_page.get_new_customer_form_values()
+        new_customer_form_values = manager_add_customer_page.get_new_customer_form_values()
         assert new_customer_form_values['FIRST_NAME_TEXTBOX'] == "", f"Textbox 'FIRST_NAME_TEXTBOX' is not cleared"
         assert new_customer_form_values['LAST_NAME_TEXTBOX'] == "", f"Textbox 'LAST_NAME_TEXTBOX' is not cleared"
         assert new_customer_form_values['POSTAL_CODE_TEXTBOX'] == "", f"Textbox 'POSTAL_CODE_TEXTBOX' is not cleared"
 
 
-    @allure.title("Banking: Add new customer and verify account is created")
-    def test_add_customer_and_verify_account(self):
-        print("Test")
+    @allure.title("Banking: Add new customer and verify customer is added to the customer table")
+    def test_add_customer_and_verify_customer_table(self, driver):
+        home_page = HomePage(driver)
+        home_page.open_bank_website()
+        home_page.click_bank_manager_login_button()
+
+        manager_page = ManagerPage(driver)
+        manager_page.click_add_customer_button()
+
+        manager_add_customer_page = ManagerAddCustomerPage(driver)
+        first_name = "QA"
+        last_name = generate_random_last_name()
+        postal_code = generate_random_postal_code()
+
+        manager_add_customer_page.fill_up_new_customer_form(first_name, last_name, postal_code)
+        manager_add_customer_page.click_add_customer_save_button()
+        manager_add_customer_page.accept_alert_popup()
+
+        manager_page = ManagerPage(driver)
+        manager_page.click_customers_button()
+
+        manager_customers_page = ManagerCustomersPage(driver)
+        manager_customers_page.is_customer_exists(first_name, last_name, postal_code)
+
+
+
+
+
+
+    # TC - search customer
 
 
 
