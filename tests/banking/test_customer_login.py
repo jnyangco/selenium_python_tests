@@ -74,7 +74,7 @@ class TestCustomerLogin(BaseTest):
         assert currency == "Dollar", f"Currency '{currency}' should be 'Dollar'"
 
 
-    @allure_step("Banking: Customer logout")
+    @allure.title("Banking: Customer logout")
     def test_customer_logout(self, driver):
         home_page = HomePage(driver)
         home_page.open_bank_website()
