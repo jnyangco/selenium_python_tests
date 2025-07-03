@@ -66,3 +66,12 @@ Use descriptive marker names
 Document marker purposes
 Combine markers logically
 Use --strict-markers to catch typos
+
+
+# =======================================
+pytest -m "your_marker" --collect-only
+
+You can also use --collect-only with other pytest options:
+-q for quieter output (just shows the count)
+-v for more verbose collection info
+--tb=no to suppress traceback formatting

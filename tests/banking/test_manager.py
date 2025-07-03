@@ -114,7 +114,6 @@ class TestManager(BaseTest):
         manager_add_customer_page.accept_alert_popup()
 
         manager_page = ManagerPage(driver)
-        manager_page.click_customers_button()
         manager_page.click_open_account_button()
 
         # Manager Open Account Page
@@ -145,6 +144,56 @@ class TestManager(BaseTest):
 
             assert "---Currency---" in currency_dropdown_text, \
                 f"Currency dropdown is not cleared. Expected '---Currency---', but found '{currency_dropdown_text}'"
+
+
+    @allure.title("Banking: Open an account and customer login")
+    def test_open_account_and_customer_login(self, driver):
+        home_page = HomePage(driver)
+        home_page.open_bank_website()
+        home_page.click_bank_manager_login_button()
+
+        manager_page = ManagerPage(driver)
+        manager_page.click_add_customer_button()
+
+        # Manager Add Customer
+        manager_add_customer_page = ManagerAddCustomerPage(driver)
+        first_name = "QA"
+        last_name = generate_random_last_name()
+        postal_code = generate_random_postal_code()
+
+        manager_add_customer_page.fill_up_new_customer_form(first_name, last_name, postal_code)
+        manager_add_customer_page.click_add_customer_save_button()
+        manager_add_customer_page.accept_alert_popup()
+
+        manager_page = ManagerPage(driver)
+        manager_page.click_open_account_button()
+
+        # Manager Open Account Page
+        manager_open_account_page = ManagerOpenAccountPage(driver)
+        manager_open_account_page.select_customer(first_name + " " + last_name)
+        manager_open_account_page.select_currency("Dollar")
+        manager_open_account_page.click_process_button()
+        manager_open_account_page.accept_alert()
+        manager_open_account_page.click_home_button()
+
+        home_page = HomePage(driver)
+        home_page.click_customer_login_button()
+
+        customer_login_page = CustomerLoginPage(driver)
+        customer_name = first_name + " " + last_name
+        customer_login_page.login_as_customer(customer_name)
+
+        customer_account_page = CustomerAccountPage(driver)
+        account_number = customer_account_page.get_account_number()
+        assert account_number, f"Account number is empty"  # is not None, 0, "", [], {}, etc...
+        assert len(account_number) == 4, f"Account number '{account_number}' should be 4 digits"
+
+        balance = customer_account_page.get_balance()
+        assert balance >= 0, f"Invalid balance: '{balance}'"
+
+        currency = customer_account_page.get_currency()
+        assert currency == "Dollar", f"Currency '{currency}' should be 'Dollar'"
+
 
 
 
