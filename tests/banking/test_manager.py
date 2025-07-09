@@ -206,16 +206,6 @@ class TestManager(BaseTest):
 
 
 
-    # TC - search customer
-
-
-
-
-
-
-
-
-
 
 
 
