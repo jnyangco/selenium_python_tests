@@ -73,7 +73,7 @@ class TransactionsPage(HeaderPage):
     def is_transaction_exists(self, amount, transaction_type):
         all_transactions = self.get_all_transactions()
 
-        current_datetime = datetime.now().strftime("%b %d, %Y")
+        current_datetime = datetime.now().strftime("%b %-d, %Y")
         self.log.info(f"current_datetime = {current_datetime}")
 
         for transaction in all_transactions:
