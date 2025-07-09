@@ -1,6 +1,5 @@
 import allure
 import time
-
 import pytest
 from pages.saucedemo.login_page_saucedemo import LoginPageSaucedemo
 from pages.saucedemo.product_page_saucedemo import ProductPageSaucedemo

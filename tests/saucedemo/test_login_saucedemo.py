@@ -1,5 +1,4 @@
 import allure
-
 import pytest
 from pages.saucedemo.login_page_saucedemo import LoginPageSaucedemo
 from utils.data_utils import get_data as data

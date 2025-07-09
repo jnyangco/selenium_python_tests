@@ -1,15 +1,15 @@
 import allure
 import pytest
-
-from pages.bank.customer_account_page import CustomerAccountPage
-from pages.bank.customer_login_page import CustomerLoginPage
-from pages.bank.header_page import HeaderPage
-from pages.bank.manager_page import ManagerPage
+from pages.banking.customer_account_page import CustomerAccountPage
+from pages.banking.customer_login_page import CustomerLoginPage
+from pages.banking.header_page import HeaderPage
+from pages.banking.manager_page import ManagerPage
 from utils.data_utils import get_data as data
 import time
 from core.base.base_test import BaseTest
-from pages.bank.home_page import HomePage
+from pages.banking.home_page import HomePage
 from utils.decorators_utils import allure_step
+
 
 @pytest.mark.banking
 @pytest.mark.login

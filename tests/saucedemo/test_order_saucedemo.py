@@ -1,6 +1,5 @@
 import allure
 import time
-
 import pytest
 from pages.saucedemo.cart_page_saucedemo import CartPageSaucedemo
 from pages.saucedemo.checkout_complete_page_saucedemo import CheckoutCompletePageSaucedemo

@@ -1,6 +1,6 @@
 import allure
 from selenium.webdriver.common.by import By
-from pages.bank.header_page import HeaderPage
+from pages.banking.header_page import HeaderPage
 from utils.data_utils import get_data as data
 from utils.decorators_utils import allure_step
 

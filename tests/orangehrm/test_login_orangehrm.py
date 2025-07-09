@@ -1,5 +1,4 @@
 import allure
-
 import pytest
 from pages.orangehrm.dashboard_page_orangehrm import DashboardPageOrangehrm
 from pages.orangehrm.login_page_orangehrm import LoginPageOrangehrm
