@@ -1,106 +1,147 @@
-// Jenkinsfile.smoke - Quick smoke test pipeline
 pipeline {
-    agent any
+    agent { label 'master' }
+    options { timestamps() }
 
-    environment {
-        PYTHON_VERSION = '3.13.3'
-        VENV_NAME = '.venv'
-        BROWSER = 'chrome'
-        ENV = 'docker'
+    parameters {
+        // Basic Parameters
+        choice(choices: ['docker', 'local'], description: 'Test environment', name: 'ENVIRONMENT')
+        choice(choices: ['chrome', 'firefox', 'edge'], description: 'Browser', name: 'BROWSER')
+        choice(choices: ['main', 'develop', 'staging'], description: 'Branch', name: 'BRANCH_NAME')
+        choice(choices: ['auto', '4', '8', '12', '16', '24'], description: 'Parallel workers', name: 'PARALLEL_WORKERS')
+
+        // Test Suite Selection (Simple)
+        booleanParam(defaultValue: true, description: 'Run SauceDemo tests', name: 'RUN_SAUCEDEMO')
+        booleanParam(defaultValue: true, description: 'Run OrangeHRM tests', name: 'RUN_ORANGEHRM')
+        booleanParam(defaultValue: true, description: 'Run Banking tests', name: 'RUN_BANKING')
     }
 
     stages {
-        stage('Quick Setup') {
+        stage('Setup') {
             steps {
                 script {
-                    echo "🚀 Quick Test Setup..."
-                    sh '''
-                        python3 -m venv ${VENV_NAME}
-                        source ${VENV_NAME}/bin/activate
-                        pip install --upgrade pip
-                        pip install -r requirements.txt
-                    '''
+                    currentBuild.description = "Env: ${params.ENVIRONMENT} | Browser: ${params.BROWSER} | Workers: ${params.PARALLEL_WORKERS}"
+                    echo """
+🚀 Starting Selenium Test Orchestrator
+Environment: ${params.ENVIRONMENT}
+Browser: ${params.BROWSER}
+Branch: ${params.BRANCH_NAME}
+Workers: ${params.PARALLEL_WORKERS}
+                    """
                 }
             }
         }
 
-//         stage('Start Selenium Grid') {
-//             steps {
-//                 script {
-//                     echo "🐳 Starting Selenium Grid..."
-//                     sh '''
-//                         // docker-compose down || true
-//                         // docker-compose up -d
-//                         // timeout 30 bash -c 'until curl -sSf http://localhost:4444/wd/hub/status > /dev/null; do sleep 2; done'
-//                     '''
-//                 }
-//             }
-//         }
-
         stage('Run Tests') {
             parallel {
-                stage('Banking Tests') {
+                stage('SauceDemo Tests') {
+                    when { expression { params.RUN_SAUCEDEMO } }
                     steps {
                         script {
-                            sh '''
-                                . ${VENV_NAME}/bin/activate
-                                pytest -m "banking" \
-                                    --browser=${BROWSER} \
-                                    --env=${ENV} \
-                                    -v \
-                                    --alluredir=reports/allure-results/smoke-login \
-                                    --html=reports/smoke_login_report.html \
-                                    --self-contained-html
-                            '''
+                            echo '🍅 Running SauceDemo Tests...'
+                            catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+
+                                // OPTION A: Non-parameterized job (your first example)
+                                build job: 'SauceDemo_Tests'  // ← Change to your actual job name
+
+                                // OPTION B: Parameterized job (your second example)
+                                // Uncomment and use this if your SauceDemo job has parameters:
+                                /*
+                                build job: 'SauceDemo_Tests_Param', parameters: [
+                                    string(name: 'BRANCH_NAME', value: params.BRANCH_NAME),
+                                    string(name: 'BROWSER', value: params.BROWSER),
+                                    string(name: 'ENVIRONMENT', value: params.ENVIRONMENT),
+                                    string(name: 'PARALLEL_WORKERS', value: params.PARALLEL_WORKERS),
+                                    string(name: 'TEST_PATH', value: 'tests/saucedemo/')
+                                ]
+                                */
+                            }
                         }
                     }
                 }
 
-//                 stage('UI Smoke Tests') {
-//                     steps {
-//                         script {
-//                             sh '''
-//                                 . ${VENV_NAME}/bin/activate
-//                                 pytest -m "smoke and ui" \
-//                                     --browser=${BROWSER} \
-//                                     --env=${ENV} \
-//                                     -v \
-//                                     --alluredir=reports/allure-results/smoke-ui \
-//                                     --html=reports/smoke_ui_report.html \
-//                                     --self-contained-html
-//                             '''
-//                         }
-//                     }
-//                 }
+                stage('OrangeHRM Tests') {
+                    when { expression { params.RUN_ORANGEHRM } }
+                    steps {
+                        script {
+                            echo '🍊 Running OrangeHRM Tests...'
+                            catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
 
+                                // Using parameterized job (your second example)
+                                build job: 'OrangeHRM_Tests', parameters: [  // ← Change to your actual job name
+                                    string(name: 'BRANCH_NAME', value: params.BRANCH_NAME),
+                                    string(name: 'BROWSER', value: params.BROWSER),
+                                    string(name: 'ENVIRONMENT', value: params.ENVIRONMENT),
+                                    string(name: 'PARALLEL_WORKERS', value: params.PARALLEL_WORKERS),
+                                    booleanParam(name: 'HEADLESS', value: false),
+                                    string(name: 'TEST_PATH', value: 'tests/orangehrm/')
+                                ]
+                            }
+                        }
+                    }
+                }
+
+                stage('Banking Tests') {
+                    when { expression { params.RUN_BANKING } }
+                    steps {
+                        script {
+                            echo '🏦 Running Banking Tests...'
+                            catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+
+                                // Using parameterized job (your second example)
+                                build job: 'Banking_Tests', parameters: [  // ← Change to your actual job name
+                                    string(name: 'BRANCH_NAME', value: params.BRANCH_NAME),
+                                    string(name: 'BROWSER', value: params.BROWSER),
+                                    string(name: 'ENVIRONMENT', value: params.ENVIRONMENT),
+                                    string(name: 'PARALLEL_WORKERS', value: params.PARALLEL_WORKERS),
+                                    booleanParam(name: 'HEADLESS', value: false),
+                                    string(name: 'TEST_PATH', value: 'tests/banking/')
+                                ]
+                            }
+                        }
+                    }
+                }
             }
         }
     }
 
     post {
-        always {
-            script {
-                // Publish reports
-//                 publishHTML([
-//                     allowMissing: false,
-//                     alwaysLinkToLastBuild: true,
-//                     keepAll: true,
-//                     reportDir: 'reports',
-//                     reportFiles: '*.html',
-//                     reportName: 'Smoke Test Reports'
-//                 ])
-
-                // Clean up
-                sh 'docker-compose down || true'
-                sh 'rm -rf ${VENV_NAME}'
-            }
+        success {
+            echo """
+                ✅ All tests completed successfully!
+                Duration: ${currentBuild.durationString}
+                Environment: ${params.ENVIRONMENT}
+                Browser: ${params.BROWSER}
+                """
         }
-//         failure {
-//             emailext (
-//                 subject: "🚨 SMOKE TESTS FAILED: ${env.JOB_NAME}",
-//                 body: "Critical smoke tests failed! Immediate attention required.",
-//                 to: "team@company.com"
-//             )
-//         }
+
+        failure {
+            echo """
+                ❌ Some tests failed!
+                Check individual job console logs for details.
+                Duration: ${currentBuild.durationString}
+                """
+        }
+
+        unstable {
+            echo """
+                ⚠️ Tests completed with some failures.
+                Some test suites failed but execution continued.
+                Duration: ${currentBuild.durationString}
+                """
+        }
+
+        always {
+            echo """
+                📊 Build Summary:
+                =================
+                Job: ${env.JOB_NAME} #${env.BUILD_NUMBER}
+                Result: ${currentBuild.result ?: 'SUCCESS'}
+                Duration: ${currentBuild.durationString}
+                SauceDemo: ${params.RUN_SAUCEDEMO ? 'Executed' : 'Skipped'}
+                OrangeHRM: ${params.RUN_ORANGEHRM ? 'Executed' : 'Skipped'}
+                Banking: ${params.RUN_BANKING ? 'Executed' : 'Skipped'}
+                =================
+                """
+        }
     }
 }
