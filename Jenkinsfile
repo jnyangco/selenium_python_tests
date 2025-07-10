@@ -12,6 +12,7 @@ pipeline {
         // Test Suite Selection (Simple)
         booleanParam(defaultValue: true, description: 'Run SauceDemo tests', name: 'RUN_SAUCEDEMO')
         booleanParam(defaultValue: true, description: 'Run OrangeHRM tests', name: 'RUN_ORANGEHRM')
+        booleanParam(defaultValue: true, description: 'Run Banking tests', name: 'RUN_LEETCODE')
         booleanParam(defaultValue: true, description: 'Run Banking tests', name: 'RUN_BANKING')
     }
 
