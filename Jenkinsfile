@@ -53,7 +53,20 @@ pipeline {
                             echo '🍊 Running OrangeHRM Tests (Non-parameterized)...'
                             catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
                                 // Non-parameterized job - no parameters passed
-                                build job: 'OrangeHRM_Tests'  // ← Change to your actual job name
+                                build job: 'Selenium_Python_Tests_Orangehrm'  // ← Change to your actual job name
+                            }
+                        }
+                    }
+                }
+
+                stage('Leetcode Tests') {
+                    when { expression { params.RUN_ORANGEHRM } }
+                    steps {
+                        script {
+                            echo '🍊 Running OrangeHRM Tests (Non-parameterized)...'
+                            catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                                // Non-parameterized job - no parameters passed
+                                build job: 'Selenium_Python_Tests_Leetcode'  // ← Change to your actual job name
                             }
                         }
                     }
@@ -66,7 +79,7 @@ pipeline {
                             echo '🏦 Running Banking Tests (Parameterized)...'
                             catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
                                 // Parameterized job - passes parameters from orchestrator
-                                build job: 'Banking_Tests', parameters: [  // ← Change to your actual job name
+                                build job: 'Selenium_Python_Tests_Banking', parameters: [  // ← Change to your actual job name
                                     string(name: 'BRANCH_NAME', value: params.BRANCH_NAME),
                                     string(name: 'BROWSER', value: params.BROWSER),
                                     string(name: 'ENVIRONMENT', value: params.ENVIRONMENT),
