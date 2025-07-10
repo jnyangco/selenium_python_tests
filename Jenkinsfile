@@ -24,27 +24,27 @@ pipeline {
             }
         }
 
-        stage('Start Selenium Grid') {
-            steps {
-                script {
-                    echo "🐳 Starting Selenium Grid..."
-                    sh '''
-                        // docker-compose down || true
-                        // docker-compose up -d
-                        // timeout 30 bash -c 'until curl -sSf http://localhost:4444/wd/hub/status > /dev/null; do sleep 2; done'
-                    '''
-                }
-            }
-        }
+//         stage('Start Selenium Grid') {
+//             steps {
+//                 script {
+//                     echo "🐳 Starting Selenium Grid..."
+//                     sh '''
+//                         // docker-compose down || true
+//                         // docker-compose up -d
+//                         // timeout 30 bash -c 'until curl -sSf http://localhost:4444/wd/hub/status > /dev/null; do sleep 2; done'
+//                     '''
+//                 }
+//             }
+//         }
 
-        stage('Smoke Tests') {
+        stage('Run Tests') {
             parallel {
-                stage('Login Smoke Tests') {
+                stage('Banking Tests') {
                     steps {
                         script {
                             sh '''
                                 . ${VENV_NAME}/bin/activate
-                                pytest -m "smoke and login" \
+                                pytest -m "banking" \
                                     --browser=${BROWSER} \
                                     --env=${ENV} \
                                     -v \
