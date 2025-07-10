@@ -95,12 +95,12 @@ pipeline {
                 sh 'rm -rf ${VENV_NAME}'
             }
         }
-        failure {
+//         failure {
 //             emailext (
 //                 subject: "🚨 SMOKE TESTS FAILED: ${env.JOB_NAME}",
 //                 body: "Critical smoke tests failed! Immediate attention required.",
 //                 to: "team@company.com"
 //             )
-        }
+//         }
     }
 }
