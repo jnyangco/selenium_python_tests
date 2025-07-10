@@ -1,21 +1,19 @@
 pipeline {
-    pipeline {
-        agent any  // ← Use this instead of agent { label 'master' }
-            // rest of pipeline...
-        }
+    agent any
     options { timestamps() }
 
     parameters {
         // Basic Parameters
         choice(choices: ['docker', 'local'], description: 'Test environment', name: 'ENVIRONMENT')
         choice(choices: ['chrome', 'firefox', 'edge'], description: 'Browser', name: 'BROWSER')
-        choice(choices: ['main', 'develop', 'staging'], description: 'Branch', name: 'BRANCH_NAME')
-        choice(choices: ['auto', '4', '8', '12', '16', '24'], description: 'Parallel workers', name: 'PARALLEL_WORKERS')
+        choice(choices: ['develop', 'main', 'staging'], description: 'Branch', name: 'BRANCH_NAME')
+        choice(choices: ['24', 'auto', '4', '8', '12', '16'], description: 'Parallel workers', name: 'PARALLEL_WORKERS')
 
-        // Test Suite Selection (Simple)
+        // Test Suite Selection (Fixed parameter names and descriptions)
         booleanParam(defaultValue: true, description: 'Run SauceDemo tests', name: 'RUN_SAUCEDEMO')
         booleanParam(defaultValue: true, description: 'Run OrangeHRM tests', name: 'RUN_ORANGEHRM')
-        booleanParam(defaultValue: true, description: 'Run Banking tests', name: 'RUN_BANKING')
+        booleanParam(defaultValue: true, description: 'Run Leetcode tests', name: 'RUN_LEETCODE')  // ← Fixed: was RUN_LEETCODE
+        booleanParam(defaultValue: true, description: 'Run Banking tests', name: 'RUN_BANKING')   // ← Fixed: removed duplicate
     }
 
     stages {
@@ -29,34 +27,27 @@ Environment: ${params.ENVIRONMENT}
 Browser: ${params.BROWSER}
 Branch: ${params.BRANCH_NAME}
 Workers: ${params.PARALLEL_WORKERS}
+
+Test Suites Selected:
+SauceDemo: ${params.RUN_SAUCEDEMO ? '✅' : '❌'}
+OrangeHRM: ${params.RUN_ORANGEHRM ? '✅' : '❌'}
+Leetcode: ${params.RUN_LEETCODE ? '✅' : '❌'}
+Banking: ${params.RUN_BANKING ? '✅' : '❌'}
                     """
                 }
             }
         }
 
-        stage('Run Tests') {
+        stage('Run Tests in Parallel') {
             parallel {
                 stage('SauceDemo Tests') {
                     when { expression { params.RUN_SAUCEDEMO } }
                     steps {
                         script {
-                            echo '🍅 Running SauceDemo Tests...'
+                            echo '🍅 Running SauceDemo Tests (Non-parameterized)...'
                             catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
-
-                                // OPTION A: Non-parameterized job (your first example)
-                                build job: 'SauceDemo_Tests'  // ← Change to your actual job name
-
-                                // OPTION B: Parameterized job (your second example)
-                                // Uncomment and use this if your SauceDemo job has parameters:
-                                /*
-                                build job: 'SauceDemo_Tests_Param', parameters: [
-                                    string(name: 'BRANCH_NAME', value: params.BRANCH_NAME),
-                                    string(name: 'BROWSER', value: params.BROWSER),
-                                    string(name: 'ENVIRONMENT', value: params.ENVIRONMENT),
-                                    string(name: 'PARALLEL_WORKERS', value: params.PARALLEL_WORKERS),
-                                    string(name: 'TEST_PATH', value: 'tests/saucedemo/')
-                                ]
-                                */
+                                // Non-parameterized job - no parameters passed
+                                build job: 'Selenium_Python_Tests_Saucedemo'
                             }
                         }
                     }
@@ -66,18 +57,23 @@ Workers: ${params.PARALLEL_WORKERS}
                     when { expression { params.RUN_ORANGEHRM } }
                     steps {
                         script {
-                            echo '🍊 Running OrangeHRM Tests...'
+                            echo '🍊 Running OrangeHRM Tests (Non-parameterized)...'
                             catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                                // Non-parameterized job - no parameters passed
+                                build job: 'Selenium_Python_Tests_Orangehrm'
+                            }
+                        }
+                    }
+                }
 
-                                // Using parameterized job (your second example)
-                                build job: 'OrangeHRM_Tests', parameters: [  // ← Change to your actual job name
-                                    string(name: 'BRANCH_NAME', value: params.BRANCH_NAME),
-                                    string(name: 'BROWSER', value: params.BROWSER),
-                                    string(name: 'ENVIRONMENT', value: params.ENVIRONMENT),
-                                    string(name: 'PARALLEL_WORKERS', value: params.PARALLEL_WORKERS),
-                                    booleanParam(name: 'HEADLESS', value: false),
-                                    string(name: 'TEST_PATH', value: 'tests/orangehrm/')
-                                ]
+                stage('Leetcode Tests') {
+                    when { expression { params.RUN_LEETCODE } }  // ← Fixed: was RUN_ORANGEHRM
+                    steps {
+                        script {
+                            echo '💻 Running Leetcode Tests (Non-parameterized)...'  // ← Fixed: updated description
+                            catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                                // Non-parameterized job - no parameters passed
+                                build job: 'Selenium_Python_Tests_Leetcode'
                             }
                         }
                     }
@@ -87,11 +83,10 @@ Workers: ${params.PARALLEL_WORKERS}
                     when { expression { params.RUN_BANKING } }
                     steps {
                         script {
-                            echo '🏦 Running Banking Tests...'
+                            echo '🏦 Running Banking Tests (Parameterized)...'
                             catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
-
-                                // Using parameterized job (your second example)
-                                build job: 'Banking_Tests', parameters: [  // ← Change to your actual job name
+                                // Parameterized job - passes parameters from orchestrator
+                                build job: 'Selenium_Python_Tests_Banking', parameters: [
                                     string(name: 'BRANCH_NAME', value: params.BRANCH_NAME),
                                     string(name: 'BROWSER', value: params.BROWSER),
                                     string(name: 'ENVIRONMENT', value: params.ENVIRONMENT),
@@ -110,41 +105,42 @@ Workers: ${params.PARALLEL_WORKERS}
     post {
         success {
             echo """
-                ✅ All tests completed successfully!
-                Duration: ${currentBuild.durationString}
-                Environment: ${params.ENVIRONMENT}
-                Browser: ${params.BROWSER}
-                """
+✅ All tests completed successfully!
+Duration: ${currentBuild.durationString}
+Environment: ${params.ENVIRONMENT}
+Browser: ${params.BROWSER}
+            """
         }
 
         failure {
             echo """
-                ❌ Some tests failed!
-                Check individual job console logs for details.
-                Duration: ${currentBuild.durationString}
-                """
+❌ Some tests failed!
+Check individual job console logs for details.
+Duration: ${currentBuild.durationString}
+            """
         }
 
         unstable {
             echo """
-                ⚠️ Tests completed with some failures.
-                Some test suites failed but execution continued.
-                Duration: ${currentBuild.durationString}
-                """
+⚠️ Tests completed with some failures.
+Some test suites failed but execution continued.
+Duration: ${currentBuild.durationString}
+            """
         }
 
         always {
             echo """
-                📊 Build Summary:
-                =================
-                Job: ${env.JOB_NAME} #${env.BUILD_NUMBER}
-                Result: ${currentBuild.result ?: 'SUCCESS'}
-                Duration: ${currentBuild.durationString}
-                SauceDemo: ${params.RUN_SAUCEDEMO ? 'Executed' : 'Skipped'}
-                OrangeHRM: ${params.RUN_ORANGEHRM ? 'Executed' : 'Skipped'}
-                Banking: ${params.RUN_BANKING ? 'Executed' : 'Skipped'}
-                =================
-                """
+📊 Build Summary:
+=================
+Job: ${env.JOB_NAME} #${env.BUILD_NUMBER}
+Result: ${currentBuild.result ?: 'SUCCESS'}
+Duration: ${currentBuild.durationString}
+SauceDemo: ${params.RUN_SAUCEDEMO ? 'Executed (Non-param)' : 'Skipped'}
+OrangeHRM: ${params.RUN_ORANGEHRM ? 'Executed (Non-param)' : 'Skipped'}
+Leetcode: ${params.RUN_LEETCODE ? 'Executed (Non-param)' : 'Skipped'}
+Banking: ${params.RUN_BANKING ? 'Executed (Parameterized)' : 'Skipped'}
+=================
+            """
         }
     }
 }
