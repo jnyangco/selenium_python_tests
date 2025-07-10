@@ -6,8 +6,8 @@ pipeline {
         // Basic Parameters
         choice(choices: ['docker', 'local'], description: 'Test environment', name: 'ENVIRONMENT')
         choice(choices: ['chrome', 'firefox', 'edge'], description: 'Browser', name: 'BROWSER')
-        choice(choices: ['main', 'develop', 'staging'], description: 'Branch', name: 'BRANCH_NAME')
-        choice(choices: ['auto', '4', '8', '12', '16', '24'], description: 'Parallel workers', name: 'PARALLEL_WORKERS')
+        choice(choices: ['develop', 'main', 'staging'], description: 'Branch', name: 'BRANCH_NAME')
+        choice(choices: ['24', 'auto', '4', '8', '12', '16'], description: 'Parallel workers', name: 'PARALLEL_WORKERS')
 
         // Test Suite Selection (Simple)
         booleanParam(defaultValue: true, description: 'Run SauceDemo tests', name: 'RUN_SAUCEDEMO')
