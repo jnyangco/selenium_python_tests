@@ -21,11 +21,11 @@ pipeline {
                 script {
                     currentBuild.description = "Env: ${params.ENVIRONMENT} | Browser: ${params.BROWSER} | Workers: ${params.PARALLEL_WORKERS}"
                     echo """
-🚀 Starting Selenium Test Orchestrator
-Environment: ${params.ENVIRONMENT}
-Browser: ${params.BROWSER}
-Branch: ${params.BRANCH_NAME}
-Workers: ${params.PARALLEL_WORKERS}
+                    🚀 Starting Selenium Test Orchestrator
+                    Environment: ${params.ENVIRONMENT}
+                    Browser: ${params.BROWSER}
+                    Branch: ${params.BRANCH_NAME}
+                    Workers: ${params.PARALLEL_WORKERS}
                     """
                 }
             }
@@ -40,7 +40,7 @@ Workers: ${params.PARALLEL_WORKERS}
                             echo '🍅 Running SauceDemo Tests (Non-parameterized)...'
                             catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
                                 // Non-parameterized job - no parameters passed
-                                build job: 'SauceDemo_Tests'  // ← Change to your actual job name
+                                build job: 'Selenium_Python_Tests_Saucedemo'  // ← Change to your actual job name
                             }
                         }
                     }
@@ -85,40 +85,40 @@ Workers: ${params.PARALLEL_WORKERS}
     post {
         success {
             echo """
-✅ All tests completed successfully!
-Duration: ${currentBuild.durationString}
-Environment: ${params.ENVIRONMENT}
-Browser: ${params.BROWSER}
+                ✅ All tests completed successfully!
+                Duration: ${currentBuild.durationString}
+                Environment: ${params.ENVIRONMENT}
+                Browser: ${params.BROWSER}
             """
         }
 
         failure {
             echo """
-❌ Some tests failed!
-Check individual job console logs for details.
-Duration: ${currentBuild.durationString}
+                ❌ Some tests failed!
+                Check individual job console logs for details.
+                Duration: ${currentBuild.durationString}
             """
         }
 
         unstable {
             echo """
-⚠️ Tests completed with some failures.
-Some test suites failed but execution continued.
-Duration: ${currentBuild.durationString}
+                ⚠️ Tests completed with some failures.
+                Some test suites failed but execution continued.
+                Duration: ${currentBuild.durationString}
             """
         }
 
         always {
             echo """
-📊 Build Summary:
-=================
-Job: ${env.JOB_NAME} #${env.BUILD_NUMBER}
-Result: ${currentBuild.result ?: 'SUCCESS'}
-Duration: ${currentBuild.durationString}
-SauceDemo: ${params.RUN_SAUCEDEMO ? 'Executed (Non-param)' : 'Skipped'}
-OrangeHRM: ${params.RUN_ORANGEHRM ? 'Executed (Non-param)' : 'Skipped'}
-Banking: ${params.RUN_BANKING ? 'Executed (Parameterized)' : 'Skipped'}
-=================
+                📊 Build Summary:
+                =================
+                Job: ${env.JOB_NAME} #${env.BUILD_NUMBER}
+                Result: ${currentBuild.result ?: 'SUCCESS'}
+                Duration: ${currentBuild.durationString}
+                SauceDemo: ${params.RUN_SAUCEDEMO ? 'Executed (Non-param)' : 'Skipped'}
+                OrangeHRM: ${params.RUN_ORANGEHRM ? 'Executed (Non-param)' : 'Skipped'}
+                Banking: ${params.RUN_BANKING ? 'Executed (Parameterized)' : 'Skipped'}
+                =================
             """
         }
     }
