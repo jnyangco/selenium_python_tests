@@ -2,7 +2,7 @@ pipeline {
     agent none
     options {
         timestamps()
-        buildDiscarder(logRotator(numToKeepStr: '20'))  // ← Added: Keep only 20 builds
+        // buildDiscarder(logRotator(numToKeepStr: '20'))  // ← Added: Keep only 20 builds
         timeout(time: 2, unit: 'HOURS')                 // ← Added: 2-hour timeout safety
     }
 
