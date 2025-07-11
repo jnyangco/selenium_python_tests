@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent none  // ← KEY CHANGE: Don't assign agent at pipeline level
     options { timestamps() }
 
     parameters {
@@ -9,15 +9,16 @@ pipeline {
         choice(choices: ['develop', 'main', 'staging'], description: 'Branch', name: 'BRANCH_NAME')
         choice(choices: ['24', 'auto', '4', '8', '12', '16'], description: 'Parallel workers', name: 'PARALLEL_WORKERS')
 
-        // Test Suite Selection (Fixed parameter names and descriptions)
+        // Test Suite Selection
         booleanParam(defaultValue: true, description: 'Run SauceDemo tests', name: 'RUN_SAUCEDEMO')
         booleanParam(defaultValue: true, description: 'Run OrangeHRM tests', name: 'RUN_ORANGEHRM')
-        booleanParam(defaultValue: true, description: 'Run Leetcode tests', name: 'RUN_LEETCODE')  // ← Fixed: was RUN_LEETCODE
-        booleanParam(defaultValue: true, description: 'Run Banking tests', name: 'RUN_BANKING')   // ← Fixed: removed duplicate
+        booleanParam(defaultValue: true, description: 'Run Leetcode tests', name: 'RUN_LEETCODE')
+        booleanParam(defaultValue: true, description: 'Run Banking tests', name: 'RUN_BANKING')
     }
 
     stages {
         stage('Setup') {
+            agent any  // ← Only setup stage needs an agent
             steps {
                 script {
                     currentBuild.description = "Env: ${params.ENVIRONMENT} | Browser: ${params.BROWSER} | Workers: ${params.PARALLEL_WORKERS}"
@@ -38,54 +39,57 @@ Banking: ${params.RUN_BANKING ? '✅' : '❌'}
             }
         }
 
-        stage('Run Tests in Parallel') {
+        stage('Run Tests in True Parallel') {
             parallel {
                 stage('SauceDemo Tests') {
+                    agent any  // ← Each stage gets its own executor
                     when { expression { params.RUN_SAUCEDEMO } }
                     steps {
                         script {
-                            echo '🍅 Running SauceDemo Tests (Non-parameterized)...'
+                            echo "🍅 SauceDemo starting on agent: ${env.NODE_NAME} at: ${new Date()}"
                             catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
-                                // Non-parameterized job - no parameters passed
                                 build job: 'Selenium_Python_Tests_Saucedemo'
                             }
+                            echo "🍅 SauceDemo finished on agent: ${env.NODE_NAME} at: ${new Date()}"
                         }
                     }
                 }
 
                 stage('OrangeHRM Tests') {
+                    agent any  // ← Each stage gets its own executor
                     when { expression { params.RUN_ORANGEHRM } }
                     steps {
                         script {
-                            echo '🍊 Running OrangeHRM Tests (Non-parameterized)...'
+                            echo "🍊 OrangeHRM starting on agent: ${env.NODE_NAME} at: ${new Date()}"
                             catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
-                                // Non-parameterized job - no parameters passed
                                 build job: 'Selenium_Python_Tests_Orangehrm'
                             }
+                            echo "🍊 OrangeHRM finished on agent: ${env.NODE_NAME} at: ${new Date()}"
                         }
                     }
                 }
 
                 stage('Leetcode Tests') {
-                    when { expression { params.RUN_LEETCODE } }  // ← Fixed: was RUN_ORANGEHRM
+                    agent any  // ← Each stage gets its own executor
+                    when { expression { params.RUN_LEETCODE } }
                     steps {
                         script {
-                            echo '💻 Running Leetcode Tests (Non-parameterized)...'  // ← Fixed: updated description
+                            echo "💻 Leetcode starting on agent: ${env.NODE_NAME} at: ${new Date()}"
                             catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
-                                // Non-parameterized job - no parameters passed
                                 build job: 'Selenium_Python_Tests_Leetcode'
                             }
+                            echo "💻 Leetcode finished on agent: ${env.NODE_NAME} at: ${new Date()}"
                         }
                     }
                 }
 
                 stage('Banking Tests') {
+                    agent any  // ← Each stage gets its own executor
                     when { expression { params.RUN_BANKING } }
                     steps {
                         script {
-                            echo '🏦 Running Banking Tests (Parameterized)...'
+                            echo "🏦 Banking starting on agent: ${env.NODE_NAME} at: ${new Date()}"
                             catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
-                                // Parameterized job - passes parameters from orchestrator
                                 build job: 'Selenium_Python_Tests_Banking', parameters: [
                                     string(name: 'BRANCH_NAME', value: params.BRANCH_NAME),
                                     string(name: 'BROWSER', value: params.BROWSER),
@@ -95,6 +99,7 @@ Banking: ${params.RUN_BANKING ? '✅' : '❌'}
                                     string(name: 'TEST_PATH', value: 'tests/banking/')
                                 ]
                             }
+                            echo "🏦 Banking finished on agent: ${env.NODE_NAME} at: ${new Date()}"
                         }
                     }
                 }
@@ -103,33 +108,10 @@ Banking: ${params.RUN_BANKING ? '✅' : '❌'}
     }
 
     post {
-        success {
-            echo """
-✅ All tests completed successfully!
-Duration: ${currentBuild.durationString}
-Environment: ${params.ENVIRONMENT}
-Browser: ${params.BROWSER}
-            """
-        }
-
-        failure {
-            echo """
-❌ Some tests failed!
-Check individual job console logs for details.
-Duration: ${currentBuild.durationString}
-            """
-        }
-
-        unstable {
-            echo """
-⚠️ Tests completed with some failures.
-Some test suites failed but execution continued.
-Duration: ${currentBuild.durationString}
-            """
-        }
-
         always {
-            echo """
+            node('any') {  // ← Need agent for post actions
+                script {
+                    echo """
 📊 Build Summary:
 =================
 Job: ${env.JOB_NAME} #${env.BUILD_NUMBER}
@@ -140,7 +122,40 @@ OrangeHRM: ${params.RUN_ORANGEHRM ? 'Executed (Non-param)' : 'Skipped'}
 Leetcode: ${params.RUN_LEETCODE ? 'Executed (Non-param)' : 'Skipped'}
 Banking: ${params.RUN_BANKING ? 'Executed (Parameterized)' : 'Skipped'}
 =================
-            """
+                    """
+                }
+            }
+        }
+
+        success {
+            node('any') {
+                echo """
+✅ All tests completed successfully!
+Duration: ${currentBuild.durationString}
+Environment: ${params.ENVIRONMENT}
+Browser: ${params.BROWSER}
+                """
+            }
+        }
+
+        failure {
+            node('any') {
+                echo """
+❌ Some tests failed!
+Check individual job console logs for details.
+Duration: ${currentBuild.durationString}
+                """
+            }
+        }
+
+        unstable {
+            node('any') {
+                echo """
+⚠️ Tests completed with some failures.
+Some test suites failed but execution continued.
+Duration: ${currentBuild.durationString}
+                """
+            }
         }
     }
 }
