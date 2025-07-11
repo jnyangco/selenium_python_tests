@@ -1,6 +1,10 @@
 pipeline {
     agent none
-    options { timestamps() }
+    options {
+        timestamps()
+        buildDiscarder(logRotator(numToKeepStr: '10'))  // ← Added: Keep only 10 builds
+        timeout(time: 2, unit: 'HOURS')                 // ← Added: 2-hour timeout safety
+    }
 
     parameters {
         // Basic Parameters
@@ -34,6 +38,9 @@ SauceDemo: ${params.RUN_SAUCEDEMO ? '✅' : '❌'}
 OrangeHRM: ${params.RUN_ORANGEHRM ? '✅' : '❌'}
 Leetcode: ${params.RUN_LEETCODE ? '✅' : '❌'}
 Banking: ${params.RUN_BANKING ? '✅' : '❌'}
+
+Build: ${env.JOB_NAME} #${env.BUILD_NUMBER}
+Started: ${new Date()}
                     """
                 }
             }
@@ -53,6 +60,14 @@ Banking: ${params.RUN_BANKING ? '✅' : '❌'}
                             echo "🍅 SauceDemo finished on agent: ${env.NODE_NAME} at: ${new Date()}"
                         }
                     }
+                    post {
+                        failure {
+                            echo "❌ SauceDemo tests failed - check job logs"
+                        }
+                        success {
+                            echo "✅ SauceDemo tests passed"
+                        }
+                    }
                 }
 
                 stage('OrangeHRM Tests') {
@@ -67,6 +82,14 @@ Banking: ${params.RUN_BANKING ? '✅' : '❌'}
                             echo "🍊 OrangeHRM finished on agent: ${env.NODE_NAME} at: ${new Date()}"
                         }
                     }
+                    post {
+                        failure {
+                            echo "❌ OrangeHRM tests failed - check job logs"
+                        }
+                        success {
+                            echo "✅ OrangeHRM tests passed"
+                        }
+                    }
                 }
 
                 stage('Leetcode Tests') {
@@ -79,6 +102,14 @@ Banking: ${params.RUN_BANKING ? '✅' : '❌'}
                                 build job: 'Selenium_Python_Tests_Leetcode'
                             }
                             echo "💻 Leetcode finished on agent: ${env.NODE_NAME} at: ${new Date()}"
+                        }
+                    }
+                    post {
+                        failure {
+                            echo "❌ Leetcode tests failed - check job logs"
+                        }
+                        success {
+                            echo "✅ Leetcode tests passed"
                         }
                     }
                 }
@@ -102,6 +133,14 @@ Banking: ${params.RUN_BANKING ? '✅' : '❌'}
                             echo "🏦 Banking finished on agent: ${env.NODE_NAME} at: ${new Date()}"
                         }
                     }
+                    post {
+                        failure {
+                            echo "❌ Banking tests failed - check job logs"
+                        }
+                        success {
+                            echo "✅ Banking tests passed"
+                        }
+                    }
                 }
             }
         }
@@ -110,13 +149,32 @@ Banking: ${params.RUN_BANKING ? '✅' : '❌'}
     post {
         always {
             script {
-                // ✅ FIXED: Use simple echo instead of node allocation
+                // Calculate execution summary
+                def executedJobs = []
+                if (params.RUN_SAUCEDEMO) executedJobs << 'SauceDemo'
+                if (params.RUN_ORANGEHRM) executedJobs << 'OrangeHRM'
+                if (params.RUN_LEETCODE) executedJobs << 'Leetcode'
+                if (params.RUN_BANKING) executedJobs << 'Banking'
+
                 echo """
 📊 Build Summary:
 =================
 Job: ${env.JOB_NAME} #${env.BUILD_NUMBER}
 Result: ${currentBuild.result ?: 'SUCCESS'}
 Duration: ${currentBuild.durationString}
+Started: ${currentBuild.startTimeInMillis ? new Date(currentBuild.startTimeInMillis) : 'Unknown'}
+Finished: ${new Date()}
+
+Test Suites Executed: ${executedJobs.join(', ') ?: 'None'}
+Total Selected: ${executedJobs.size()} out of 4 available
+
+Configuration:
+- Environment: ${params.ENVIRONMENT}
+- Browser: ${params.BROWSER}
+- Branch: ${params.BRANCH_NAME}
+- Workers: ${params.PARALLEL_WORKERS}
+
+Individual Results:
 SauceDemo: ${params.RUN_SAUCEDEMO ? 'Executed (Non-param)' : 'Skipped'}
 OrangeHRM: ${params.RUN_ORANGEHRM ? 'Executed (Non-param)' : 'Skipped'}
 Leetcode: ${params.RUN_LEETCODE ? 'Executed (Non-param)' : 'Skipped'}
@@ -129,10 +187,12 @@ Banking: ${params.RUN_BANKING ? 'Executed (Parameterized)' : 'Skipped'}
         success {
             script {
                 echo """
-✅ All tests completed successfully!
+✅ All selected tests completed successfully!
 Duration: ${currentBuild.durationString}
 Environment: ${params.ENVIRONMENT}
 Browser: ${params.BROWSER}
+
+🎉 Parallel execution working perfectly with 12 executors!
                 """
             }
         }
@@ -141,8 +201,15 @@ Browser: ${params.BROWSER}
             script {
                 echo """
 ❌ Some tests failed!
-Check individual job console logs for details.
 Duration: ${currentBuild.durationString}
+
+🔍 Next Steps:
+1. Check individual job console logs for details
+2. Review screenshots in failed job artifacts
+3. Check test reports for specific failure details
+
+Environment: ${params.ENVIRONMENT}
+Browser: ${params.BROWSER}
                 """
             }
         }
@@ -151,8 +218,13 @@ Duration: ${currentBuild.durationString}
             script {
                 echo """
 ⚠️ Tests completed with some failures.
-Some test suites failed but execution continued.
 Duration: ${currentBuild.durationString}
+
+Some test suites failed but execution continued.
+Review individual job results for details.
+
+Environment: ${params.ENVIRONMENT}
+Browser: ${params.BROWSER}
                 """
             }
         }
