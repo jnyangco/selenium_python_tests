@@ -7,13 +7,13 @@ pipeline {
     }
 
     parameters {
-        // Basic Parameters
+        // Basic Parameters (update)
         choice(choices: ['docker', 'local'], description: 'Test environment', name: 'ENVIRONMENT')
         choice(choices: ['chrome', 'firefox', 'edge'], description: 'Browser', name: 'BROWSER')
         choice(choices: ['develop', 'main', 'staging'], description: 'Branch', name: 'BRANCH_NAME')
         choice(choices: ['24', 'auto', '4', '8', '12', '16'], description: 'Parallel workers', name: 'PARALLEL_WORKERS')
 
-        // Test Suite Selection
+        // Test Suite Selection (update)
         booleanParam(defaultValue: true, description: 'Run SauceDemo tests', name: 'RUN_SAUCEDEMO')
         booleanParam(defaultValue: true, description: 'Run OrangeHRM tests', name: 'RUN_ORANGEHRM')
         booleanParam(defaultValue: true, description: 'Run Leetcode tests', name: 'RUN_LEETCODE')
@@ -53,12 +53,12 @@ pipeline {
             parallel {
                 stage('SauceDemo Tests') {
                     agent any
-                    when { expression { params.RUN_SAUCEDEMO } }
+                    when { expression { params.RUN_SAUCEDEMO } }  // <- update params test
                     steps {
                         script {
                             echo "🍅 SauceDemo starting on agent: ${env.NODE_NAME} at: ${new Date()}"
                             catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
-                                build job: 'Selenium_Python_Tests_Saucedemo'
+                                build job: 'Selenium_Python_Tests_Saucedemo'  // <- update job name
                             }
                             echo "🍅 SauceDemo finished on agent: ${env.NODE_NAME} at: ${new Date()}"
                         }
@@ -75,12 +75,12 @@ pipeline {
 
                 stage('OrangeHRM Tests') {
                     agent any
-                    when { expression { params.RUN_ORANGEHRM } }
+                    when { expression { params.RUN_ORANGEHRM } }  // <- update params test
                     steps {
                         script {
                             echo "🍊 OrangeHRM starting on agent: ${env.NODE_NAME} at: ${new Date()}"
                             catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
-                                build job: 'Selenium_Python_Tests_Orangehrm'
+                                build job: 'Selenium_Python_Tests_Orangehrm'  // <- update job name
                             }
                             echo "🍊 OrangeHRM finished on agent: ${env.NODE_NAME} at: ${new Date()}"
                         }
@@ -97,12 +97,12 @@ pipeline {
 
                 stage('Leetcode Tests') {
                     agent any
-                    when { expression { params.RUN_LEETCODE } }
+                    when { expression { params.RUN_LEETCODE } }  // <- update params test
                     steps {
                         script {
                             echo "💻 Leetcode starting on agent: ${env.NODE_NAME} at: ${new Date()}"
                             catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
-                                build job: 'Selenium_Python_Tests_Leetcode'
+                                build job: 'Selenium_Python_Tests_Leetcode'  // <- update job name
                             }
                             echo "💻 Leetcode finished on agent: ${env.NODE_NAME} at: ${new Date()}"
                         }
@@ -119,18 +119,17 @@ pipeline {
 
                 stage('Banking Tests') {
                     agent any
-                    when { expression { params.RUN_BANKING } }
+                    when { expression { params.RUN_BANKING } }  // <- update params test
                     steps {
                         script {
                             echo "🏦 Banking starting on agent: ${env.NODE_NAME} at: ${new Date()}"
                             catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
-                                build job: 'Selenium_Python_Tests_Banking', parameters: [
+                                build job: 'Selenium_Python_Tests_Banking', parameters: [  // <- update job name
                                     string(name: 'BRANCH_NAME', value: params.BRANCH_NAME),
                                     string(name: 'BROWSER', value: params.BROWSER),
                                     string(name: 'ENVIRONMENT', value: params.ENVIRONMENT),
                                     string(name: 'PARALLEL_WORKERS', value: params.PARALLEL_WORKERS),
-                                    booleanParam(name: 'HEADLESS', value: false),
-                                    string(name: 'TEST_PATH', value: 'tests/banking/')
+                                    booleanParam(name: 'HEADLESS', value: false)
                                 ]
                             }
                             echo "🏦 Banking finished on agent: ${env.NODE_NAME} at: ${new Date()}"
