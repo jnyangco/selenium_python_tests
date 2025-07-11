@@ -48,8 +48,13 @@ if [ "$PARALLEL_WORKERS" != "1" ]; then
     PYTEST_CMD="$PYTEST_CMD $WORKERS_FLAG"
 fi
 
+
+
+
+# ***************************************
 # ***** SPECIFY TEST MARKERS / TAGS *****
 PYTEST_CMD="$PYTEST_CMD -m banking"
+# ***************************************
 
 echo "=== Running Selenium tests with command ==="
 # Execute the command
