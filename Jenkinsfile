@@ -2,7 +2,7 @@ pipeline {
     agent none
     options {
         timestamps()
-        buildDiscarder(logRotator(numToKeepStr: '10'))  // ← Added: Keep only 10 builds
+        buildDiscarder(logRotator(numToKeepStr: '20'))  // ← Added: Keep only 20 builds
         timeout(time: 2, unit: 'HOURS')                 // ← Added: 2-hour timeout safety
     }
 
@@ -27,20 +27,23 @@ pipeline {
                 script {
                     currentBuild.description = "Env: ${params.ENVIRONMENT} | Browser: ${params.BROWSER} | Workers: ${params.PARALLEL_WORKERS}"
                     echo """
-🚀 Starting Selenium Test Orchestrator
-Environment: ${params.ENVIRONMENT}
-Browser: ${params.BROWSER}
-Branch: ${params.BRANCH_NAME}
-Workers: ${params.PARALLEL_WORKERS}
+                        ===================================================
+                        🚀 Starting Selenium Test Orchestrator
+                        ===================================================
+                        Environment: ${params.ENVIRONMENT}
+                        Browser: ${params.BROWSER}
+                        Branch: ${params.BRANCH_NAME}
+                        Workers: ${params.PARALLEL_WORKERS}
 
-Test Suites Selected:
-SauceDemo: ${params.RUN_SAUCEDEMO ? '✅' : '❌'}
-OrangeHRM: ${params.RUN_ORANGEHRM ? '✅' : '❌'}
-Leetcode: ${params.RUN_LEETCODE ? '✅' : '❌'}
-Banking: ${params.RUN_BANKING ? '✅' : '❌'}
+                        Test Suites Selected:
+                        SauceDemo: ${params.RUN_SAUCEDEMO ? '✅' : '❌'}
+                        OrangeHRM: ${params.RUN_ORANGEHRM ? '✅' : '❌'}
+                        Leetcode: ${params.RUN_LEETCODE ? '✅' : '❌'}
+                        Banking: ${params.RUN_BANKING ? '✅' : '❌'}
 
-Build: ${env.JOB_NAME} #${env.BUILD_NUMBER}
-Started: ${new Date()}
+                        Build: ${env.JOB_NAME} #${env.BUILD_NUMBER}
+                        Started: ${new Date()}
+                        ===================================================
                     """
                 }
             }
@@ -157,29 +160,33 @@ Started: ${new Date()}
                 if (params.RUN_BANKING) executedJobs << 'Banking'
 
                 echo """
-📊 Build Summary:
-=================
-Job: ${env.JOB_NAME} #${env.BUILD_NUMBER}
-Result: ${currentBuild.result ?: 'SUCCESS'}
-Duration: ${currentBuild.durationString}
-Started: ${currentBuild.startTimeInMillis ? new Date(currentBuild.startTimeInMillis) : 'Unknown'}
-Finished: ${new Date()}
+                    ===================================================
+                    📊 Build Summary:
+                    ===================================================
+                    Job: ${env.JOB_NAME} #${env.BUILD_NUMBER}
+                    Result: ${currentBuild.result ?: 'SUCCESS'}
+                    Duration: ${currentBuild.durationString}
+                    Started: ${currentBuild.startTimeInMillis ? new Date(currentBuild.startTimeInMillis) : 'Unknown'}
+                    Finished: ${new Date()}
 
-Test Suites Executed: ${executedJobs.join(', ') ?: 'None'}
-Total Selected: ${executedJobs.size()} out of 4 available
+                    ===================================================
+                    Test Suites Executed: ${executedJobs.join(', ') ?: 'None'}
+                    Total Selected: ${executedJobs.size()} out of 4 available
 
-Configuration:
-- Environment: ${params.ENVIRONMENT}
-- Browser: ${params.BROWSER}
-- Branch: ${params.BRANCH_NAME}
-- Workers: ${params.PARALLEL_WORKERS}
+                    ===================================================
+                    Configuration:
+                    - Environment: ${params.ENVIRONMENT}
+                    - Browser: ${params.BROWSER}
+                    - Branch: ${params.BRANCH_NAME}
+                    - Workers: ${params.PARALLEL_WORKERS}
 
-Individual Results:
-SauceDemo: ${params.RUN_SAUCEDEMO ? 'Executed (Non-param)' : 'Skipped'}
-OrangeHRM: ${params.RUN_ORANGEHRM ? 'Executed (Non-param)' : 'Skipped'}
-Leetcode: ${params.RUN_LEETCODE ? 'Executed (Non-param)' : 'Skipped'}
-Banking: ${params.RUN_BANKING ? 'Executed (Parameterized)' : 'Skipped'}
-=================
+                    ===================================================
+                    Individual Results:
+                    SauceDemo: ${params.RUN_SAUCEDEMO ? 'Executed (Non-param)' : 'Skipped'}
+                    OrangeHRM: ${params.RUN_ORANGEHRM ? 'Executed (Non-param)' : 'Skipped'}
+                    Leetcode: ${params.RUN_LEETCODE ? 'Executed (Non-param)' : 'Skipped'}
+                    Banking: ${params.RUN_BANKING ? 'Executed (Parameterized)' : 'Skipped'}
+                    ===================================================
                 """
             }
         }
@@ -187,12 +194,15 @@ Banking: ${params.RUN_BANKING ? 'Executed (Parameterized)' : 'Skipped'}
         success {
             script {
                 echo """
-✅ All selected tests completed successfully!
-Duration: ${currentBuild.durationString}
-Environment: ${params.ENVIRONMENT}
-Browser: ${params.BROWSER}
+                    ===================================================
+                    ✅ All selected tests completed successfully!
+                    ===================================================
+                    Duration: ${currentBuild.durationString}
+                    Environment: ${params.ENVIRONMENT}
+                    Browser: ${params.BROWSER}
 
-🎉 Parallel execution working perfectly with 12 executors!
+                    🎉 Parallel execution working perfectly with 12 executors!
+                    ===================================================
                 """
             }
         }
@@ -200,16 +210,19 @@ Browser: ${params.BROWSER}
         failure {
             script {
                 echo """
-❌ Some tests failed!
-Duration: ${currentBuild.durationString}
+                    ===================================================
+                    ❌ Some tests failed!
+                    ===================================================
+                    Duration: ${currentBuild.durationString}
 
-🔍 Next Steps:
-1. Check individual job console logs for details
-2. Review screenshots in failed job artifacts
-3. Check test reports for specific failure details
+                    🔍 Next Steps:
+                    1. Check individual job console logs for details
+                    2. Review screenshots in failed job artifacts
+                    3. Check test reports for specific failure details
 
-Environment: ${params.ENVIRONMENT}
-Browser: ${params.BROWSER}
+                    Environment: ${params.ENVIRONMENT}
+                    Browser: ${params.BROWSER}
+                    ===================================================
                 """
             }
         }
@@ -217,14 +230,17 @@ Browser: ${params.BROWSER}
         unstable {
             script {
                 echo """
-⚠️ Tests completed with some failures.
-Duration: ${currentBuild.durationString}
+                    ===================================================
+                    ⚠️ Tests completed with some failures.
+                    ===================================================
+                    Duration: ${currentBuild.durationString}
 
-Some test suites failed but execution continued.
-Review individual job results for details.
+                    Some test suites failed but execution continued.
+                    Review individual job results for details.
 
-Environment: ${params.ENVIRONMENT}
-Browser: ${params.BROWSER}
+                    Environment: ${params.ENVIRONMENT}
+                    Browser: ${params.BROWSER}
+                    ===================================================
                 """
             }
         }
