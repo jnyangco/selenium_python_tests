@@ -1,0 +1,33 @@
+#!/bin/bash
+set -e
+export PATH=$PATH:/usr/local/bin
+
+echo "=== Setting up Python virtual environment ==="
+python3 -m venv .venv
+source .venv/bin/activate
+which python
+python --version
+
+echo "=== Installing dependencies ==="
+pip install --upgrade pip
+pip install -r requirements.txt
+
+echo "=== Creating reports directory ==="
+mkdir -p reports/allure-results
+mkdir -p reports/screenshots
+
+echo "=== Running Selenium tests with Allure ==="
+# using addopts:
+pytest -m orangehrm --env docker -n 24
+
+# if framework is not using addopts -> enable the following tags below:
+# can use python file to run test suite or group tests using tags
+# pytest -s -v tests/orangehrm/test_*.py \
+# --env docker \
+# --alluredir=reports/allure-results \
+# --clean-alluredir \
+# --browser=chrome \
+# -n 24
+
+echo "=== Test execution completed ==="
+ls -la reports/allure-results/
