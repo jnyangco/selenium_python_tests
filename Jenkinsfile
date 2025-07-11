@@ -1,5 +1,5 @@
 pipeline {
-    agent none  // ← KEY CHANGE: Don't assign agent at pipeline level
+    agent none
     options { timestamps() }
 
     parameters {
@@ -18,7 +18,7 @@ pipeline {
 
     stages {
         stage('Setup') {
-            agent any  // ← Only setup stage needs an agent
+            agent any
             steps {
                 script {
                     currentBuild.description = "Env: ${params.ENVIRONMENT} | Browser: ${params.BROWSER} | Workers: ${params.PARALLEL_WORKERS}"
@@ -42,7 +42,7 @@ Banking: ${params.RUN_BANKING ? '✅' : '❌'}
         stage('Run Tests in True Parallel') {
             parallel {
                 stage('SauceDemo Tests') {
-                    agent any  // ← Each stage gets its own executor
+                    agent any
                     when { expression { params.RUN_SAUCEDEMO } }
                     steps {
                         script {
@@ -56,7 +56,7 @@ Banking: ${params.RUN_BANKING ? '✅' : '❌'}
                 }
 
                 stage('OrangeHRM Tests') {
-                    agent any  // ← Each stage gets its own executor
+                    agent any
                     when { expression { params.RUN_ORANGEHRM } }
                     steps {
                         script {
@@ -70,7 +70,7 @@ Banking: ${params.RUN_BANKING ? '✅' : '❌'}
                 }
 
                 stage('Leetcode Tests') {
-                    agent any  // ← Each stage gets its own executor
+                    agent any
                     when { expression { params.RUN_LEETCODE } }
                     steps {
                         script {
@@ -84,7 +84,7 @@ Banking: ${params.RUN_BANKING ? '✅' : '❌'}
                 }
 
                 stage('Banking Tests') {
-                    agent any  // ← Each stage gets its own executor
+                    agent any
                     when { expression { params.RUN_BANKING } }
                     steps {
                         script {
@@ -109,9 +109,9 @@ Banking: ${params.RUN_BANKING ? '✅' : '❌'}
 
     post {
         always {
-            node('any') {  // ← Need agent for post actions
-                script {
-                    echo """
+            script {
+                // ✅ FIXED: Use simple echo instead of node allocation
+                echo """
 📊 Build Summary:
 =================
 Job: ${env.JOB_NAME} #${env.BUILD_NUMBER}
@@ -122,13 +122,12 @@ OrangeHRM: ${params.RUN_ORANGEHRM ? 'Executed (Non-param)' : 'Skipped'}
 Leetcode: ${params.RUN_LEETCODE ? 'Executed (Non-param)' : 'Skipped'}
 Banking: ${params.RUN_BANKING ? 'Executed (Parameterized)' : 'Skipped'}
 =================
-                    """
-                }
+                """
             }
         }
 
         success {
-            node('any') {
+            script {
                 echo """
 ✅ All tests completed successfully!
 Duration: ${currentBuild.durationString}
@@ -139,7 +138,7 @@ Browser: ${params.BROWSER}
         }
 
         failure {
-            node('any') {
+            script {
                 echo """
 ❌ Some tests failed!
 Check individual job console logs for details.
@@ -149,7 +148,7 @@ Duration: ${currentBuild.durationString}
         }
 
         unstable {
-            node('any') {
+            script {
                 echo """
 ⚠️ Tests completed with some failures.
 Some test suites failed but execution continued.
