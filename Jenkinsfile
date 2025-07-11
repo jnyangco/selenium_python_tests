@@ -25,14 +25,14 @@ pipeline {
             agent any
             steps {
                 script {
-                    currentBuild.description = "Env: ${params.ENVIRONMENT} | Browser: ${params.BROWSER} | Workers: ${params.PARALLEL_WORKERS}"
+                    currentBuild.description = "Branch: ${params.BRANCH_NAME} | Env: ${params.ENVIRONMENT} | Browser: ${params.BROWSER} | Workers: ${params.PARALLEL_WORKERS}"
                     echo """
                         ===================================================
                         🚀 Starting Selenium Test Orchestrator
                         ===================================================
+                        Branch: ${params.BRANCH_NAME}
                         Environment: ${params.ENVIRONMENT}
                         Browser: ${params.BROWSER}
-                        Branch: ${params.BRANCH_NAME}
                         Workers: ${params.PARALLEL_WORKERS}
 
                         Test Suites Selected:
@@ -197,6 +197,7 @@ pipeline {
                     ✅ All selected tests completed successfully!
                     ===================================================
                     Duration: ${currentBuild.durationString}
+                    Branch: ${params.BRANCH_NAME}
                     Environment: ${params.ENVIRONMENT}
                     Browser: ${params.BROWSER}
 
@@ -219,6 +220,7 @@ pipeline {
                     2. Review screenshots in failed job artifacts
                     3. Check test reports for specific failure details
 
+                    Branch: ${params.BRANCH_NAME}
                     Environment: ${params.ENVIRONMENT}
                     Browser: ${params.BROWSER}
                     ===================================================
@@ -237,6 +239,7 @@ pipeline {
                     Some test suites failed but execution continued.
                     Review individual job results for details.
 
+                    Branch: ${params.BRANCH_NAME}
                     Environment: ${params.ENVIRONMENT}
                     Browser: ${params.BROWSER}
                     ===================================================
