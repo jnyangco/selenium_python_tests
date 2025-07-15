@@ -7,15 +7,15 @@ from core.base.base_test import BaseTest
 
 @pytest.mark.saucedemo
 @pytest.mark.login
-@allure.feature("Saucedemo: Login")
+@allure.feature("Test: Login")
 class TestTemplate(BaseTest):
 
-    @allure.title("Saucedemo: Valid Login Test")
+    @allure.title("Test: Valid Login Test")
     @allure.description("Test description: Test Login with valid credentials")
     def test_valid_login(self, driver):
         """Test login with valid credentials"""
 
-        self.log.info("Step: Open SauceDemo Website")
+        self.log.info("Step: Open Test Website")
         login_page = LoginPageSaucedemo(driver)
         login_page.open_url(data("saucedemo", "base_url"))
 
