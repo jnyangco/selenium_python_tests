@@ -1,6 +1,8 @@
 import allure
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.select import Select
+
 from core.base.base_page import BasePage
 from selenium.webdriver.support import expected_conditions as EC
 from utils.data_utils import get_data as data
@@ -14,12 +16,17 @@ class LeetcodePage(BasePage):
     # LOCATORS - All locators from all Leetcode pages
     # ============================================================================
     # HOME PAGE (HP)
-    HP_EDIT_BUTTON = (By.XPATH, "//a[@href='/edit']")
+    HP_INPUT_BUTTON = (By.XPATH, "//a[@href='/edit']")
     HP_CARDS_OBJECT = (By.XPATH, "//div[@class='columns is-multiline']/div[@class='column is-3-desktop is-6-tablet']")
     HP_CARDS_TITLE = (By.XPATH, "//div/div[@class='column is-3-desktop is-6-tablet']//header/p")
     HP_CARDS_DESCRIPTION = (By.XPATH, "//div/div[@class='column is-3-desktop is-6-tablet']//div/p")
-    HP_CLICK_BUTTON = (By.XPATH, "//a[@href='/button']")
-    HP_DIALOG_BUTTON = (By.XPATH, "//a[@href='/alert']")
+    HP_BUTTON = (By.XPATH, "//a[@href='/button']")
+    HP_SELECT_BUTTON = (By.XPATH, "//a[@href='/dropdowns']")
+    HP_ALERT_BUTTON = (By.XPATH, "//a[@href='/alert']")
+    HP_FRAME_BUTTON = (By.XPATH, "//a[@href='/frame']")
+    HP_RADIO_BUTTON = (By.XPATH, "//a[@href='/radio']")
+    HP_WINDOW_BUTTON = (By.XPATH, "//a[@href='/window']")
+    HP_ELEMENTS_BUTTON = (By.XPATH, "//a[@href='/window']")
 
     # INPUT PAGE
     IP_FULL_NAME_TEXTBOX = (By.XPATH, "//input[@id='fullName']")
@@ -44,6 +51,13 @@ class LeetcodePage(BasePage):
     AP_MODERN_ALERT_BUTTON = (By.XPATH, "//button[text()='Modern Alert']")
     AP_MODERN_ALERT_TEXT = (By.XPATH, "//div[@class='card-content']/p")
     AP_MODERN_ALERT_CLOSE_BUTTON = (By.XPATH, "//button[@class='modal-close is-large']")
+
+    # SELECT PAGE
+    SP_SELECT_FRUIT_DROPDOWN = (By.XPATH, "//select[@id='fruits']")
+    SP_SELECT_FRUIT_TEXT = (By.XPATH, "//select[@id='fruits']//following::p[1]")
+    SP_SELECT_MULTIPLE = (By.XPATH, "//select[@id='superheros']")
+    SP_SELECT_MULTIPLE_TEXT = (By.XPATH, "//select[@id='superheros']//following::p[1]")
+
 
 
 
@@ -72,17 +86,21 @@ class LeetcodePage(BasePage):
     # ============================================================================
     # HOMEPAGE BUTTON CLICKS
     # ============================================================================
-    @allure_step("Click [Edit] button")
-    def click_edit_button(self):
-        self.click_element(self.HP_EDIT_BUTTON)
+    @allure_step("Click [Input] button")
+    def click_input_button(self):
+        self.click_element(self.HP_INPUT_BUTTON)
 
-    @allure_step("Click [Click] button")
-    def click_click_button(self):
-        self.click_element(self.HP_CLICK_BUTTON)
+    @allure_step("Click [Button]")
+    def click_button(self):
+        self.click_element(self.HP_BUTTON)
 
-    @allure_step("Click [Dialog] button")
-    def click_dialog_button(self):
-        self.click_element(self.HP_DIALOG_BUTTON)
+    @allure_step("Click [Select] button")
+    def click_select_button(self):
+        self.click_element(self.HP_SELECT_BUTTON)
+
+    @allure_step("Click [Alert] button")
+    def click_alert_button(self):
+        self.click_element(self.HP_ALERT_BUTTON)
 
 
     # ============================================================================
@@ -242,6 +260,12 @@ class LeetcodePage(BasePage):
         assert size['width'] > 0, f"Button width should be greater than 0"
         assert size['height'] > 0, f"Button height should be greater than 0"
 
+        allure.attach(
+            f"Button size: width:{size['width']}, height:{size['height']}",
+            name="Button size info",
+            attachment_type=allure.attachment_type.TEXT
+        )
+
 
     @allure_step("Verify button is disabled")
     def verify_button_is_disabled(self):
@@ -249,7 +273,7 @@ class LeetcodePage(BasePage):
         assert not button.is_enabled(), f"Button should be disabled"
 
 
-    @allure_step("Verify button click and hold")
+    @allure_step("Verify button click and hold: text_before '{text_before}', text_after '{text_after}'")
     def verify_button_click_and_hold(self, text_before, text_after):
         button = self.find_web_element(self.BP_HOLD_BUTTON)
         assert button.text == text_before, f"Button text should be '{text_before}'"
@@ -262,9 +286,53 @@ class LeetcodePage(BasePage):
 
 
     # ============================================================================
+    # SELECT METHODS
+    # ============================================================================
+    @allure_step("Verify dropdown option list: {option_list}")
+    def verify_dropdown_option_list(self, option_list=""):
+        dropdown = self.find_web_element(self.SP_SELECT_FRUIT_DROPDOWN)
+        dropdown_options = dropdown.find_elements(By.TAG_NAME, 'option')
+
+        # for option in dropdown_options:
+        #     self.log.info(f"option: {option.text}")
+
+        # for i in range(len(dropdown_options)):
+        #     self.log.info(f"option[{i+1}]: {dropdown_options[i+1].text}")
+
+        for index, option in enumerate(dropdown_options, start=0):
+            self.log.info(f"Assert options[{index}]: {option.text}")
+            # self.log.info(f"Assert options[{index}]: {option.text} == {option_list[index]}")
+            # assert option.text == option_list[index-1], f"Option mismatch: Expected '{option.text}', but found '{option_list[index-1]}'"
+
+
+
+
+
+    @allure_step("Verify dropdown select by visible text: option='{option}', message='{message}'")
+    def verify_dropdown_select_by_visible_text(self, option, message):
+        select = self.find_web_element(self.SP_SELECT_FRUIT_DROPDOWN)
+        dropdown = Select(select)
+        dropdown.select_by_visible_text(option)
+
+        fruit_message = self.find_web_element(self.SP_SELECT_FRUIT_TEXT).text
+        assert fruit_message == message, f"Message mismatch. Expected '{message}', but found '{fruit_message}'"
+
+    @allure_step("Verify dropdown select multiple: option='{option}', message='{message}'")
+    def verify_dropdown_select_multiple(self, option, message):
+        select = self.find_web_element(self.SP_SELECT_MULTIPLE)
+        dropdown = Select(select)
+        dropdown.select_by_visible_text(option)
+
+        multiple_text = self.find_web_element(self.SP_SELECT_MULTIPLE_TEXT).text
+        assert multiple_text == message, f"Message mismatch. Expected '{message}', but found '{multiple_text}'"
+
+
+
+
+    # ============================================================================
     # ALERT METHODS
     # ============================================================================
-    @allure_step("Verify Alert - Accept")
+    @allure_step("Verify Alert - Accept: '{expected_text}'")
     def verify_alert_accept(self, expected_text):
         self.click_element(self.AP_SIMPLE_ALERT_BUTTON)
 
@@ -325,7 +393,7 @@ class LeetcodePage(BasePage):
 
         assert alert_text == expected_text, f"Alert text mismatch. Expected '{expected_text}', but found '{alert_text}'"
         self.click_element(self.AP_MODERN_ALERT_CLOSE_BUTTON)
-        self.wait_seconds(2)
+        self.wait_seconds(1)
 
 
 

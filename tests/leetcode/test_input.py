@@ -16,7 +16,7 @@ class TestInput(BaseTest):
 
         leetcode = LeetcodePage(driver)
         leetcode.open_leetcode_site()
-        leetcode.click_edit_button()
+        leetcode.click_input_button()
 
         leetcode.verify_full_name_placeholder_text("Enter first & last name")
         leetcode.enter_text_to_full_name_textbox("John Doe")

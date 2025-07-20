@@ -8,7 +8,7 @@ from core.base.base_test import BaseTest
 
 @pytest.mark.leetcode
 @pytest.mark.alert
-@allure.feature("Leetcode: Button")
+@allure.feature("Leetcode: Alert")
 class TestAlert(BaseTest):
 
     @allure.title("Leetcode: Testing alert methods")
@@ -17,7 +17,7 @@ class TestAlert(BaseTest):
         leetcode = LeetcodePage(driver)
         leetcode.open_leetcode_site()
 
-        leetcode.click_dialog_button()
+        leetcode.click_alert_button()
 
         leetcode.verify_alert_accept("Hey! Welcome to LetCode")
         leetcode.verify_alert_confirm()

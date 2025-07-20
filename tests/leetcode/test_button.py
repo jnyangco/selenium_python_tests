@@ -17,7 +17,7 @@ class TestButton(BaseTest):
         leetcode = LeetcodePage(driver)
         leetcode.open_leetcode_site()
 
-        leetcode.click_click_button()
+        leetcode.click_button()
         leetcode.click_goto_home_button()
         leetcode.verify_current_url("https://letcode.in/")
         leetcode.navigate_back()
