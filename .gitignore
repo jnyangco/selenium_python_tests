@@ -4,6 +4,10 @@ automation.log
 
 # IDE Specific
 .DS_Store
+EOF
+
+# PyCharm
+.idea/
 
 # Ignore Python cache files
 __pycache__/
