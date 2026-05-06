@@ -10,16 +10,18 @@ from pages.banking.manager_page import ManagerPage
 from pages.banking.transactions_page import TransactionsPage
 from utils.data_utils import get_data as data
 import time
-from core.base.base_test import BaseTest
 from pages.banking.home_page import HomePage
 from utils.decorators_utils import step
 from utils.faker_utils import generate_random_last_name, generate_random_postal_code
+from utils.logger_utils import get_logger
+
+log = get_logger(__name__)
 
 
 @pytest.mark.banking
 @pytest.mark.manager
 @allure.feature("Banking: Manager")
-class TestManager(BaseTest):
+class TestManager:
 
 
     @allure.title("Banking: Manager access dashboard")

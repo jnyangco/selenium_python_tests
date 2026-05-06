@@ -4,13 +4,14 @@ import pytest
 from pages.leetcode.leetcode_page import LeetcodePage
 from pages.saucedemo.login_page_saucedemo import LoginPageSaucedemo
 from utils.data_utils import get_data as data
-from core.base.base_test import BaseTest
+from utils.logger_utils import get_logger
 
+log = get_logger(__name__)
 
 @pytest.mark.leetcode
 @pytest.mark.homepage
 @allure.feature("Leetcode: Homepage")
-class TestHomepage(BaseTest):
+class TestHomepage:
 
     @allure.title("Leetcode: Test homepage card titles")
     def test_homepage_cards_title(self, driver):
