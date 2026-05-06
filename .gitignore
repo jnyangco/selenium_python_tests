@@ -14,3 +14,9 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+
+
+# Python cache (Unified)
+**/__pycache__/
+*.py[cod]
+*$py.class
