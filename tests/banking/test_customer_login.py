@@ -6,15 +6,16 @@ from pages.banking.header_page import HeaderPage
 from pages.banking.manager_page import ManagerPage
 from utils.data_utils import get_data as data
 import time
-from core.base.base_test import BaseTest
 from pages.banking.home_page import HomePage
 from utils.decorators_utils import allure_step
+from utils.logger_utils import get_logger
 
+log = get_logger(__name__)
 
 @pytest.mark.banking
 @pytest.mark.login
 @allure.feature("Banking: Customer Login")
-class TestCustomerLogin(BaseTest):
+class TestCustomerLogin:
 
     @allure.title("Banking: Verify Customer Dropdown has options")
     def test_customer_dropdown_has_options(self, driver):

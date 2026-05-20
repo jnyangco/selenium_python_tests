@@ -11,7 +11,7 @@ class ProductPageSaucedemo(BasePage):
 
     # Locators
     _product_cards = (By.XPATH, "//div[@class='inventory_list']//div[@class='inventory_item_name ']")
-    _product_price = (By.XPATH, "//div[@class='inventory_list']//div[@class='inventory_item_price']")
+    _product_prices = (By.XPATH, "//div[@class='inventory_list']//div[@class='inventory_item_price']")
     _add_to_cart_item_button_dynamic_xpath = "//div[@class='inventory_item_name ' and contains(.,'{}')]/../../..//button[1]"
     _product_item_price_added_to_cart_dynamic_xpath = "//div[@class='inventory_item_name ' and contains(.,'{}')]/../../..//div[@class='inventory_item_price']"
     _cart_total_text = (By.XPATH, "//div[@id='shopping_cart_container']//span")
@@ -48,38 +48,44 @@ class ProductPageSaucedemo(BasePage):
     #         pytest.fail(f"Element not matched. Expected = {expected_element}, Actual = {actual_element}")
 
 
-    @allure.step("Verify hamburger menu list")
-    def verify_hamburger_menu_list(self, expected_hamburger_list):
-        try:
-            actual_hamburger_list = self.wait.until(EC.visibility_of_all_elements_located(self._burger_menu_list))
-            assert len(actual_hamburger_list) == len(expected_hamburger_list), \
-                f"Hamburger menu list count mismatch. Actual = {len(actual_hamburger_list)}, Expected = {len(expected_hamburger_list)}"
+    @allure.step("Get hamburger menu list")
+    def get_hamburger_menu_list(self):
+        elements = self.find_elements(self._burger_menu_list)
+        return [element.text for element in elements]
 
-            for index, element in enumerate(actual_hamburger_list):
-                expected_element = expected_hamburger_list[index]
-                actual_element = element.text
-                assert actual_element == expected_element, \
-                    f"Element mismatch at index {index}. Expected = {expected_element}, Actual = {actual_element}"
-        except (TimeoutException, AssertionError):
-            self.screenshot_util.capture_screenshot()
-            self.log.error(f"Hamburger menu list verification failed.")
-            raise
+        # return self.find_elements(self._burger_menu_list)
+        # try:
+        #     actual_hamburger_list = self.wait.until(EC.visibility_of_all_elements_located(self._burger_menu_list))
+        #     assert len(actual_hamburger_list) == len(expected_hamburger_list), \
+        #         f"Hamburger menu list count mismatch. Actual = {len(actual_hamburger_list)}, Expected = {len(expected_hamburger_list)}"
+        #
+        #     for index, element in enumerate(actual_hamburger_list):
+        #         expected_element = expected_hamburger_list[index]
+        #         actual_element = element.text
+        #         assert actual_element == expected_element, \
+        #             f"Element mismatch at index {index}. Expected = {expected_element}, Actual = {actual_element}"
+        # except (TimeoutException, AssertionError):
+        #     self.screenshot_util.capture_screenshot()
+        #     self.log.error(f"Hamburger menu list verification failed.")
+        #     raise
 
 
-    @allure.step("Verify total product cards displayed")
-    def verify_total_product_cards_displayed(self, expected_total_list):
-        try:
-            product_cards = self.wait.until(EC.visibility_of_all_elements_located(self._product_cards))
-            actual_total_list = len(product_cards)
-            print(f"actual_total_list -> {actual_total_list}")
-            for element in product_cards:
-                print(f"Element = {element.text}")
-            assert actual_total_list == expected_total_list, \
-                f"Total product cards displayed mismatch: Actual = {actual_total_list}, Expected = {expected_total_list}"
-        except (TimeoutException, AssertionError):
-            self.screenshot_util.capture_screenshot()
-            self.log.error(f"Total products verification failed.")
-            raise
+    @allure.step("Get product cards count")
+    def get_product_cards_count(self):
+        elements = self.find_elements(self._product_cards)
+        return len(elements)
+        # try:
+        #     product_cards = self.wait.until(EC.visibility_of_all_elements_located(self._product_cards))
+        #     actual_total_list = len(product_cards)
+        #     print(f"actual_total_list -> {actual_total_list}")
+        #     for element in product_cards:
+        #         print(f"Element = {element.text}")
+        #     assert actual_total_list == expected_total_list, \
+        #         f"Total product cards displayed mismatch: Actual = {actual_total_list}, Expected = {expected_total_list}"
+        # except (TimeoutException, AssertionError):
+        #     self.screenshot_util.capture_screenshot()
+        #     self.log.error(f"Total products verification failed.")
+        #     raise
 
 
     @allure.step("Verify cart total")
@@ -170,65 +176,79 @@ class ProductPageSaucedemo(BasePage):
             pytest.fail("Failed to select dropdown filter.")
 
 
-    @allure.step("Verify product cards ordering")
-    def verify_product_cards_ordering(self, order_type="ascending"): #default = ascending
-        try:
-            actual_product_list = []
-            actual_product_price = []
+    @allure.step("Get product cards")
+    def get_product_card_names(self) -> list:
+        product_cards = self.find_elements(self._product_cards)
+        return [product_card.text for product_card in product_cards]
 
-            product_cards = self.wait.until(EC.visibility_of_all_elements_located(self._product_cards))
-            print(f">>> product_cards = {product_cards}")
 
-            product_price = self.wait.until(EC.visibility_of_all_elements_located(self._product_price))
+    @allure.step("Get product prices")
+    def get_product_prices(self) -> list:
+        product_prices = self.find_elements(self._product_prices)
+        price_list = [float(product_price.text.replace("$", "").strip()) for product_price in product_prices]
+        print(f">>> PRICE LIST: {price_list}")
+        return price_list
 
-            if order_type.lower() == "ascending":
-                for product in product_cards:
-                    print(f">>> product = {product.text}")
-                    actual_product_list.append(product.text)
-                expected_product_list = sorted(actual_product_list)
-                print(f">>> actual_product_list = {actual_product_list}")
-                print(f">>> expected_product_list = {expected_product_list}")
-                assert actual_product_list == expected_product_list, \
-                    f"Product is not in ascending order: Expected = \n'{expected_product_list}', Actual = \n'{actual_product_list}'"
 
-            elif order_type.lower() == "descending":
-                for product in product_cards:
-                    print(f">>> product = {product.text}")
-                    actual_product_list.append(product.text)
-                expected_product_list = sorted(actual_product_list, reverse=True)
-                print(f">>> actual_product_list = {actual_product_list}")
-                print(f">>> expected_product_list = {expected_product_list}")
-                assert actual_product_list == expected_product_list, \
-                    f"Product is not in ascending order: Expected = \n'{expected_product_list}', Actual = \n'{actual_product_list}'"
-
-            elif order_type.lower() == "price low to high":
-                for price in product_price:
-                    price = float(price.text.replace("$",""))
-                    print(f">>> price = {price}")
-                    actual_product_price.append(price)
-
-                expected_product_price = sorted(actual_product_price)
-                print(f">>> actual_product_price = {actual_product_price}")
-                print(f">>> expected_product_price = {expected_product_price}")
-                assert actual_product_price == expected_product_price, \
-                    f"Product price is not in ascending order: Expected = \n'{expected_product_price}', Actual = \n'{actual_product_price}'"
-
-            elif order_type.lower() == "price high to low":
-                for price in product_price:
-                    price = float(price.text.replace("$",""))
-                    print(f">>> price = {price}")
-                    actual_product_price.append(price)
-
-                expected_product_price = sorted(actual_product_price, reverse=True)
-                print(f">>> actual_product_price = {actual_product_price}")
-                print(f">>> expected_product_price = {expected_product_price}")
-                assert actual_product_price == expected_product_price, \
-                    f"Product price is not in descending order: Expected = \n'{expected_product_price}', Actual = \n'{actual_product_price}'"
-
-        except (TimeoutException, AssertionError):
-            self.screenshot_util.capture_screenshot()
-            self.log.error("Failed to verify product cards ordering.")
-            raise
+    # @allure.step("Verify product cards ordering")
+    # def verify_product_cards_ordering(self, order_type="ascending"): #default = ascending
+    #     try:
+    #         actual_product_list = []
+    #         actual_product_price = []
+    #
+    #         product_cards = self.wait.until(EC.visibility_of_all_elements_located(self._product_cards))
+    #         print(f">>> product_cards = {product_cards}")
+    #
+    #         product_price = self.wait.until(EC.visibility_of_all_elements_located(self._product_prices))
+    #
+    #         if order_type.lower() == "ascending":
+    #             for product in product_cards:
+    #                 print(f">>> product = {product.text}")
+    #                 actual_product_list.append(product.text)
+    #             expected_product_list = sorted(actual_product_list)
+    #             print(f">>> actual_product_list = {actual_product_list}")
+    #             print(f">>> expected_product_list = {expected_product_list}")
+    #             assert actual_product_list == expected_product_list, \
+    #                 f"Product is not in ascending order: Expected = \n'{expected_product_list}', Actual = \n'{actual_product_list}'"
+    #
+    #         elif order_type.lower() == "descending":
+    #             for product in product_cards:
+    #                 print(f">>> product = {product.text}")
+    #                 actual_product_list.append(product.text)
+    #             expected_product_list = sorted(actual_product_list, reverse=True)
+    #             print(f">>> actual_product_list = {actual_product_list}")
+    #             print(f">>> expected_product_list = {expected_product_list}")
+    #             assert actual_product_list == expected_product_list, \
+    #                 f"Product is not in ascending order: Expected = \n'{expected_product_list}', Actual = \n'{actual_product_list}'"
+    #
+    #         elif order_type.lower() == "price low to high":
+    #             for price in product_price:
+    #                 price = float(price.text.replace("$",""))
+    #                 print(f">>> price = {price}")
+    #                 actual_product_price.append(price)
+    #
+    #             expected_product_price = sorted(actual_product_price)
+    #             print(f">>> actual_product_price = {actual_product_price}")
+    #             print(f">>> expected_product_price = {expected_product_price}")
+    #             assert actual_product_price == expected_product_price, \
+    #                 f"Product price is not in ascending order: Expected = \n'{expected_product_price}', Actual = \n'{actual_product_price}'"
+    #
+    #         elif order_type.lower() == "price high to low":
+    #             for price in product_price:
+    #                 price = float(price.text.replace("$",""))
+    #                 print(f">>> price = {price}")
+    #                 actual_product_price.append(price)
+    #
+    #             expected_product_price = sorted(actual_product_price, reverse=True)
+    #             print(f">>> actual_product_price = {actual_product_price}")
+    #             print(f">>> expected_product_price = {expected_product_price}")
+    #             assert actual_product_price == expected_product_price, \
+    #                 f"Product price is not in descending order: Expected = \n'{expected_product_price}', Actual = \n'{actual_product_price}'"
+    #
+    #     except (TimeoutException, AssertionError):
+    #         self.screenshot_util.capture_screenshot()
+    #         self.log.error("Failed to verify product cards ordering.")
+    #         raise
 
 
 

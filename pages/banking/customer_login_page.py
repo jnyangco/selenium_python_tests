@@ -18,7 +18,7 @@ class CustomerLoginPage(HeaderPage):
     # Functions
     @allure_step("Customer dropdown is displayed")
     def is_customer_dropdown_visible(self):
-        return self.is_element_displayed(self.CUSTOMER_DROPDOWN)
+        return self.is_displayed(self.CUSTOMER_DROPDOWN)
 
 
     @allure_step("Get customer dropdown options")

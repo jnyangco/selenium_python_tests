@@ -7,15 +7,16 @@ from pages.banking.manager_page import ManagerPage
 from pages.banking.transactions_page import TransactionsPage
 from utils.data_utils import get_data as data
 import time
-from core.base.base_test import BaseTest
 from pages.banking.home_page import HomePage
 from utils.decorators_utils import allure_step
+from utils.logger_utils import get_logger
 
+log = get_logger(__name__)
 
 @pytest.mark.banking
 @pytest.mark.transactions
 @allure.feature("Banking: Transactions")
-class TestCustomerTransactions(BaseTest):
+class TestCustomerTransactions:
 
     def login_as_customer(self, driver):
         """Helper method to login as customer"""

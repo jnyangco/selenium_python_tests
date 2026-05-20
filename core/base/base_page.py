@@ -43,6 +43,8 @@ class BasePage:
             None
         """
         self.driver = driver
+
+        # WAIT UTILS
         self.wait = WebDriverWait(driver, config.EXPLICIT_WAIT)
         self.short_wait = WebDriverWait(driver, 5)
         self.long_wait = WebDriverWait(driver, 30)
@@ -54,10 +56,14 @@ class BasePage:
         self.actions = ActionChains(driver)
 
         # context
-        self.context = context
+        # self.context = context
 
+
+    # ============================================================================
+    # COMMON METHODS
+    # ============================================================================
     # @allure.step("Opening URL: {url}")
-    def open_url(self, url):
+    def open(self, url):
         """Navigate to specified URL"""
         self.log.info(f"Opening URL: {url}")
         self.driver.get(url)
@@ -80,32 +86,27 @@ class BasePage:
 
     # @allure.step("Finding element: {locator}")
     # @screenshot_on_failure
-    def find_web_element(self, locator, timeout=10):
+    def find_element(self, locator):
         """Find element with explicit wait"""
-
         # wait = WebDriverWait(self.driver, 10)
         # element = wait.until(EC.visibility_of_element_located(locator))
-
         try:
-            # element = WebDriverWait(self.driver, timeout).until(EC.presence_of_element_located(locator))
-            element = WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
-            # self.log.info(f"Found element: {locator}")
+            # element = WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
+            element = self.wait.until(EC.visibility_of_element_located(locator))
             return element
-        except TimeoutException:
-            self.log.error(f"Element not found: {locator}")
-            raise TimeoutException(f"Element not found: {locator}")
+        except TimeoutException as e:
+            self.screenshot_util.capture_screenshot()
+            self.log.error(f"Element not found: {locator}. Error: {e}")
+            raise
 
     # @allure.step("Finding elements: {locator}")
-    def find_web_elements(self, locator, timeout=10):
+    def find_elements(self, locator):
         """Find multiple elements with explicit wait"""
         try:
-            elements = WebDriverWait(self.driver, timeout).until(
-                EC.presence_of_all_elements_located(locator)
-            )
-            # self.log.info(f"Found {len(elements)} elements: {locator}")
-            return elements
-        except TimeoutException:
-            self.log.error(f"Elements not found: {locator}")
+            return self.wait.until(EC.visibility_of_all_elements_located(locator))
+        except TimeoutException as e:
+            self.screenshot_util.capture_screenshot()
+            self.log.error(f"Elements not found: {locator}. Error: {e}")
             return []
 
 
@@ -115,11 +116,10 @@ class BasePage:
         """Click an element"""
         try:
             element = self.wait.until(EC.element_to_be_clickable(locator))
-            # self.log.info(f"Clicking element: {locator}")
             element.click()
-        except TimeoutException:
-            self.log.error(f"Element not clickable: {locator}.")
-            raise TimeoutException(f"Element not clickable: {locator}.")
+        except TimeoutException as e:
+            self.log.error(f"Element is not clickable: {locator}. Error: {e}")
+            raise
 
 
     # @allure.step("Clicking element with dynamic xpath: {locator}")
@@ -141,35 +141,34 @@ class BasePage:
     # @screenshot_on_failure
     def enter_text(self, locator, text):
         """Type text into an element after clearing it"""
-        # element = self.find_web_element(locator)
-        element = self.wait.until(EC.element_to_be_clickable(locator))
-        element.clear()
-        # self.log.info(f"Typing: {text} into element: {locator}")
-        element.send_keys(text)
+        try:
+            element = self.wait.until(EC.element_to_be_clickable(locator))
+            element.clear()
+            element.send_keys(text)
+        except TimeoutException as e:
+            self.screenshot_util.capture_screenshot()
+            self.log.error(f"Unable to type into element {locator}. Error: {e}")
+            raise
 
 
     # @screenshot_on_failure
     # @allure.step("Getting text from element: {locator}")
     def get_text(self, locator):
         """Get text from an element"""
-        element = self.find_web_element(locator)
-        text = element.text
-        # self.log.info(f"Got text: '{text}' from element: {locator}")
-        return text
+        element = self.find_element(locator)
+        return element.text
+
 
 
     # @screenshot_on_failure
     # @allure.step("Checking if element is displayed: {locator}")
-    def is_element_displayed(self, locator):
+    def is_displayed(self, locator):
         """Check if element is displayed"""
         try:
-            element = self.find_web_element(locator)
-            is_displayed = element.is_displayed()
-            # self.log.info(f"Element {locator} is {'displayed' if is_displayed else 'not displayed'}")
-            return is_displayed
-        # except (TimeoutException, NoSuchElementException):
-        except TimeoutException:
-            self.log.error(f"Element {locator} is not displayed")
+            element = self.find_element(locator)
+            return element.is_displayed()
+        except TimeoutException as e:
+            self.log.error(f"Element {locator} is not displayed. Error: {e}")
             return False
 
 
@@ -191,7 +190,7 @@ class BasePage:
     # @allure.step("Hovering over element: {locator}")
     def hover(self, locator):
         """Hover over an element"""
-        element = self.find_web_element(locator)
+        element = self.find_element(locator)
         # ActionChains(self.driver).move_to_element(element).perform()
         self.actions.move_to_element(element).perform()
         self.log.info(f"Hovered over element: {locator}")
@@ -200,7 +199,7 @@ class BasePage:
     # @allure.step("Scrolling to element: {locator}")
     def scroll_to_element(self, locator):
         """Scroll to element"""
-        element = self.find_web_element(locator)
+        element = self.find_element(locator)
         self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
         self.log.info(f"Scrolled to element: {locator}")
 
@@ -210,7 +209,7 @@ class BasePage:
     def assert_element_text_matches(self, locator, expected_text, assert_message="Element text mismatch"):
         actual_text = ""
         try:
-            actual_text = self.find_web_element(locator).text.strip()
+            actual_text = self.find_element(locator).text.strip()
             assert actual_text == expected_text, \
                 f"{assert_message}: Expected = '{expected_text}', Actual = '{actual_text}'"
         except AssertionError:

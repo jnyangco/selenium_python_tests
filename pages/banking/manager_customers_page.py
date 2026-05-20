@@ -18,7 +18,7 @@ class ManagerCustomersPage(HeaderPage):
     # Functions
     # Helper method for is_customer_exists
     def get_all_customers(self):
-        table_customer = self.find_web_elements(self.CUSTOMERS_TABLE)
+        table_customer = self.find_elements(self.CUSTOMERS_TABLE)
 
         all_customers = []
 

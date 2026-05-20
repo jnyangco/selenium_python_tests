@@ -5,15 +5,16 @@ from pages.banking.header_page import HeaderPage
 from pages.banking.manager_page import ManagerPage
 from utils.data_utils import get_data as data
 import time
-from core.base.base_test import BaseTest
 from pages.banking.home_page import HomePage
 from utils.decorators_utils import screenshot_on_failure
+from utils.logger_utils import get_logger
 
+log = get_logger(__name__)
 
 @pytest.mark.banking
 @pytest.mark.ui
 @allure.feature("Banking: UI & Navigation")
-class TestUINavigationBank(BaseTest):
+class TestUINavigationBank:
 
     @allure.title("Verify home page elements are displayed")
     def test_home_page_elements_bank(self, driver):

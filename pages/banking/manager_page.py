@@ -25,9 +25,9 @@ class ManagerPage(HeaderPage):
     @allure_step("Get elements displayed status")
     def get_elements_displayed_status(self):
         elements_status = {
-            'ADD_CUSTOMER_BUTTON': self.is_element_displayed(self.ADD_CUSTOMER_BUTTON),
-            'OPEN_ACCOUNT_BUTTON': self.is_element_displayed(self.OPEN_ACCOUNT_BUTTON),
-            'CUSTOMERS_BUTTON': self.is_element_displayed(self.CUSTOMERS_BUTTON)
+            'ADD_CUSTOMER_BUTTON': self.is_displayed(self.ADD_CUSTOMER_BUTTON),
+            'OPEN_ACCOUNT_BUTTON': self.is_displayed(self.OPEN_ACCOUNT_BUTTON),
+            'CUSTOMERS_BUTTON': self.is_displayed(self.CUSTOMERS_BUTTON)
         }
         return elements_status
 

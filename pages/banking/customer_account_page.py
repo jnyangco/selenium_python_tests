@@ -37,15 +37,15 @@ class CustomerAccountPage(HeaderPage):
     @allure_step("Get button elements displayed status")
     def get_button_elements_displayed_status(self):
         elements_status = {
-            "TRANSACTIONS_BUTTON": self.is_element_displayed(self.TRANSACTIONS_BUTTON),
-            "DEPOSIT_BUTTON": self.is_element_displayed(self.DEPOSIT_BUTTON),
-            "WITHDRAWL_BUTTON": self.is_element_displayed(self.WITHDRAWL_BUTTON)
+            "TRANSACTIONS_BUTTON": self.is_displayed(self.TRANSACTIONS_BUTTON),
+            "DEPOSIT_BUTTON": self.is_displayed(self.DEPOSIT_BUTTON),
+            "WITHDRAWL_BUTTON": self.is_displayed(self.WITHDRAWL_BUTTON)
         }
         return elements_status
 
     @allure_step("Get account labels displayed status")
     def get_account_labels_displayed_status(self):
-        label_text = self.find_web_element(self.ACCOUNT_LABELS).text
+        label_text = self.find_element(self.ACCOUNT_LABELS).text
         self.log.info(f">>> label_text = {label_text}")
         labels_status = {
             "Account Number": "Account Number" in label_text,
@@ -57,15 +57,15 @@ class CustomerAccountPage(HeaderPage):
 
     @allure_step("Get account number")
     def get_account_number(self):
-        return self.find_web_element(self.ACCOUNT_NUMBER_TEXT).text.strip()
+        return self.find_element(self.ACCOUNT_NUMBER_TEXT).text.strip()
 
     @allure_step("Get balance")
     def get_balance(self):
-        return int(self.find_web_element(self.BALANCE_TEXT).text.strip())
+        return int(self.find_element(self.BALANCE_TEXT).text.strip())
 
     @allure_step("Get currency")
     def get_currency(self):
-        return self.find_web_element(self.CURRENCY_TEXT).text.strip()
+        return self.find_element(self.CURRENCY_TEXT).text.strip()
 
     @allure_step("Deposit money: {amount}")
     def deposit_money(self, amount):

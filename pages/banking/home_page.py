@@ -16,7 +16,7 @@ class HomePage(HeaderPage):
     @allure_step("Open banking website")
     def open_bank_website(self):
         url = data("banking", "base_url")
-        self.open_url(url)
+        self.open(url)
 
 
     @allure_step("Click Customer Login button")
@@ -39,8 +39,8 @@ class HomePage(HeaderPage):
     def get_elements_displayed_status(self):
         """Get home page elements display status"""
         elements_status = {
-            'CUSTOMER_LOGIN_BUTTON': self.is_element_displayed(self.CUSTOMER_LOGIN_BUTTON),
-            'BANK_MANAGER_LOGIN_BUTTON': self.is_element_displayed(self.BANK_MANAGER_LOGIN_BUTTON)
+            'CUSTOMER_LOGIN_BUTTON': self.is_displayed(self.CUSTOMER_LOGIN_BUTTON),
+            'BANK_MANAGER_LOGIN_BUTTON': self.is_displayed(self.BANK_MANAGER_LOGIN_BUTTON)
         }
 
         return elements_status
