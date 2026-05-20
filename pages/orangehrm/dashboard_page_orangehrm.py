@@ -14,7 +14,7 @@ class DashboardPageOrangehrm(BasePageOrangehrm):
     @allure.step("User is landed on dashboard page")
     def user_landed_on_dashboard_page(self):
         try:
-            assert self.is_element_displayed(self._header_dashboard), "Header dashboard element is not displayed."
+            assert self.is_displayed(self._header_dashboard), "Header dashboard element is not displayed."
         except AssertionError:
             self.screenshot_util.capture_screenshot()
             self.log.error("Header dashboard element is not displayed.")

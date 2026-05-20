@@ -27,11 +27,11 @@ class TransactionsPage(HeaderPage):
     @allure_step("Get elements displayed status")
     def get_elements_displayed_status(self):
         elements_status_dict = {
-            'BACK_BUTTON': self.is_element_displayed(self.BACK_BUTTON),
-            'RESET_BUTTON': self.is_element_displayed(self.RESET_BUTTON),
-            'CALENDAR_START': self.is_element_displayed(self.CALENDAR_START),
-            'CALENDAR_END': self.is_element_displayed(self.CALENDAR_END),
-            'TRANSACTIONS_TABLE': self.is_element_displayed(self.TRANSACTIONS_TABLE)
+            'BACK_BUTTON': self.is_displayed(self.BACK_BUTTON),
+            'RESET_BUTTON': self.is_displayed(self.RESET_BUTTON),
+            'CALENDAR_START': self.is_displayed(self.CALENDAR_START),
+            'CALENDAR_END': self.is_displayed(self.CALENDAR_END),
+            'TRANSACTIONS_TABLE': self.is_displayed(self.TRANSACTIONS_TABLE)
         }
         return elements_status_dict
 
@@ -42,7 +42,7 @@ class TransactionsPage(HeaderPage):
 
     @allure_step("Get transaction count")
     def get_transaction_count(self):
-        transaction_count = len(self.find_web_elements(self.TRANSACTION_ROWS))
+        transaction_count = len(self.find_elements(self.TRANSACTION_ROWS))
         self.log.info(f"transaction_count = {transaction_count}")
         return transaction_count
 
@@ -52,7 +52,7 @@ class TransactionsPage(HeaderPage):
     def get_all_transactions(self):
         all_transactions = []
         row_cell_details = {}
-        transaction_rows = self.find_web_elements(self.TRANSACTION_ROWS)
+        transaction_rows = self.find_elements(self.TRANSACTION_ROWS)
         self.log.info(f"transaction_rows.text = {transaction_rows[0].text}")
         self.log.info(f"transaction_rows.text = {transaction_rows[1].text}")
 
@@ -97,7 +97,7 @@ class TransactionsPage(HeaderPage):
 
     @allure_step("Verify transaction is cleared")
     def is_transactions_cleared(self):
-        table = self.find_web_element(self.TRANSACTIONS_TABLE)
+        table = self.find_element(self.TRANSACTIONS_TABLE)
         total_rows = len(table.find_elements(By.TAG_NAME, "tr"))
         self.log.info(f"Total table rows = {total_rows}")
         return total_rows == 0

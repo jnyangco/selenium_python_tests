@@ -18,14 +18,14 @@ class LoginPageOrangehrm(BasePageOrangehrm):
     def open_orangehrm_website(self):
         self.log.info("Open Orangehrm Website")
         base_url = data("orangehrm", "base_url")
-        self.open_url(base_url)
+        self.open(base_url)
 
 
     @allure.step("Login to Orangehrm website")
     def login(self):
         self.log.info("Login to Orangehrm website")
         base_url = data("orangehrm", "base_url")
-        self.open_url(base_url)
+        self.open(base_url)
 
         username = data("orangehrm", "username")
         password = data("orangehrm", "password")

@@ -33,8 +33,8 @@ class HeaderPage(BasePage):
     @allure_step("Get header elements displayed status")
     def get_header_elements_displayed_status(self):
         elements_status = {
-            'HEADER': self.is_element_displayed(self.HEADER),
-            'HOME_BUTTON': self.is_element_displayed(self.HOME_BUTTON)
+            'HEADER': self.is_displayed(self.HEADER),
+            'HOME_BUTTON': self.is_displayed(self.HOME_BUTTON)
         }
         return elements_status
 

@@ -10,7 +10,7 @@ class TestConfig:
     HEADLESS: bool = os.getenv("HEADLESS", "False").lower() == "true"
     # HEADLESS: bool = os.getenv("HEADLESS", "False").lower() == "false"
 
-    # Base Url settings
+    # Base Url settings  # REMOVED -> this file is only for test config, not test data
     # BASE_URL_SAUCEDEMO: str = os.getenv("BASE_URL_SAUCEDEMO", "https://www.saucedemo.com/")
     # BASE_URL_ORANGEHRM: str = os.getenv("BASE_URL_ORANGEHRM", "https://opensource-demo.orangehrmlive.com")
 
@@ -26,5 +26,5 @@ class TestConfig:
     LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
     LOG_FILE: str = os.getenv("LOG_FILE", "reports/test.log")
 
-    # Test data
+    # Test data files
     DATA_DIR: str = os.getenv("DATA_DIR", "../config/data/test_data.ini")

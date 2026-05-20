@@ -24,4 +24,4 @@ class PageTemplate(BasePage):
     @allure_step("Open banking website")
     def open_leetcode_site(self):
         url = data("leetcode", "base_url")
-        self.open_url(url)
+        self.open(url)
