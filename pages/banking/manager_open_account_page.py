@@ -19,13 +19,13 @@ class ManagerOpenAccountPage(HeaderPage):
     # Functions
     @allure_step("Select customer name: '{customer_name}'")
     def select_customer(self, customer_name):
-        dropdown = self.find_web_element(self.CUSTOMER_DROPDOWN)
+        dropdown = self.find_element(self.CUSTOMER_DROPDOWN)
         select = Select(dropdown)
         select.select_by_visible_text(customer_name)
 
     @allure_step("Select currency: '{currency}'")
     def select_currency(self, currency):
-        dropdown = self.find_web_element(self.CURRENCY_DROPDOWN)
+        dropdown = self.find_element(self.CURRENCY_DROPDOWN)
         select = Select(dropdown)
         select.select_by_visible_text(currency)
 

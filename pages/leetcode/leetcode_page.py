@@ -72,7 +72,7 @@ class LeetcodePage(BasePage):
     @allure_step("Opening leetcode website")
     def open_leetcode_site(self):
         url = data("leetcode", "base_url")
-        self.open_url(url)
+        self.open(url)
 
     @allure_step("Verify current url: {expected_url}")
     def verify_current_url(self, expected_url):
@@ -108,7 +108,7 @@ class LeetcodePage(BasePage):
     # ============================================================================
     @allure_step("Verify total cards: {expected_total}")
     def verify_total_cards(self, expected_total):
-        cards_object = self.find_web_elements(self.HP_CARDS_OBJECT)
+        cards_object = self.find_elements(self.HP_CARDS_OBJECT)
         total_cards = len(cards_object)
         self.log.info(f"total_cards = {total_cards}")
         assert total_cards == expected_total, \
@@ -116,7 +116,7 @@ class LeetcodePage(BasePage):
 
     @allure_step("Verify cards title: {expected_list}")
     def verify_cards_title(self, expected_list):
-        cards_object = self.find_web_elements(self.HP_CARDS_TITLE)
+        cards_object = self.find_elements(self.HP_CARDS_TITLE)
         cards_title_list = []
         for card in cards_object:
             # self.log.info(card.text.strip())
@@ -130,7 +130,7 @@ class LeetcodePage(BasePage):
     @allure_step("Verify cards description: {expected_dict}")
     def verify_cards_description(self, expected_dict):
         # get cards title -> list
-        titles = self.find_web_elements(self.HP_CARDS_TITLE)
+        titles = self.find_elements(self.HP_CARDS_TITLE)
         title_list = []
         for card in titles:
             # self.log.info(card.text.strip())
@@ -138,7 +138,7 @@ class LeetcodePage(BasePage):
         self.log.info(f"title_list = {title_list}")
 
         # get cards description -> list
-        descriptions = self.find_web_elements(self.HP_CARDS_DESCRIPTION)
+        descriptions = self.find_elements(self.HP_CARDS_DESCRIPTION)
         description_list = []
         for description in descriptions:
             self.log.info(description.text.strip())
@@ -169,7 +169,7 @@ class LeetcodePage(BasePage):
     # ============================================================================
     @allure_step("Verify full name placeholder text: '{expected_text}'")
     def verify_full_name_placeholder_text(self, expected_text):
-        actual_text = self.find_web_element(self.IP_FULL_NAME_TEXTBOX).get_attribute('placeholder')
+        actual_text = self.find_element(self.IP_FULL_NAME_TEXTBOX).get_attribute('placeholder')
         assert actual_text == expected_text, \
             f"Placeholder text mismatch: Expected text '{expected_text}', but found '{actual_text}'"
 
@@ -181,14 +181,14 @@ class LeetcodePage(BasePage):
 
     @allure_step("Verify text inside the textbox: '{expected_text}'")
     def verify_text_inside_the_textbox(self, expected_text):
-        actual_text = self.find_web_element(self.IP_INSIDE_TEXTBOX).get_attribute('value')
+        actual_text = self.find_element(self.IP_INSIDE_TEXTBOX).get_attribute('value')
         assert actual_text == expected_text, \
             f"Text mismatch: Expected text '{expected_text}', but found '{actual_text}'"
 
 
     @allure_step("Clear textbox")
     def clear_textbox(self):
-        textbox = self.find_web_element(self.IP_CLEAR_TEXTBOX)
+        textbox = self.find_element(self.IP_CLEAR_TEXTBOX)
         text_value = textbox.get_attribute('value')
         self.log.info(f"Before clearing text: text_value = {text_value}")
         assert text_value != "", f"Textbox is empty"
@@ -201,7 +201,7 @@ class LeetcodePage(BasePage):
 
     @allure_step("Verify textbox is disabled")
     def verify_textbox_is_disabled(self):
-        textbox = self.find_web_element(self.IP_DISABLED_TEXTBOX)
+        textbox = self.find_element(self.IP_DISABLED_TEXTBOX)
         is_textbox_disabled = textbox.get_attribute('disabled')
         self.log.info(f"is_textbox_disabled = {is_textbox_disabled}")
         assert is_textbox_disabled, f"Textbox should be disabled: is_textbox_disabled '{is_textbox_disabled}'"
@@ -209,7 +209,7 @@ class LeetcodePage(BasePage):
 
     @allure_step("Verify textbox is read only")
     def verify_textbox_is_read_only(self):
-        textbox = self.find_web_element(self.IP_READ_ONLY_TEXTBOX)
+        textbox = self.find_element(self.IP_READ_ONLY_TEXTBOX)
         is_textbox_readonly = textbox.get_attribute('readonly')
         self.log.info(f"is_textbox_readonly = {is_textbox_readonly}")
         assert is_textbox_readonly, f"Textboxt should be read only: is_textbox_readonly = {is_textbox_readonly}"
@@ -225,7 +225,7 @@ class LeetcodePage(BasePage):
 
     @allure_step("Verify button location")
     def verify_button_location(self):
-        element = self.find_web_element(self.BP_FIND_LOCATION_BUTTON)
+        element = self.find_element(self.BP_FIND_LOCATION_BUTTON)
         location = element.location
         x = location['x']
         y = location['y']
@@ -241,7 +241,7 @@ class LeetcodePage(BasePage):
 
     @allure_step("Verify button color: {color}")
     def verify_button_color(self, expected_color):
-        button = self.find_web_element(self.BP_WHAT_IS_MY_COLOR_BUTTON)
+        button = self.find_element(self.BP_WHAT_IS_MY_COLOR_BUTTON)
         bg_color = button.value_of_css_property("background-color")
         hex_color = Color.from_string(bg_color).hex
 
@@ -254,7 +254,7 @@ class LeetcodePage(BasePage):
 
     @allure_step("Verify button size")
     def verify_button_size(self):
-        button = self.find_web_element(self.BP_HOW_TALL_AND_FAT_I_AM_BUTTON)
+        button = self.find_element(self.BP_HOW_TALL_AND_FAT_I_AM_BUTTON)
         size = button.size
         self.log.info(f"Button size: width: {size['width']}, height: {size['height']}")
         assert size['width'] > 0, f"Button width should be greater than 0"
@@ -269,13 +269,13 @@ class LeetcodePage(BasePage):
 
     @allure_step("Verify button is disabled")
     def verify_button_is_disabled(self):
-        button = self.find_web_element(self.BP_DISABLED_BUTTON)
+        button = self.find_element(self.BP_DISABLED_BUTTON)
         assert not button.is_enabled(), f"Button should be disabled"
 
 
     @allure_step("Verify button click and hold: text_before '{text_before}', text_after '{text_after}'")
     def verify_button_click_and_hold(self, text_before, text_after):
-        button = self.find_web_element(self.BP_HOLD_BUTTON)
+        button = self.find_element(self.BP_HOLD_BUTTON)
         assert button.text == text_before, f"Button text should be '{text_before}'"
 
         actions = ActionChains(self.driver)
@@ -290,7 +290,7 @@ class LeetcodePage(BasePage):
     # ============================================================================
     @allure_step("Verify dropdown option list: {option_list}")
     def verify_dropdown_option_list(self, option_list=""):
-        dropdown = self.find_web_element(self.SP_SELECT_FRUIT_DROPDOWN)
+        dropdown = self.find_element(self.SP_SELECT_FRUIT_DROPDOWN)
         dropdown_options = dropdown.find_elements(By.TAG_NAME, 'option')
 
         # for option in dropdown_options:
@@ -310,20 +310,20 @@ class LeetcodePage(BasePage):
 
     @allure_step("Verify dropdown select by visible text: option='{option}', message='{message}'")
     def verify_dropdown_select_by_visible_text(self, option, message):
-        select = self.find_web_element(self.SP_SELECT_FRUIT_DROPDOWN)
+        select = self.find_element(self.SP_SELECT_FRUIT_DROPDOWN)
         dropdown = Select(select)
         dropdown.select_by_visible_text(option)
 
-        fruit_message = self.find_web_element(self.SP_SELECT_FRUIT_TEXT).text
+        fruit_message = self.find_element(self.SP_SELECT_FRUIT_TEXT).text
         assert fruit_message == message, f"Message mismatch. Expected '{message}', but found '{fruit_message}'"
 
     @allure_step("Verify dropdown select multiple: option='{option}', message='{message}'")
     def verify_dropdown_select_multiple(self, option, message):
-        select = self.find_web_element(self.SP_SELECT_MULTIPLE)
+        select = self.find_element(self.SP_SELECT_MULTIPLE)
         dropdown = Select(select)
         dropdown.select_by_visible_text(option)
 
-        multiple_text = self.find_web_element(self.SP_SELECT_MULTIPLE_TEXT).text
+        multiple_text = self.find_element(self.SP_SELECT_MULTIPLE_TEXT).text
         assert multiple_text == message, f"Message mismatch. Expected '{message}', but found '{multiple_text}'"
 
 
@@ -379,7 +379,7 @@ class LeetcodePage(BasePage):
         self.wait_seconds(1)
         alert.accept()
 
-        your_name_text = self.find_web_element(self.AP_YOUR_NAME_TEXT).text
+        your_name_text = self.find_element(self.AP_YOUR_NAME_TEXT).text
         expected_text = f"Your name is: {name}"
         assert your_name_text == expected_text, \
             f"Text mismatch. Expected '{expected_text}', but found '{your_name_text}'"
@@ -388,7 +388,7 @@ class LeetcodePage(BasePage):
     @allure_step("Verify Alert - Modern Alert")
     def verify_alert_modern(self, expected_text):
         self.click_element(self.AP_MODERN_ALERT_BUTTON)
-        alert_text = self.find_web_element(self.AP_MODERN_ALERT_TEXT).text
+        alert_text = self.find_element(self.AP_MODERN_ALERT_TEXT).text
         self.log.info(f"Alert text: {alert_text}")
 
         assert alert_text == expected_text, f"Alert text mismatch. Expected '{expected_text}', but found '{alert_text}'"

@@ -42,7 +42,7 @@ class BasePageOrangehrm(BasePage):
     @allure.step("Verify search menu is displayed")
     def verify_search_menu_displayed(self):
         try:
-            search_menu = self.is_element_displayed(self._search_menu)
+            search_menu = self.is_displayed(self._search_menu)
             assert search_menu, f"Search menu is not displayed."
         except AssertionError:
             self.screenshot_util.capture_screenshot()

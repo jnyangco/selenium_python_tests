@@ -25,7 +25,7 @@ class TestOrderSaucedemo:
 
         log.info("Step: Open SauceDemo Website")
         login_page = LoginPageSaucedemo(driver)
-        login_page.open_url(data("saucedemo", "base_url"))
+        login_page.open()
         time.sleep(1)
 
         log.info("Step: Login to website")
@@ -95,7 +95,7 @@ class TestOrderSaucedemo:
 
         log.info("Step: Open SauceDemo Website")
         login_page = LoginPageSaucedemo(driver)
-        login_page.open_url(data("saucedemo", "base_url"))
+        login_page.open()
 
         log.info("Step: Login to website")
         login_page.login("standard_user", "secret_sauce")
